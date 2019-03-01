@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package booksvc;
+
+service BookService {
+  // rpc AddBook(AddBookRequest) returns (AddBookResponse) {}
+  rpc SearchBooks(BooksQueryRequest) returns (BooksResponse) {}
+}
+
+message Book {
+  int32 id = 1;
+  string name = 2;
+}
+
+message BooksQueryRequest {
+  string name = 1;
+  string author = 2;
+}
+
+message BooksResponse {
+  repeated Book Books = 1;
+}

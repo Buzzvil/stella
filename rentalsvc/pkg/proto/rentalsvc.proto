@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package booksvc;
+
+service RentalService {
+  rpc CheckBookAvailability(CheckBookAvailabilityRequest) returns (CheckBookAvailabilityResponse) {}
+  rpc RentBook(RentBookRequest) returns (RentBookResponse) {}
+}
+
+message CheckBookAvailabilityRequest {
+  int32 book_id = 1;
+}
+
+message CheckBookAvailabilityResponse {
+  enum Availability {
+    AVAILABLE = 0;
+    UNAVAILABLE = 1;
+  }
+  Availability availability = 1;
+}
+
+message RentBookRequest {
+  int32 book_id = 1;
+  int32 user_id = 2;
+}
+
+message RentBookResponse {
+  string status = 1;
+}
