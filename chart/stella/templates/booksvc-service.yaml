@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "stella.booksvc.fullname" . }}
+  labels:
+    {{- include "stella.booksvc.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.booksvc.service.type }}
+  ports:
+    - port: {{ .Values.booksvc.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "stella.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
