@@ -2,10 +2,11 @@
 
 
 [[projects]]
-  digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"
+  digest = "1:64c2b533ffd17023738c534548ab2455d7f519bc15ed4225145425ed2222448b"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
+    "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
@@ -63,9 +64,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:077c1c599507b3b3e9156d17d36e1e61928ee9b53a5b420f10f28ebd4a0b275c"
+  digest = "1:48cd63b152af9cc0010714d881a3d29a68c19a265fbb914d884dfde42fe9337a"
   name = "google.golang.org/genproto"
-  packages = ["googleapis/rpc/status"]
+  packages = [
+    "googleapis/api/annotations",
+    "googleapis/rpc/status",
+  ]
   pruneopts = "UT"
   revision = "4f5b463f9597cbe0dd13a6a2cd4f85e788d27508"
 
@@ -114,6 +118,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/golang/protobuf/proto",
+    "google.golang.org/genproto/googleapis/api/annotations",
     "google.golang.org/grpc",
     "google.golang.org/grpc/grpclog",
   ]
