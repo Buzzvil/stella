@@ -1,0 +1,9 @@
+ type: google.api.Service
+ config_version: 3
+
+ http:
+  rules:
+  - selector: proto.BookService.SearchBooks
+    get: /v1/books/search
+  - selector: proto.RentalService.CheckAvailability
+    get: /v1/rental/check_availability
