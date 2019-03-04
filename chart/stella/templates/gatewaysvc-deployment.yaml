@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stella.gatewaysvc.fullname" . }}
+  labels:
+    {{- include "stella.gatewaysvc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.gatewaysvc.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "stella.gatewaysvc.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "stella.gatewaysvc.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.gatewaysvc.image.repository }}:{{ .Values.gatewaysvc.image.tag }}"
+          imagePullPolicy: {{ .Values.gatewaysvc.image.pullPolicy }}
+          command: ["/go/bin/gatewaysvc", "--booksvc_endpoint", "stella-booksvc:9000"]
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.gatewaysvc.resources | nindent 12 }}
+      {{- with .Values.gatewaysvc.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.gatewaysvc.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.gatewaysvc.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

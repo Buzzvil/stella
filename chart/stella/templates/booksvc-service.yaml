@@ -8,9 +8,9 @@ spec:
   type: {{ .Values.booksvc.service.type }}
   ports:
     - port: {{ .Values.booksvc.service.port }}
-      targetPort: http
+      targetPort: grpc
       protocol: TCP
-      name: http
+      name: grpc
   selector:
     app.kubernetes.io/name: {{ include "stella.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

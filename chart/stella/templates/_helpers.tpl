@@ -29,6 +29,16 @@ app.kubernetes.io/component: {{ .Values.booksvc.name | quote }}
 {{ include "stella.common.matchLabels" . }}
 {{- end -}}
 
+{{- define "stella.gatewaysvc.labels" -}}
+{{ include "stella.gatewaysvc.matchLabels" . }}
+{{ include "stella.common.metaLabels" . }}
+{{- end -}}
+
+{{- define "stella.gatewaysvc.matchLabels" -}}
+app.kubernetes.io/component: {{ .Values.gatewaysvc.name | quote }}
+{{ include "stella.common.matchLabels" . }}
+{{- end -}}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -60,6 +70,23 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name .Values.booksvc.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.booksvc.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a fully qualified gatewaysvc name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "stella.gatewaysvc.fullname" -}}
+{{- if .Values.gatewaysvc.fullnameOverride -}}
+{{- .Values.gatewaysvc.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Values.gatewaysvc.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-%s" .Release.Name $name .Values.gatewaysvc.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
