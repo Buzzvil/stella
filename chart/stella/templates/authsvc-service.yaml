@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "stella.authsvc.fullname" . }}
+  labels:
+    {{- include "stella.authsvc.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.authsvc.service.type }}
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if (and (eq .Values.authsvc.service.type "NodePort") (not (empty .Values.authsvc.service.nodePorts.http)))}}
+      nodePort: {{ .Values.authsvc.service.nodePorts.http }}
+      {{- end }}
+  selector:
+    {{- include "stella.authsvc.matchLabels" . | nindent 4 }}

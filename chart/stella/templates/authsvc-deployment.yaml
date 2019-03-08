@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stella.authsvc.fullname" . }}
+  labels:
+    {{- include "stella.authsvc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.authsvc.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "stella.authsvc.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "stella.authsvc.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.authsvc.image.repository }}:{{ .Values.authsvc.image.tag }}"
+          imagePullPolicy: {{ .Values.authsvc.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          env:
+            - name: SLACK_OAUTH_CLIENT_ID
+              value: '2921750999.570187289585'
+            - name: SLACK_OAUTH_CLIENT_SECRET
+              value: 'c5d10427a5b04db27628f71a57b5686a'
+          resources:
+            {{- toYaml .Values.authsvc.resources | nindent 12 }}
+      {{- with .Values.authsvc.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.authsvc.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.authsvc.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

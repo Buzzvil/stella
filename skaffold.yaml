@@ -6,6 +6,8 @@ build:
   artifacts:
   - image: asia.gcr.io/devops-229509/stella/booksvc
     context: ./booksvc
+  - image: asia.gcr.io/devops-229509/stella/authsvc
+    context: ./authsvc
 deploy:
   helm:
     releases:
@@ -26,3 +28,5 @@ deploy:
         gatewaysvc.service.type: NodePort
         gatewaysvc.service.nodePorts.http: 30080
         gatewaysvc.service.nodePorts.web: 30081
+        authsvc.service.type: NodePort
+        authsvc.service.nodePorts.http: 30082

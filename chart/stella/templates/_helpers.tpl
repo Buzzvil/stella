@@ -29,6 +29,16 @@ app.kubernetes.io/component: {{ .Values.booksvc.name | quote }}
 {{ include "stella.common.matchLabels" . }}
 {{- end -}}
 
+{{- define "stella.authsvc.labels" -}}
+{{ include "stella.authsvc.matchLabels" . }}
+{{ include "stella.common.metaLabels" . }}
+{{- end -}}
+
+{{- define "stella.authsvc.matchLabels" -}}
+app.kubernetes.io/component: {{ .Values.authsvc.name | quote }}
+{{ include "stella.common.matchLabels" . }}
+{{- end -}}
+
 {{- define "stella.gatewaysvc.labels" -}}
 {{ include "stella.gatewaysvc.matchLabels" . }}
 {{ include "stella.common.metaLabels" . }}
@@ -70,6 +80,23 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name .Values.booksvc.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.booksvc.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a fully qualified authsvc name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "stella.authsvc.fullname" -}}
+{{- if .Values.authsvc.fullnameOverride -}}
+{{- .Values.authsvc.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Values.authsvc.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-%s" .Release.Name $name .Values.authsvc.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
