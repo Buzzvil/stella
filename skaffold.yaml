@@ -16,11 +16,13 @@ deploy:
       #- some-values.yaml
       values: {}
       #recreatePods will pass --recreate-pods to helm upgrade
-      #recreatePods: true
+      recreatePods: true
       #overrides builds an override values.yaml file to run with the helm deploy
       #overrides:
       # some:
       #   key: someValue
       #setValues get appended to the helm deploy with --set.
-      # setValues:
-      #   image.repository: asia.gcr.io/devops-229509/stella
+      setValues:
+        gatewaysvc.service.type: NodePort
+        gatewaysvc.service.nodePorts.http: 30080
+        gatewaysvc.service.nodePorts.web: 30081

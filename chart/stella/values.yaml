@@ -8,7 +8,7 @@ gatewaysvc:
   name: gatewaysvc
 
   image:
-    repository: asia.gcr.io/devops-229509/stella/gatewaysvc
+    repository: traefik
     tag: latest
     pullPolicy: IfNotPresent
 
@@ -17,7 +17,7 @@ gatewaysvc:
 
   service:
     type: ClusterIP
-    port: 8080
+    nodePorts: {}
 
   ingress:
     enabled: false
@@ -97,7 +97,3 @@ booksvc:
   tolerations: []
 
   affinity: {}
-
-
-ingress:
-  enabled: false

@@ -7,10 +7,19 @@ metadata:
 spec:
   type: {{ .Values.gatewaysvc.service.type }}
   ports:
-    - port: {{ .Values.gatewaysvc.service.port }}
+    - port: 80
       targetPort: http
       protocol: TCP
       name: http
+      {{- if (and (eq .Values.gatewaysvc.service.type "NodePort") (not (empty .Values.gatewaysvc.service.nodePorts.http)))}}
+      nodePort: {{ .Values.gatewaysvc.service.nodePorts.http }}
+      {{- end }}
+    - port: 8080
+      targetPort: web
+      protocol: TCP
+      name: web
+      {{- if (and (eq .Values.gatewaysvc.service.type "NodePort") (not (empty .Values.gatewaysvc.service.nodePorts.web)))}}
+      nodePort: {{ .Values.gatewaysvc.service.nodePorts.web }}
+      {{- end }}
   selector:
-    app.kubernetes.io/name: {{ include "stella.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "stella.gatewaysvc.matchLabels" . | nindent 4 }}

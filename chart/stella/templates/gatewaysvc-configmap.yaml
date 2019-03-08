@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "stella.gatewaysvc.fullname" . }}
+  labels:
+    {{- include "stella.gatewaysvc.labels" . | nindent 4 }}
+data:
+  traefik.toml: |
+    defaultEntryPoints = ["http"]
+
+    [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+
+    [api]
+
+    [file]
+
+    [backends]
+      [backends.booksvc]
+        [backends.booksvc.servers.server1]
+        url = "h2c://{{ include "stella.booksvc.fullname" . }}:{{ .Values.booksvc.service.port }}"
+
+    [frontends]
+      [frontends.booksvc]
+      backend = "booksvc"
+        [frontends.booksvc.routes.test1]
+        rule = "PathPrefix:/proto.BookService"

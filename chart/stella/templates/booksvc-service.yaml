@@ -5,12 +5,11 @@ metadata:
   labels:
     {{- include "stella.booksvc.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.booksvc.service.type }}
   ports:
     - port: {{ .Values.booksvc.service.port }}
       targetPort: grpc
       protocol: TCP
       name: grpc
   selector:
-    app.kubernetes.io/name: {{ include "stella.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "stella.booksvc.matchLabels" . | nindent 4 }}
+  clusterIP: None
