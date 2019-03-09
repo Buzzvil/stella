@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/rand"
+	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"time"
 
+	_ "github.com/lib/pq"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/slack"
 )
@@ -25,13 +27,13 @@ var slackOauthConfig = &oauth2.Config{
 
 const slackIdentityAPI = "https://slack.com/api/users.identity?token="
 
-func oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
+func (*server) oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
 	oauthState := generateStateOauthCookie(w)
 	u := slackOauthConfig.AuthCodeURL(oauthState)
 	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
 }
 
-func oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
+func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 	oauthState, _ := r.Cookie("oauthstate")
 
 	if r.FormValue("state") != oauthState.Value {
@@ -39,14 +41,61 @@ func oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	identityResp, err := getUserDataFromSlack(r.FormValue("code"))
+	resp, err := getUserDataFromSlack(r.FormValue("code"))
 	if err != nil {
 		log.Println(err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	fmt.Fprintf(w, "UserInfo: %+v\n", identityResp)
+	u, err := s.GetUserBySlackUserID(resp.User.ID)
+	if err != nil {
+		log.Println(err)
+	}
+	if u == nil {
+		u = &user{
+			Name:        resp.User.Name,
+			SlackUserID: resp.User.ID,
+			SlackTeamID: resp.Team.ID,
+			Image:       resp.User.Image,
+		}
+		err = s.CreateUser(u)
+		if err != nil {
+			log.Printf("failed to create user: %s", err)
+		}
+	}
+	fmt.Fprintf(w, "User: %+v\n", u)
+}
+
+type user struct {
+	ID          int64
+	Name        string
+	SlackUserID string
+	SlackTeamID string
+	Image       string
+}
+
+func (s *server) GetUserBySlackUserID(id string) (*user, error) {
+	u := &user{}
+	row := s.DB.QueryRow("SELECT id, name, slack_user_id, slack_team_id, image FROM users WHERE slack_user_id = $1", id)
+	err := row.Scan(&u.ID, &u.Name, &u.SlackUserID, &u.SlackTeamID, &u.Image)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("failed to fetch user: %s", err)
+	}
+	return u, nil
+}
+
+func (s *server) CreateUser(u *user) error {
+	q := `
+		INSERT INTO users (name, slack_user_id, slack_team_id, image)
+		VALUES ($1, $2, $3, $4)`
+	if err := s.DB.QueryRow(q, u.Name, u.SlackUserID, u.SlackTeamID, u.Image).Scan(&u.ID); err != nil {
+		return fmt.Errorf("failed to create user: %s", err)
+	}
+	return nil
 }
 
 func generateStateOauthCookie(w http.ResponseWriter) string {
@@ -94,29 +143,47 @@ func getUserDataFromSlack(code string) (*slackIdentityResp, error) {
 	return resp, nil
 }
 
-func verify(w http.ResponseWriter, r *http.Request) {
+func (*server) verify(w http.ResponseWriter, r *http.Request) {
 	log.Println("verifying request")
 	w.Header().Set("X-Forwarded-User", "Liam Hwang")
 	w.WriteHeader(http.StatusOK)
 }
 
-func health(w http.ResponseWriter, r *http.Request) {
+func (*server) health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func main() {
-	ctx := context.Background()
+type server struct {
+	*sql.DB
+}
+
+func NewServer(db *sql.DB) *server {
+	return &server{db}
+}
+
+func (s *server) Run(ctx context.Context) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/auth/slack/login", oauthSlackLogin)
-	mux.HandleFunc("/auth/slack/callback", oauthSlackCallback)
-	mux.HandleFunc("/auth/verify", verify)
-	mux.HandleFunc("/health", health)
+	mux.HandleFunc("/auth/slack/login", s.oauthSlackLogin)
+	mux.HandleFunc("/auth/slack/callback", s.oauthSlackCallback)
+	mux.HandleFunc("/auth/verify", s.verify)
+	mux.HandleFunc("/health", s.health)
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	return http.ListenAndServe(":8080", mux)
+}
+
+func main() {
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalf("Failed to open database: %v", err)
+	}
+
+	s := NewServer(db)
+
+	ctx := context.Background()
+	if err := s.Run(ctx); err != nil {
 		log.Println(err)
 	}
 	return
