@@ -16,7 +16,7 @@ import (
 )
 
 var slackOauthConfig = &oauth2.Config{
-	RedirectURL:  "http://localhost:30082/auth/slack/callback",
+	RedirectURL:  "http://localhost:30080/auth/slack/callback",
 	ClientID:     os.Getenv("SLACK_OAUTH_CLIENT_ID"),
 	ClientSecret: os.Getenv("SLACK_OAUTH_CLIENT_SECRET"),
 	Scopes:       []string{"identity.basic", "identity.avatar"},
@@ -94,6 +94,12 @@ func getUserDataFromSlack(code string) (*slackIdentityResp, error) {
 	return resp, nil
 }
 
+func verify(w http.ResponseWriter, r *http.Request) {
+	log.Println("verifying request")
+	w.Header().Set("X-Forwarded-User", "Liam Hwang")
+	w.WriteHeader(http.StatusOK)
+}
+
 func health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
@@ -107,6 +113,7 @@ func main() {
 
 	mux.HandleFunc("/auth/slack/login", oauthSlackLogin)
 	mux.HandleFunc("/auth/slack/callback", oauthSlackCallback)
+	mux.HandleFunc("/auth/verify", verify)
 	mux.HandleFunc("/health", health)
 
 	if err := http.ListenAndServe(":8080", mux); err != nil {

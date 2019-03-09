@@ -12,6 +12,10 @@ data:
       [entryPoints.http]
       address = ":80"
 
+      [entryPoints.http.auth.forward]
+      address = "http://{{ include "stella.authsvc.fullname" . }}:{{ .Values.authsvc.service.port }}/auth/verify"
+      authResponseHeaders = ["X-Forwarded-User"]
+
     [api]
 
     [file]
@@ -21,8 +25,17 @@ data:
         [backends.booksvc.servers.server1]
         url = "h2c://{{ include "stella.booksvc.fullname" . }}:{{ .Values.booksvc.service.port }}"
 
+      [backends.authsvc]
+        [backends.authsvc.servers.server1]
+        url = "http://{{ include "stella.authsvc.fullname" . }}:{{ .Values.authsvc.service.port }}"
+
     [frontends]
       [frontends.booksvc]
       backend = "booksvc"
         [frontends.booksvc.routes.test1]
         rule = "PathPrefix:/proto.BookService"
+
+      [frontends.authsvc]
+      backend = "authsvc"
+        [frontends.authsvc.routes.test1]
+        rule = "PathPrefix:/auth"
