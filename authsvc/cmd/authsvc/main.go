@@ -10,7 +10,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 
 	_ "github.com/lib/pq"
 	"golang.org/x/oauth2"
@@ -26,6 +30,13 @@ var slackOauthConfig = &oauth2.Config{
 }
 
 const slackIdentityAPI = "https://slack.com/api/users.identity?token="
+
+var jwtSigningKey = []byte("test stella signing key")
+
+type authClaims struct {
+	UserID int64 `json:"user_id"`
+	jwt.StandardClaims
+}
 
 func (*server) oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
 	oauthState := generateStateOauthCookie(w)
@@ -62,9 +73,25 @@ func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 		err = s.CreateUser(u)
 		if err != nil {
 			log.Printf("failed to create user: %s", err)
+			fmt.Fprintf(w, "failed to create user")
+			return
 		}
 	}
-	fmt.Fprintf(w, "User: %+v\n", u)
+
+	claims := authClaims{
+		u.ID,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+			Issuer:    "authsvc",
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	ss, err := token.SignedString(jwtSigningKey)
+	if err != nil {
+		log.Printf("failed to sign jwt token: %s", err)
+	}
+
+	fmt.Fprintf(w, "%s", ss)
 }
 
 type user struct {
@@ -91,7 +118,8 @@ func (s *server) GetUserBySlackUserID(id string) (*user, error) {
 func (s *server) CreateUser(u *user) error {
 	q := `
 		INSERT INTO users (name, slack_user_id, slack_team_id, image)
-		VALUES ($1, $2, $3, $4)`
+		VALUES ($1, $2, $3, $4)
+		RETURNING id`
 	if err := s.DB.QueryRow(q, u.Name, u.SlackUserID, u.SlackTeamID, u.Image).Scan(&u.ID); err != nil {
 		return fmt.Errorf("failed to create user: %s", err)
 	}
@@ -144,9 +172,27 @@ func getUserDataFromSlack(code string) (*slackIdentityResp, error) {
 }
 
 func (*server) verify(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Authorization") == "" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 	log.Println("verifying request")
-	w.Header().Set("X-Forwarded-User", "Liam Hwang")
-	w.WriteHeader(http.StatusOK)
+	s := strings.Split(r.Header.Get("Authorization"), " ")[1]
+	token, err := jwt.ParseWithClaims(s, &authClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtSigningKey, nil
+	})
+	if err != nil {
+		log.Printf("failed to parse jwt token: %s", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	if claims, ok := token.Claims.(*authClaims); ok && token.Valid {
+		log.Printf("Verified UserID: %d", claims.UserID)
+		w.Header().Set("X-Forwarded-User", strconv.FormatInt(claims.UserID, 10))
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+	}
 }
 
 func (*server) health(w http.ResponseWriter, r *http.Request) {
@@ -157,7 +203,7 @@ type server struct {
 	*sql.DB
 }
 
-func NewServer(db *sql.DB) *server {
+func newServer(db *sql.DB) *server {
 	return &server{db}
 }
 
@@ -180,7 +226,7 @@ func main() {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	s := NewServer(db)
+	s := newServer(db)
 
 	ctx := context.Background()
 	if err := s.Run(ctx); err != nil {
