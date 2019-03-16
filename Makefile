@@ -1,6 +1,6 @@
 .PHONY: proto
 
-SERVICES=booksvc rentalsvc
+SERVICES=booksvc rentalsvc ratingsvc
 
 proto:
 	for s in $(SERVICES); do \
