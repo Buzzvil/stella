@@ -19,7 +19,7 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 	return &pb.ListBooksResponse{
 		Books: []*pb.Book{
 			&pb.Book{
-				Name: "Harry Potter",
+				Name: r.GetName(),
 				Id:   1,
 			},
 		},
