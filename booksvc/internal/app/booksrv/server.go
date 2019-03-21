@@ -3,11 +3,13 @@ package booksrv
 import (
 	"context"
 
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
 )
 
 // Server is interface for grpc server
 type server struct {
+	u book.Usecase
 }
 
 // NewServer initializes server
