@@ -19,10 +19,7 @@ message Book {
 }
 
 message ListBooksRequest {
-  string name = 1;
-  string author = 2;
-  string publisher = 3;
-  string isbn = 4;
+  string filter = 1;
 }
 
 message ListBooksResponse {
