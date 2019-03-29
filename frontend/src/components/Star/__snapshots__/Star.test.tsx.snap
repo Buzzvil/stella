@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`displays with empty image when value is .5 1`] = `
+<img
+  className="sc-bdVaJa kCvZfg"
+  src="Star-half.svg"
+/>
+`;
+
+exports[`displays with empty image when value is 0 1`] = `
+<img
+  className="sc-bdVaJa kCvZfg"
+  src="Star-empty.svg"
+/>
+`;
+
+exports[`displays with empty image when value is 1 1`] = `
+<img
+  className="sc-bdVaJa kCvZfg"
+  src="Star-filled.svg"
+/>
+`;
