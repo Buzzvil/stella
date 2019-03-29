@@ -10,7 +10,7 @@ interface StarProps {
 }
 
 const StarImg = Styled.img`
-    height: 1em;
+  height: 1em;
 `;
 
 const Star: React.SFC<StarProps> = ({ value }) => {
