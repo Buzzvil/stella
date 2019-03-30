@@ -4,13 +4,19 @@ import renderer from "react-test-renderer";
 import Star from "./Star";
 
 it("displays with empty image when value is 0", () => {
-  expect(renderer.create(<Star value={0} />)).toMatchSnapshot();
+  const instance = renderer.create(<Star value={0} />).root;
+  const element = instance.findByType("img");
+  expect(element.props.src).toEqual("Star-empty.svg");
 });
 
-it("displays with empty image when value is .5", () => {
-  expect(renderer.create(<Star value={0.5} />)).toMatchSnapshot();
+it("displays with half filled image when value is .5", () => {
+  const instance = renderer.create(<Star value={0.5} />).root;
+  const element = instance.findByType("img");
+  expect(element.props.src).toEqual("Star-half.svg");
 });
 
-it("displays with empty image when value is 1", () => {
-  expect(renderer.create(<Star value={0.5} />)).toMatchSnapshot();
+it("displays with filled image when value is 1", () => {
+  const instance = renderer.create(<Star value={1} />).root;
+  const element = instance.findByType("img");
+  expect(element.props.src).toEqual("Star-filled.svg");
 });
