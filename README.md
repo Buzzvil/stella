@@ -11,6 +11,11 @@
   ```bash
   npm install -g protoc-gen-grpc-web
   ```
+- Install & run for each service `Dep`
+  ```bash
+  brew install dep
+  dep ensure
+  ```
 
 ## Getting Started
 
