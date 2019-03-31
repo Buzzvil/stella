@@ -14,30 +14,52 @@ type server struct {
 
 // NewServer initializes server
 func NewServer() pb.BookServiceServer {
-	return &server{}
+	u := book.NewUsecase(nil)
+	return &server{u: u}
 }
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
-	return &pb.ListBooksResponse{
-		Books: []*pb.Book{
-			&pb.Book{
-				Name: r.GetName(),
-				Id:   1,
-			},
-		},
-	}, nil
+	books, err := s.u.ListBooks(r.Filter)
+	if err != nil {
+		return nil, err
+	}
+	bookList := []*pb.Book{}
+	for _, book := range books {
+		bookList = append(bookList, &pb.Book{
+			Id:        book.ID,
+			Name:      book.Name,
+			Publisher: book.Publisher,
+			Isbn:      book.Isbn,
+			Authors:   book.Authors,
+		})
+	}
+	return &pb.ListBooksResponse{Books: bookList}, nil
 }
 
 func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {
+	book, err := s.u.GetBook(r.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	return &pb.Book{
-		Name: "Harry Potter",
-		Id:   1,
+		Name:      book.Name,
+		Id:        book.ID,
+		Isbn:      book.Isbn,
+		Authors:   book.Authors,
+		Publisher: book.Publisher,
+		Content:   book.Content,
 	}, nil
 }
 
 func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Book, error) {
+	b, nil := s.u.CreateBook(r.Name, r.Isbn, r.Authors, r.Publisher, r.Content)
 	return &pb.Book{
-		Name: "Harry Potter",
-		Id:   1,
+		Name:      b.Name,
+		Id:        b.ID,
+		Isbn:      b.Isbn,
+		Authors:   b.Authors,
+		Publisher: b.Publisher,
+		Content:   b.Content,
 	}, nil
 }
