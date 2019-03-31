@@ -1,12 +1,8 @@
 package book
 
-import (
-	"errors"
-)
-
 type Usecase interface {
-	GetBook(id int64) (Book, error)
-	CreateBook(name string, isbn string, authors []string, publisher string, content string) error
+	GetBook(id int64) (*Book, error)
+	CreateBook(name string, isbn string, authors []string, publisher string, content string) (*Book, error)
 	ListBooks(filter string) ([]Book, error)
 }
 
@@ -22,16 +18,12 @@ func NewUsecase(repo Repo) Usecase {
 }
 
 // GetBook returns book with book id.
-func (u *usecase) GetBook(id int64) (Book, error) {
+func (u *usecase) GetBook(id int64) (*Book, error) {
 	return u.repo.GetByID(id)
 }
 
 // CreateBook creates book into repository.
-func (u *usecase) CreateBook(name string, isbn string, authorNames []string, publisher string, content string) error {
-	if _, err := u.repo.GetByISBN(isbn); err == nil {
-		return errors.New("This book is already registered")
-	}
-
+func (u *usecase) CreateBook(name string, isbn string, authorNames []string, publisher string, content string) (*Book, error) {
 	b := Book{
 		Name:      name,
 		Isbn:      isbn,
@@ -40,12 +32,14 @@ func (u *usecase) CreateBook(name string, isbn string, authorNames []string, pub
 		Content:   content,
 	}
 
-	if err := u.repo.Create(b); err != nil {
-		return err
+	book, err := u.repo.Create(b)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return book, nil
 }
 
+// TODO: define what is filter
 func (u *usecase) ListBooks(filter string) ([]Book, error) {
 	books, err := u.repo.GetByFilter(filter)
 	if err == nil {
