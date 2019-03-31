@@ -4,7 +4,8 @@ import Fab, { FabProps } from "@material-ui/core/Fab";
 const style = {
   paddingLeft: "2.14em",
   paddingRight: "2.14em",
-  height: "2.571em"
+  height: "2.571em",
+  boxShadow: "none"
 };
 
 const RoundButton: React.SFC<FabProps> = ({ ...props }) => (
