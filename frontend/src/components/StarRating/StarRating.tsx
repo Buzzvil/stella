@@ -14,7 +14,7 @@ const StarRating: React.SFC<StarRatingProps> = ({
   value,
   count = 5,
   min = 0,
-  max = count,
+  max = count
 }) => {
   const normalizedValue =
     (Math.max(min, Math.min(max, value)) - min) / (max - min);

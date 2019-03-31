@@ -29,7 +29,8 @@ it("renders star values of [1, 1, 0.5, 0, 0, 0] for value of 2.5 and count 6", (
 });
 
 it("renders star values of [1, 1, 1, 0, 0, 0] for value of 2.5, count 6, and max 5", () => {
-  const instance = renderer.create(<StarRating value={2.5} count={6} max={5} />).root;
+  const instance = renderer.create(<StarRating value={2.5} count={6} max={5} />)
+    .root;
   const stars = instance.findAllByType(Star);
   expect(stars.map(star => star.props.value)).toEqual([1, 1, 1, 0, 0, 0]);
 });
