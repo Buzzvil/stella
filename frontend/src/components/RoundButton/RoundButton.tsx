@@ -8,8 +8,8 @@ const style = {
   boxShadow: "none"
 };
 
-const RoundButton: React.SFC<FabProps> = ({ ...props }) => (
-  <Fab variant="extended" color="primary" style={style} {...props} />
+const RoundButton: React.SFC<FabProps> = ({ style: propsStyle = {}, ...props }) => (
+  <Fab variant="extended" color="primary" style={{...style, ...propsStyle}} {...props} />
 );
 
 export default RoundButton;
