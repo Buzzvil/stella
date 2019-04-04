@@ -28,16 +28,18 @@ func TestGetBook(t *testing.T) {
 func TestCreateBook(t *testing.T) {
 	id := int64(100)
 	isbn := "0011"
-	book := Book{Name: "book", ID: id, Isbn: isbn}
+	name := "book name"
+	bookEntity := Book{Name: name, Isbn: isbn}
+	book := Book{Name: name, ID: id, Isbn: isbn}
 
 	mockRepo := new(mockRepo)
 	mockRepo.On("Create", mock.Anything).Return(&book, nil).Once()
 
 	u := NewUsecase(mockRepo)
-	b, err := u.CreateBook("name", "isbn", []string{"authors"}, "publisher", "content")
+	b, err := u.CreateBook(bookEntity)
 
 	mockRepo.AssertExpectations(t)
 	require.Nil(t, err)
-	assert.NotEqual(t, 0, b.ID)
+	assert.Equal(t, id, b.ID)
 	assert.Equal(t, isbn, b.Isbn)
 }

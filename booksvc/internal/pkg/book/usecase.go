@@ -2,7 +2,7 @@ package book
 
 type Usecase interface {
 	GetBook(id int64) (*Book, error)
-	CreateBook(name string, isbn string, authors []string, publisher string, content string) (*Book, error)
+	CreateBook(book Book) (*Book, error)
 	ListBooks(filter string) ([]Book, error)
 }
 
@@ -23,20 +23,12 @@ func (u *usecase) GetBook(id int64) (*Book, error) {
 }
 
 // CreateBook creates book into repository.
-func (u *usecase) CreateBook(name string, isbn string, authorNames []string, publisher string, content string) (*Book, error) {
-	b := Book{
-		Name:      name,
-		Isbn:      isbn,
-		Authors:   authorNames,
-		Publisher: publisher,
-		Content:   content,
-	}
-
-	book, err := u.repo.Create(b)
+func (u *usecase) CreateBook(book Book) (*Book, error) {
+	b, err := u.repo.Create(book)
 	if err != nil {
 		return nil, err
 	}
-	return book, nil
+	return b, nil
 }
 
 // TODO: define what is filter
