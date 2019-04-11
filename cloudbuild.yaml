@@ -1,0 +1,43 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      docker build \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/authsvc:latest \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/authsvc:$BRANCH_NAME-$SHORT_SHA \
+        authsvc
+
+      docker build \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/booksvc:latest \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/booksvc:$BRANCH_NAME-$SHORT_SHA \
+        booksvc
+
+      docker build \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/frontend:latest \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/frontend:$BRANCH_NAME-$SHORT_SHA \
+        frontend
+
+      docker build \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/ratingsvc:latest \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/ratingsvc:$BRANCH_NAME-$SHORT_SHA \
+        ratingsvc
+
+      docker build \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/rentalsvc:latest \
+        --tag asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/rentalsvc:$BRANCH_NAME-$SHORT_SHA \
+        rentalsvc
+
+images:
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/authsvc:latest'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/authsvc:$BRANCH_NAME-$SHORT_SHA'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/booksvc:latest'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/booksvc:$BRANCH_NAME-$SHORT_SHA'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/frontend:latest'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/frontend:$BRANCH_NAME-$SHORT_SHA'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/ratingsvc:latest'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/ratingsvc:$BRANCH_NAME-$SHORT_SHA'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/rentalsvc:latest'
+  - 'asia.gcr.io/$PROJECT_ID/${_SVC_BASENAME}/rentalsvc:$BRANCH_NAME-$SHORT_SHA'
+timeout: '1200s'
