@@ -12,7 +12,9 @@ service RatingService {
 
 message Rating {
   int64 entity_id = 1;
-  float rating = 2;
+  float score = 2;
+  int64 user_id = 3;
+  string comment = 4;
 }
 
 message GetRatingRequest {
@@ -22,7 +24,7 @@ message GetRatingRequest {
 message UpsertRatingRequest {
   int64 entity_id = 1;
   int64 user_id = 2;
-  int64 rating = 3;
+  int64 score = 3;
   string comment = 4;
 }
 
