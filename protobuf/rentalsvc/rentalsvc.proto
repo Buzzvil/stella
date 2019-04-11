@@ -6,10 +6,10 @@ import "google/protobuf/wrappers.proto";
 
 service RentalService {
   rpc GetResourceStatus(GetResourceStatusRequest) returns (ResourceStatus) {}
-  rpc RentResource(RentResourceRequest) returns (google.protobuf.BoolValue) {}
-  rpc ReturnResource(ReturnResourceRequest) returns (google.protobuf.BoolValue) {}
-  rpc ReserveResource(ReserveResourceRequest) returns (google.protobuf.BoolValue) {}
-  rpc CancelResource(CancelResourceRequest) returns (google.protobuf.BoolValue) {}
+  rpc RentResource(RentResourceRequest) returns (google.protobuf.Empty) {}
+  rpc ReturnResource(ReturnResourceRequest) returns (google.protobuf.Empty) {}
+  rpc ReserveResource(ReserveResourceRequest) returns (google.protobuf.Empty) {}
+  rpc CancelResource(CancelResourceRequest) returns (google.protobuf.Empty) {}
 }
 
 message ResourceStatus {
