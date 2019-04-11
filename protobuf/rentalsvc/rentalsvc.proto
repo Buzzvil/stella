@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package stella.rental.v1;
 
-import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
 
 service RentalService {
   rpc GetResourceStatus(GetResourceStatusRequest) returns (ResourceStatus) {}
