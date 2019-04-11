@@ -9,6 +9,8 @@ import (
 	proto "github.com/golang/protobuf/proto"
 	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -307,6 +309,20 @@ type RatingServiceServer interface {
 	GetRating(context.Context, *GetRatingRequest) (*Rating, error)
 	UpsertRating(context.Context, *UpsertRatingRequest) (*Rating, error)
 	Delete(context.Context, *DeleteRequest) (*empty.Empty, error)
+}
+
+// UnimplementedRatingServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedRatingServiceServer struct {
+}
+
+func (*UnimplementedRatingServiceServer) GetRating(ctx context.Context, req *GetRatingRequest) (*Rating, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRating not implemented")
+}
+func (*UnimplementedRatingServiceServer) UpsertRating(ctx context.Context, req *UpsertRatingRequest) (*Rating, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertRating not implemented")
+}
+func (*UnimplementedRatingServiceServer) Delete(ctx context.Context, req *DeleteRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 
 func RegisterRatingServiceServer(s *grpc.Server, srv RatingServiceServer) {

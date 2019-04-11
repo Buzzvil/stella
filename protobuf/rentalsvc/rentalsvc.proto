@@ -2,12 +2,14 @@ syntax = "proto3";
 
 package stella.rental.v1;
 
+import "google/protobuf/wrappers.proto";
+
 service RentalService {
   rpc GetResourceStatus(GetResourceStatusRequest) returns (ResourceStatus) {}
-  rpc RentResource(RentResourceRequest) returns (ResourceStatus) {}
-  rpc ReturnResource(ReturnResourceRequest) returns (ResourceStatus) {}
-  rpc ReserveResource(ReserveResourceRequest) returns (ResourceStatus) {}
-  rpc CancelResource(CancelResourceRequest) returns (ResourceStatus) {}
+  rpc RentResource(RentResourceRequest) returns (google.protobuf.BoolValue) {}
+  rpc ReturnResource(ReturnResourceRequest) returns (google.protobuf.BoolValue) {}
+  rpc ReserveResource(ReserveResourceRequest) returns (google.protobuf.BoolValue) {}
+  rpc CancelResource(CancelResourceRequest) returns (google.protobuf.BoolValue) {}
 }
 
 message ResourceStatus {
