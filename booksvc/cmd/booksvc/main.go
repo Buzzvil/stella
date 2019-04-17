@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 
-	"github.com/Buzzvil/stella/booksvc/internal/pkg/booksrv"
+	"github.com/Buzzvil/stella/booksvc/internal/app/booksrv"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"

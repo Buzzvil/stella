@@ -1,5 +1,22 @@
 # Stella Project
 
+## Prerequisites
+
+- Install `protoc-gen-go`
+
+  ```bash
+  go get -u github.com/golang/protobuf/protoc-gen-go
+  ```
+- Install `protoc-gen-grpc-web`
+  ```bash
+  npm install -g protoc-gen-grpc-web
+  ```
+- Install & run for each service `Dep`
+  ```bash
+  brew install dep
+  dep ensure
+  ```
+
 ## Getting Started
 
 Install golang
