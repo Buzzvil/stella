@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "booksvc.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "booksvc.labels" . | nindent 4 }}
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - {{ .Values.global.gateway.name }}
+  http:
+  # - match:
+  #   - uri:
+  #       prefix: "/stella.book.v1.BookService"
+  - route:
+    - destination:
+        host: {{ include "booksvc.fullname" . }}
+        port:
+          number: {{ .Values.service.port }}

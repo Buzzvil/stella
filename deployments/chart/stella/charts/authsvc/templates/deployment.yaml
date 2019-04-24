@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "stella.authsvc.fullname" . }}
+  name: {{ include "authsvc.fullname" . }}
   labels:
-    {{- include "stella.authsvc.labels" . | nindent 4 }}
+    {{- include "authsvc.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.authsvc.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "stella.authsvc.matchLabels" . | nindent 6 }}
+      {{- include "authsvc.matchLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "stella.authsvc.labels" . | nindent 8 }}
+        {{- include "authsvc.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.authsvc.image.repository }}:{{ .Values.authsvc.image.tag }}"
-          imagePullPolicy: {{ .Values.authsvc.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
@@ -38,16 +38,16 @@ spec:
             - name: DATABASE_URL
               value: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
           resources:
-            {{- toYaml .Values.authsvc.resources | nindent 12 }}
-      {{- with .Values.authsvc.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.authsvc.affinity }}
+    {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.authsvc.tolerations }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
