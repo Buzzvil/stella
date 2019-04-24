@@ -11,10 +11,7 @@ spec:
   gateways:
   - {{ .Values.global.gateway.name }}
   http:
-  - match:
-    - uri:
-        prefix: "/xxx"
-    route:
+  - route:
     - destination:
         host: {{ include "frontend.fullname" . }}
         port:

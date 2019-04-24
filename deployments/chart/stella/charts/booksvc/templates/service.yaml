@@ -10,6 +10,6 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: grpc
       protocol: TCP
-      name: grpc-web-port
+      name: grpc
   selector:
     {{- include "booksvc.matchLabels" . | nindent 4 }}
