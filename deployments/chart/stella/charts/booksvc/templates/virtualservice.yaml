@@ -11,10 +11,10 @@ spec:
   gateways:
   - {{ .Values.global.gateway.name }}
   http:
-  # - match:
-  #   - uri:
-  #       prefix: "/stella.book.v1.BookService"
-  - route:
+  - match:
+    - uri:
+        prefix: "/stella.book.v1.BookService/"
+    route:
     - destination:
         host: {{ include "booksvc.fullname" . }}
         port:
