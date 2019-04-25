@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", ":9002")
+	listener, err := net.Listen("tcp", ":9000")
 
 	if err != nil {
 		grpclog.Fatalf("failed to listen: %v", err)
