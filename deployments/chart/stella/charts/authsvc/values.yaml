@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: asia.gcr.io/devops-229509/stella/authsvc
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+  nodePorts: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -9,44 +9,19 @@ Expand the name of the chart.
 {{/*
 Create unified labels for stella components
 */}}
-{{- define "stella.common.matchLabels" -}}
+{{- define "stella.matchLabels" -}}
 app.kubernetes.io/name: {{ include "stella.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "stella.common.metaLabels" -}}
+{{- define "stella.metaLabels" -}}
 helm.sh/chart: {{ include "stella.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
-{{- define "stella.booksvc.labels" -}}
-{{ include "stella.booksvc.matchLabels" . }}
-{{ include "stella.common.metaLabels" . }}
-{{- end -}}
-
-{{- define "stella.booksvc.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.booksvc.name | quote }}
-{{ include "stella.common.matchLabels" . }}
-{{- end -}}
-
-{{- define "stella.authsvc.labels" -}}
-{{ include "stella.authsvc.matchLabels" . }}
-{{ include "stella.common.metaLabels" . }}
-{{- end -}}
-
-{{- define "stella.authsvc.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.authsvc.name | quote }}
-{{ include "stella.common.matchLabels" . }}
-{{- end -}}
-
-{{- define "stella.gatewaysvc.labels" -}}
-{{ include "stella.gatewaysvc.matchLabels" . }}
-{{ include "stella.common.metaLabels" . }}
-{{- end -}}
-
-{{- define "stella.gatewaysvc.matchLabels" -}}
-app.kubernetes.io/component: {{ .Values.gatewaysvc.name | quote }}
-{{ include "stella.common.matchLabels" . }}
+{{- define "stella.labels" -}}
+{{ include "stella.matchLabels" . }}
+{{ include "stella.metaLabels" . }}
 {{- end -}}
 
 {{/*
@@ -97,6 +72,23 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name .Values.authsvc.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.authsvc.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a fully qualified frontend name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "stella.frontend.fullname" -}}
+{{- if .Values.frontend.fullnameOverride -}}
+{{- .Values.frontend.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Values.frontend.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-%s" .Release.Name $name .Values.frontend.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

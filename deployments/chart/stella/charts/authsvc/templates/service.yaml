@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "authsvc.fullname" . }}
+  labels:
+    {{- include "authsvc.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.http)))}}
+      nodePort: {{ .Values.service.nodePorts.http }}
+      {{- end }}
+  selector:
+    {{- include "authsvc.matchLabels" . | nindent 4 }}

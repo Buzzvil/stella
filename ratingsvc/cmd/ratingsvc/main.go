@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Buzzvil/stella/ratingsvc/internal/app/ratingsrv"
 	"net"
+
+	"github.com/Buzzvil/stella/ratingsvc/internal/app/ratingsrv"
 
 	pb "github.com/Buzzvil/stella/ratingsvc/pkg/proto"
 	"google.golang.org/grpc"

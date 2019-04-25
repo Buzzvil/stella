@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "github.com/Buzzvil/stella/ratingsvc/pkg/proto"
+	"github.com/golang/protobuf/ptypes/empty"
 )
 
 // Server is interface for grpc server
@@ -18,7 +19,7 @@ func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rat
 	panic("implement me")
 }
 
-func (s *server) Delete(context.Context, *pb.DeleteRequest) (*interface{}, error) {
+func (s *server) Delete(context.Context, *pb.DeleteRequest) (*empty.Empty, error) {
 	panic("implement me")
 }
 

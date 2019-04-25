@@ -58,7 +58,8 @@ func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Boo
 		Isbn:      r.Isbn,
 		Authors:   r.Authors,
 		Publisher: r.Publisher,
-		Content:   r.Content}
+		Content:   r.Content,
+	}
 	b, nil := s.u.CreateBook(book)
 	return &pb.Book{
 		Name:      b.Name,
