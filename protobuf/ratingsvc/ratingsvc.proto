@@ -5,8 +5,10 @@ package stella.rating.v1;
 import "google/protobuf/empty.proto";
 
 service RatingService {
-  rpc GetRating(GetRatingRequest) returns (Rating) {}
-  rpc ListRatings(ListRatingRequests) returns (ListRatingsResponse) {}
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse) {}
+  rpc GetUserRating(GetUserRatingRequest) returns (Rating) {}
+  rpc ListRatings(GetRatingRequest) returns (ListRatingsResponse) {}
+  rpc ListUserRatings(GetUserRatingRequest) returns (ListRatingsResponse) {}
   rpc UpsertRating(UpsertRatingRequest) returns (Rating) {}
   rpc Delete(DeleteRequest) returns (google.protobuf.Empty) {}
 }
@@ -20,11 +22,15 @@ message Rating {
 
 message GetRatingRequest {
   int64 entity_id = 1;
-  int64 user_id = 2;
 }
 
-message ListRatingRequests {
-  int64 entity_id = 1;
+message GetRatingResponse {
+  float score = 1;
+  int32 count = 2;
+}
+
+message GetUserRatingRequest {
+  int64 user_id = 1;
 }
 
 message ListRatingsResponse {
