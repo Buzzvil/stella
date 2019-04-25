@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "stella.booksvc.fullname" . }}
+  name: {{ include "booksvc.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "stella.booksvc.labels" . | nindent 4 }}
+    {{- include "booksvc.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.booksvc.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "stella.booksvc.matchLabels" . | nindent 6 }}
+      {{- include "booksvc.matchLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "stella.booksvc.labels" . | nindent 8 }}
+        {{- include "booksvc.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.booksvc.image.repository }}:{{ .Values.booksvc.image.tag }}"
-          imagePullPolicy: {{ .Values.booksvc.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: grpc
               containerPort: 9000
@@ -29,16 +30,16 @@ spec:
             tcpSocket:
               port: 9000
           resources:
-            {{- toYaml .Values.booksvc.resources | nindent 12 }}
-      {{- with .Values.booksvc.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.booksvc.affinity }}
+    {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.booksvc.tolerations }}
+    {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

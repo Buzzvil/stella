@@ -1,6 +1,6 @@
 FROM golang:1.11-alpine
 
-COPY . /go/src/github.com/Buzzvil/stella
+COPY . /go/src/github.com/Buzzvil/stella/ratingsvc
 
 RUN go build -o /go/bin/ratingsvc github.com/Buzzvil/stella/ratingsvc/cmd/ratingsvc
 
