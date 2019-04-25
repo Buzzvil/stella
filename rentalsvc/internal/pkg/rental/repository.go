@@ -1,5 +1,8 @@
 package rental
 
 type Repository interface {
-	Get(entityID int64)
+	GetResourceStatus(entityID int64) (ResourceStatus, error)
+	SetResourceStatus(status ResourceStatus) error
+	AddReserveRequest(request ReserveRequest) error
+	RemoveReserveRequest(request ReserveRequest) error
 }

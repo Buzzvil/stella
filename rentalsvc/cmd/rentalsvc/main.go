@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Buzzvil/stella/rentalsvc/internal/app/rentalsrv"
 	"net"
+
+	"github.com/Buzzvil/stella/rentalsvc/internal/app/rentalsrv"
 
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
 	"google.golang.org/grpc"
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", ":9000")
+	listener, err := net.Listen("tcp", ":9002")
 
 	if err != nil {
 		grpclog.Fatalf("failed to listen: %v", err)
