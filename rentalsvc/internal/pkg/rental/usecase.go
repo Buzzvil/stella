@@ -27,8 +27,8 @@ func (u *usecase) RentResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if status.Availablility == Unavailable {
-		return UnavailableError{}
+	if status.Availablility != Available {
+		return InvalidOperationError{}
 	}
 	status.Availablility = Unavailable
 	status.Holder = &userID

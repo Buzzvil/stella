@@ -32,47 +32,29 @@ func (a *app) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequ
 }
 
 func (a *app) RentResource(c context.Context, req *pb.RentResourceRequest) (*empty.Empty, error) {
-	avail, err := a.u.GetResourceAvailability(req.GetEntityId())
-	if err != nil {
-		return nil, err
+	err := a.u.RentResource(req.GetUserId(), req.GetEntityId())
+	switch err.(type) {
+	case rental.InvalidOperationError:
+		err = status.Error(codes.Unavailable, "resource is not available")
 	}
-	if avail != rental.Available {
-		err := status.Error(codes.Unavailable, "resource is not available")
-		return nil, err
-	}
-	err = a.u.RentResource(req.GetUserId(), req.GetEntityId())
 	return nil, err
 }
 
 func (a *app) ReturnResource(c context.Context, req *pb.ReturnResourceRequest) (*empty.Empty, error) {
-	avail, err := a.u.GetResourceAvailability(req.GetEntityId())
-	if err != nil {
-		return nil, err
-	}
-	if avail == rental.Available {
-		err := status.Error(codes.Unavailable, "resource is already available")
-		return nil, err
-	}
-	err = a.u.ReturnResource(req.GetUserId(), req.GetEntityId())
-	return nil, err
+	return nil, a.u.ReturnResource(req.GetUserId(), req.GetEntityId())
 }
 
 func (a *app) ReserveResource(c context.Context, req *pb.ReserveResourceRequest) (*empty.Empty, error) {
-	avail, err := a.u.GetResourceAvailability(req.GetEntityId())
-	if err != nil {
-		return nil, err
+	err := a.u.ReserveResource(req.GetUserId(), req.GetEntityId())
+	switch err.(type) {
+	case rental.InvalidOperationError:
+		err = status.Error(codes.Unavailable, "resource is already available")
 	}
-	if avail == rental.Available {
-		err := status.Error(codes.Unavailable, "resource is already available")
-		return nil, err
-	}
-	err = a.u.ReserveResource(req.GetUserId(), req.GetEntityId())
 	return nil, err
 }
 
 func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (*empty.Empty, error) {
-	err := a.u.CancelResource(req.GetUserId(), req.GetEntityId())
-	return nil, err
+	return nil, a.u.CancelResource(req.GetUserId(), req.GetEntityId())
 }
 
 // New initializes app
