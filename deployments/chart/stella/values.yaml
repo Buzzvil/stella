@@ -12,5 +12,10 @@ frontend:
   enabled: true
 
 global:
+  hosts: []
+  # - library.buzzvil.com
   gateway:
     name: stella
+    tls:
+      enabled: false
+      secretName: stella-certs

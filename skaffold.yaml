@@ -6,13 +6,13 @@ build:
   artifacts:
   - image: asia.gcr.io/devops-229509/stella/booksvc
     context: ./booksvc
-  - image: asia.gcr.io/devops-229509/stella/authsvc
-    context: ./authsvc
+  - image: asia.gcr.io/devops-229509/stella/frontend
+    context: ./frontend
 deploy:
   helm:
     releases:
     - name: stella
-      chartPath: chart/stella
+      chartPath: deployments/chart/stella
       wait: true
       #valuesFiles:
       #- some-values.yaml
@@ -24,9 +24,4 @@ deploy:
       # some:
       #   key: someValue
       #setValues get appended to the helm deploy with --set.
-      setValues:
-        gatewaysvc.service.type: NodePort
-        gatewaysvc.service.nodePorts.http: 30080
-        gatewaysvc.service.nodePorts.web: 30081
-        authsvc.service.type: NodePort
-        authsvc.service.nodePorts.http: 30082
+      # setValues:
