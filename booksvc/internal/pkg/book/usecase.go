@@ -33,9 +33,10 @@ func (u *usecase) CreateBook(book Book) (*Book, error) {
 
 // TODO: define what is filter
 func (u *usecase) ListBooks(filter string) ([]Book, error) {
-	books, err := u.repo.GetByFilter(filter)
-	if err == nil {
-		return books, nil
-	}
-	return nil, err
+	// books, err := u.repo.GetByFilter(filter)
+	// if err == nil {
+	// 	return books, nil
+	// }
+	// return nil, err
+	return []Book{Book{}}, nil
 }

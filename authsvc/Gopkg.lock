@@ -44,19 +44,44 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:64c2b533ffd17023738c534548ab2455d7f519bc15ed4225145425ed2222448b"
+  branch = "master"
+  digest = "1:41a8b3ae20c4103d72769a448f33bae2f13ac3adcc9cef567409a410c2fa3321"
   name = "github.com/golang/protobuf"
   packages = [
+    "jsonpb",
     "proto",
     "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
+    "ptypes/struct",
     "ptypes/timestamp",
   ]
   pruneopts = "UT"
-  revision = "c823c79ea1570fb5ff454033735a8e68575d1d0f"
-  version = "v1.3.0"
+  revision = "e91709a02e0e8ff8b86b7aa913fdc9ae9498e825"
+
+[[projects]]
+  digest = "1:1dd79f72341b3def93efdc8e2832950c11cd591087493c7f466077543bba9a03"
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = [
+    ".",
+    "logging",
+    "logging/logrus",
+    "logging/logrus/ctxlogrus",
+    "tags",
+    "tags/logrus",
+  ]
+  pruneopts = "UT"
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:31e761d97c76151dde79e9d28964a812c46efc5baee4085b86f68f0c654450de"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
 
 [[projects]]
   digest = "1:8ef506fc2bb9ced9b151dafa592d4046063d744c646c1bbe801982ce87e4bc24"
@@ -70,12 +95,20 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:fd54bf7b2ed868354f34178c1d81930250bf978901ad7b0dc649223d79356ae7"
+  digest = "1:53258c295c6d2eb4f69f6008bd7648df4ffaee52ffbf5aae3d5203440d31f669"
   name = "github.com/lyft/protoc-gen-validate"
   packages = ["validate"]
   pruneopts = "UT"
-  revision = "ff6f7a9bc2e5fe006509b9f8c7594c41a953d50f"
-  version = "v0.0.14"
+  revision = "8e6aaf55f4954f1ef9d3ee2e8f5a50e79cc04f8f"
+  version = "v0.0.5"
+
+[[projects]]
+  digest = "1:fd61cf4ae1953d55df708acb6b91492d538f49c305b364a014049914495db426"
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "8bdbc7bcc01dcbb8ec23dc8a28e332258d25251f"
+  version = "v1.4.1"
 
 [[projects]]
   branch = "master"
@@ -209,11 +242,14 @@
     "github.com/envoyproxy/go-control-plane/envoy/api/v2/core",
     "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2",
     "github.com/gogo/googleapis/google/rpc",
+    "github.com/grpc-ecosystem/go-grpc-middleware",
+    "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus",
+    "github.com/grpc-ecosystem/go-grpc-middleware/tags",
     "github.com/lib/pq",
+    "github.com/sirupsen/logrus",
     "golang.org/x/oauth2",
     "golang.org/x/oauth2/slack",
     "google.golang.org/grpc",
-    "google.golang.org/grpc/grpclog",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

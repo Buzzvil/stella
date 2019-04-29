@@ -18,7 +18,6 @@ frontend:
 
 global:
   hosts: []
-  # - library.buzzvil.com
   gateway:
     name: stella
     tls:

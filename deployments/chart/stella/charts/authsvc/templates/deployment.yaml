@@ -18,26 +18,19 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/go/bin/authsvc"]
           ports:
-            - name: http
-              containerPort: 8080
+            - name: grpc
+              containerPort: 9000
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /health
-              port: http
+            tcpSocket:
+              port: 9000
           readinessProbe:
-            httpGet:
-              path: /health
-              port: http
+            tcpSocket:
+              port: 9000
           env:
             - name: DATABASE_URL
-              value: ''
-            - name: SLACK_OAUTH_CLIENT_ID
-              value: ''
-            - name: SLACK_OAUTH_CLIENT_SECRET
-              value: ''
-            - name: WEB_HOST
               value: ''
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

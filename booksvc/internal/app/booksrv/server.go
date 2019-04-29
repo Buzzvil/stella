@@ -2,6 +2,9 @@ package booksrv
 
 import (
 	"context"
+	"log"
+
+	"google.golang.org/grpc/metadata"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
@@ -19,6 +22,8 @@ func NewServer() pb.BookServiceServer {
 }
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
+	md, _ := metadata.FromIncomingContext(c)
+	log.Println("gRPC Metadata: +%v", md)
 	books, err := s.u.ListBooks(r.Filter)
 	if err != nil {
 		return nil, err

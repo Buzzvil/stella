@@ -1,41 +1,22 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-	"fmt"
 	"log"
-	"net/http"
+	"net"
 	"os"
-
-	"github.com/Buzzvil/stella/authsvc/internal/app/webauthsrv"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/grpclog"
 
 	"github.com/Buzzvil/stella/authsvc/internal/app/authsrv"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 
 	ev "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	_ "github.com/lib/pq"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/slack"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
-
-var webHost = os.Getenv("WEB_HOST")
-
-var slackOauthConfig = &oauth2.Config{
-	RedirectURL:  fmt.Sprintf("%s/auth/slack/callback", webHost),
-	ClientID:     os.Getenv("SLACK_OAUTH_CLIENT_ID"),
-	ClientSecret: os.Getenv("SLACK_OAUTH_CLIENT_SECRET"),
-	Scopes:       []string{"identity.basic", "identity.avatar"},
-	Endpoint:     slack.Endpoint,
-}
-
-var jwtSigningKey = []byte("test stella signing key")
-
-func health(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-}
 
 func main() {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -46,27 +27,38 @@ func main() {
 	r := auth.NewPGRepo(db)
 	u := auth.NewUsecase(r)
 	srv := authsrv.New(u)
-	websrv := webauthsrv.New(u, slackOauthConfig)
 
 	if err != nil {
-		grpclog.Fatalf("failed to listen: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
 
-	opts := []grpc.ServerOption{}
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := newGrpcServer()
 
 	ev.RegisterAuthorizationServer(grpcServer, srv)
 
-	mux := http.NewServeMux()
-	mux.Handle("/auth/", http.StripPrefix("/auth", websrv))
-	mux.HandleFunc("/health", health)
-	mux.Handle("/", grpcServer)
+	lis, err := net.Listen("tcp", ":9000")
+	if err != nil {
+		log.Fatalf("Failed to listen: %v", err)
+	}
 
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-	if err := http.ListenAndServe(":8080", mux); err != nil {
-		log.Println(err)
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve: %v", err)
 	}
 	return
+}
+
+func newGrpcServer() *grpc.Server {
+	logrusEntry := logrus.NewEntry(logrus.StandardLogger())
+	opts := []grpc_logrus.Option{}
+	grpc_logrus.ReplaceGrpcLogger(logrusEntry)
+	return grpc.NewServer(
+		grpc_middleware.WithUnaryServerChain(
+			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			grpc_logrus.UnaryServerInterceptor(logrusEntry, opts...),
+		),
+		grpc_middleware.WithStreamServerChain(
+			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			grpc_logrus.StreamServerInterceptor(logrusEntry, opts...),
+		),
+	)
 }
