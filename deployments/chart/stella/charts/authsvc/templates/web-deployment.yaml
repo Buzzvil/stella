@@ -18,6 +18,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/go/bin/webauthsvc"]
           ports:
             - name: http
               containerPort: 8080
