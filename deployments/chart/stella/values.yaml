@@ -4,6 +4,11 @@
 
 authsvc:
   enabled: true
+  env:
+    DATABASE_URL: postgres://PG_HOST:5432/stella
+    SLACK_OAUTH_CLIENT_ID: ''
+    SLACK_OAUTH_CLIENT_SECRET: ''
+    WEB_HOST: 'http://localhost'
 
 booksvc:
   enabled: true

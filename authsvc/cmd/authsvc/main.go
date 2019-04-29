@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,8 +21,10 @@ import (
 	"golang.org/x/oauth2/slack"
 )
 
+var webHost = os.Getenv("WEB_HOST")
+
 var slackOauthConfig = &oauth2.Config{
-	RedirectURL:  "http://localhost:30080/auth/slack/callback",
+	RedirectURL:  fmt.Sprintf("%s/auth/slack/callback", webHost),
 	ClientID:     os.Getenv("SLACK_OAUTH_CLIENT_ID"),
 	ClientSecret: os.Getenv("SLACK_OAUTH_CLIENT_SECRET"),
 	Scopes:       []string{"identity.basic", "identity.avatar"},

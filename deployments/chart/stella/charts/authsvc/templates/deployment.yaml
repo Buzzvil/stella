@@ -31,12 +31,14 @@ spec:
               path: /health
               port: http
           env:
-            - name: SLACK_OAUTH_CLIENT_ID
-              value: '2921750999.570187289585'
-            - name: SLACK_OAUTH_CLIENT_SECRET
-              value: 'c5d10427a5b04db27628f71a57b5686a'
             - name: DATABASE_URL
-              value: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
+              value: ''
+            - name: SLACK_OAUTH_CLIENT_ID
+              value: ''
+            - name: SLACK_OAUTH_CLIENT_SECRET
+              value: ''
+            - name: WEB_HOST
+              value: ''
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
