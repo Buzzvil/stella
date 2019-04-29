@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: {{ include "authsvc.fullname" . }}-ext-authz
+  namespace: {{ .Release.Namespace }}
 spec:
   workloadLabels:
     app.kubernetes.io/instance: {{ .Release.Name }}
