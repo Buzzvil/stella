@@ -31,7 +31,7 @@ spec:
               port: 9000
           env:
             - name: DATABASE_URL
-              value: ''
+              value: {{ .Values.env.DATABASE_URL }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
