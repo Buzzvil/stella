@@ -27,4 +27,3 @@ env: {}
   # DATABASE_URL: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
   # SLACK_OAUTH_CLIENT_ID: ''
   # SLACK_OAUTH_CLIENT_SECRET: ''
-  # WEB_HOST: 'https://library.buzzvil.com'

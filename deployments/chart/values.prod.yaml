@@ -11,7 +11,6 @@ authsvc:
     DATABASE_URL: postgres://postgres:Tvdn46sPaawLM(w@stella-db-postgresql:5432/authsvc?sslmode=disable
     SLACK_OAUTH_CLIENT_ID: '2921750999.570187289585'
     SLACK_OAUTH_CLIENT_SECRET: 'c5d10427a5b04db27628f71a57b5686a'
-    WEB_HOST: 'https://library.buzzvil.com'
 
 booksvc:
   resources:
@@ -32,6 +31,7 @@ frontend:
       memory: 64Mi
 
 global:
+  webHost: library.buzzvil.com
   hosts:
   - library.buzzvil.com
   gateway:
