@@ -13,7 +13,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: "/stella.book.v1.BookService/"
+        prefix: "/stella.book.v1.BookService"
     route:
     - destination:
         host: {{ include "booksvc.fullname" . }}
@@ -40,6 +40,7 @@ spec:
         - x-accept-response-streaming
         - x-user-agent
         - x-grpc-web
+        - authorization
       maxAge: 86400s
       exposeHeaders:
         - grpc-status

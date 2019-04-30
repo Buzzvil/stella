@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "authsvc.fullname" . }}-ext-authz
+  namespace: {{ .Release.Namespace }}
+spec:
+  workloadLabels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    stella/authz: 'enabled'
+  filters:
+  - listenerMatch:
+      listenerType: SIDECAR_INBOUND
+      listenerProtocol: HTTP
+    filterType: HTTP
+    filterName: envoy.ext_authz
+    filterConfig:
+      grpc_service:
+        google_grpc:
+          stat_prefix: ext_authz
+          target_uri: {{ include "authsvc.fullname" . }}:{{ .Values.service.grpc.port }}
+        timeout: 10s
