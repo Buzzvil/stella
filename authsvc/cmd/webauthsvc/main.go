@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
+
 	"github.com/Buzzvil/stella/authsvc/internal/app/webauthsrv"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 
@@ -38,7 +40,7 @@ func main() {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	r := auth.NewPGRepo(db)
+	r := pgrepo.NewPGRepo(db)
 	u := auth.NewUsecase(r)
 	c := webauthsrv.Config{
 		WebHost:          webHost,
