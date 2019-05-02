@@ -6,7 +6,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import StandardTheme from "../../theme/StandardTheme";
 import Flag from "./Flag";
 
-storiesOf("Component|Flag", module)
+storiesOf("Components|Flag", module)
   .add("on", () => (
     <MuiThemeProvider theme={StandardTheme}>
       <Flag active={true} />

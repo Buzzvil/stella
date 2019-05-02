@@ -6,7 +6,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import StandardTheme from "../../theme/StandardTheme";
 import FilterChip from "./FilterChip";
 
-storiesOf("Component|FilterChip", module).add("Default", () => (
+storiesOf("Components|FilterChip", module).add("Default", () => (
     <MuiThemeProvider theme={StandardTheme}>
         <FilterChip label="English" onDelete={() => {console.log("Bye~")}} />
     </MuiThemeProvider>

@@ -9,7 +9,7 @@ const SizedContainer = Styled.div`
   font-size: 30px;
 `;
 
-storiesOf("Organism|StarRating", module)
+storiesOf("Organisms|StarRating", module)
   .add("Rating: 0", () => <StarRating value={0} />)
   .add("Rating: 2.5", () => <StarRating value={2.5} />)
   .add("Rating: 5", () => <StarRating value={5} />)

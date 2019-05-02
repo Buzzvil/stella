@@ -6,7 +6,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import StandardTheme from "../../theme/StandardTheme";
 import IndexPage from "./IndexPage";
 
-storiesOf("Page|IndexPage", module)
+storiesOf("Pages|IndexPage", module)
   .add("default", () => (
     <MuiThemeProvider theme={StandardTheme}>
       <IndexPage />
