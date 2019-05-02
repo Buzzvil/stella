@@ -1,9 +1,5 @@
-import React from "react";
+import React, { ReactNode} from "react";
 import styled from "styled-components";
-
-interface NoticeProps {
-    label: string;
-}
 
 const NoticeBox = styled.div`
     display: inline-block;
@@ -17,8 +13,8 @@ const NoticeBox = styled.div`
     font-size: 1em;
 `;
 
-const Notice: React.SFC<NoticeProps> = ({ label }) => {
-    return <NoticeBox>{label}</NoticeBox>
+const Notice: React.SFC = ({ children }) => {
+    return <NoticeBox>{children}</NoticeBox>
 }
 
 export default Notice;
