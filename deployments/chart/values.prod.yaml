@@ -28,9 +28,9 @@ frontend:
       memory: 64Mi
 
 global:
-  webHost: library.buzzvil.com
+  webHost: billy.buzzvil.com
   hosts:
-  - library.buzzvil.com
+  - billy.buzzvil.com
   gateway:
     name: stella
     tls:
