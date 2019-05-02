@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Buzzvil/stella/rentalsvc/internal/app/rentalsrv"
 	"net"
+
+	"github.com/Buzzvil/stella/rentalsvc/internal/app/rentalsrv"
 
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
 	"google.golang.org/grpc"
