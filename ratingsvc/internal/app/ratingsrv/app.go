@@ -11,7 +11,19 @@ import (
 type server struct {
 }
 
-func (s *server) GetRating(context.Context, *pb.GetRatingRequest) (*pb.Rating, error) {
+func (s *server) GetRating(context.Context, *pb.GetRatingRequest) (*pb.GetRatingResponse, error) {
+	panic("implement me")
+}
+
+func (s *server) GetUserRating(context.Context, *pb.GetUserRatingRequest) (*pb.Rating, error) {
+	panic("implement me")
+}
+
+func (s *server) ListRatings(context.Context, *pb.GetRatingRequest) (*pb.ListRatingsResponse, error) {
+	panic("implement me")
+}
+
+func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb.ListRatingsResponse, error) {
 	panic("implement me")
 }
 
