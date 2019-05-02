@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "stella.fullname" . }}-grpc-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "stella.labels" . | nindent 4 }}
+spec:
+  workloadLabels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  filters:
+  - listenerMatch:
+      listenerType: SIDECAR_INBOUND
+      listenerProtocol: HTTP
+    filterName: envoy.grpc_web
+    filterType: HTTP
+    filterConfig: {}
+    insertPosition:
+      index: FIRST

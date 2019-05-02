@@ -7,11 +7,14 @@ metadata:
     {{- include "frontend.labels" . | nindent 4 }}
 spec:
   hosts:
-  - "*"
+  - '*'
   gateways:
   - {{ .Values.global.gateway.name }}
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /
+    route:
     - destination:
         host: {{ include "frontend.fullname" . }}
         port:

@@ -10,8 +10,10 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 8080
-  nodePorts: {}
+  http:
+    port: 8080
+  grpc:
+    port: 9000
 
 resources: {}
 
@@ -20,3 +22,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env: {}
+  # DATABASE_URL: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
+  # SLACK_OAUTH_CLIENT_ID: ''
+  # SLACK_OAUTH_CLIENT_SECRET: ''

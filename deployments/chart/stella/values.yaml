@@ -4,6 +4,10 @@
 
 authsvc:
   enabled: true
+  env:
+    DATABASE_URL: postgres://PG_HOST:5432/stella
+    SLACK_OAUTH_CLIENT_ID: ''
+    SLACK_OAUTH_CLIENT_SECRET: ''
 
 booksvc:
   enabled: true
@@ -12,5 +16,10 @@ frontend:
   enabled: true
 
 global:
+  webHost: http://localhost
+  hosts: []
   gateway:
     name: stella
+    tls:
+      enabled: false
+      secretName: stella-certs
