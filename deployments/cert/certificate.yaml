@@ -9,10 +9,10 @@ spec:
     - dns01:
         provider: route53
       domains:
-      - 'library.buzzvil.com'
-  commonName: 'library.buzzvil.com'
+      - 'billy.buzzvil.com'
+  commonName: 'billy.buzzvil.com'
   dnsNames:
-  - 'library.buzzvil.com'
+  - 'billy.buzzvil.com'
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt

@@ -7,7 +7,7 @@ import './App.css';
 
 const theme = createMuiTheme({});
 
-const bookService = new BookServiceClient('https://library.buzzvil.com', null, null);
+const bookService = new BookServiceClient('https://billy.buzzvil.com', null, null);
 
 function App() {
   const [query, setQuery] = useState("");
