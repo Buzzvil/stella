@@ -9,11 +9,11 @@ const SizedContainer = Styled.div`
   font-size: 30px;
 `;
 
-storiesOf("Star", module)
-  .add("Empty", () => <Star value={0} />)
-  .add("Half", () => <Star value={0.5} />)
-  .add("Filled", () => <Star value={1} />)
-  .add("Resized", () => (
+storiesOf("Component|Star", module)
+  .add("Component|Empty", () => <Star value={0} />)
+  .add("Component|Half", () => <Star value={0.5} />)
+  .add("Component|Filled", () => <Star value={1} />)
+  .add("Component|Resized", () => (
     <SizedContainer>
       <Star value={1} />
     </SizedContainer>

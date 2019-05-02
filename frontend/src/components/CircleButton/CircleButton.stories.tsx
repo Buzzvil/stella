@@ -7,7 +7,7 @@ import StandardTheme from "../../theme/StandardTheme";
 import CircleButton from "./CircleButton";
 import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
 
-storiesOf("CircleButton", module).add("Primary", () => (
+storiesOf("Component|CircleButton", module).add("Primary", () => (
   <MuiThemeProvider theme={StandardTheme}>
     <CircleButton>
        <FaceProfileIcon />
