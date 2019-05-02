@@ -19,7 +19,7 @@ func (u *usecase) GetResourceAvailability(entityID int64) (ResourceAvailability,
 	if err != nil {
 		return Unavailable, err
 	}
-	return status.Availablility, nil
+	return status.Availability, nil
 }
 
 func (u *usecase) RentResource(userID int64, entityID int64) error {
@@ -27,15 +27,15 @@ func (u *usecase) RentResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if status.Availablility != Available {
+	if status.Availability != Available {
 		return InvalidOperationError{}
 	}
-	status.Availablility = Unavailable
-	status.Holder = &userID
+	status.Availability = Unavailable
+	status.HolderID = &userID
 	if err != nil {
 		return err
 	}
-	return u.repo.SetResourceStatus(status)
+	return u.repo.SetResourceStatus(*status)
 }
 
 func (u *usecase) ReturnResource(userID int64, entityID int64) error {
@@ -43,12 +43,12 @@ func (u *usecase) ReturnResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if status.Availablility == Available {
+	if status.Availability == Available {
 		return nil
 	}
-	status.Availablility = Available
-	status.Holder = nil
-	return u.repo.SetResourceStatus(status)
+	status.Availability = Available
+	status.HolderID = nil
+	return u.repo.SetResourceStatus(*status)
 }
 
 func (u *usecase) ReserveResource(userID int64, entityID int64) error {
@@ -56,7 +56,7 @@ func (u *usecase) ReserveResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if status.Availablility == Available {
+	if status.Availability == Available {
 		return InvalidOperationError{}
 	}
 
@@ -71,4 +71,8 @@ func (u *usecase) CancelResource(userID int64, entityID int64) error {
 		EntityID: entityID,
 		UserID:   userID,
 	})
+}
+
+func NewUsecase(repo Repository) Usecase {
+	return &usecase{repo}
 }

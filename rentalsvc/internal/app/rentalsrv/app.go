@@ -3,16 +3,21 @@ package rentalsrv
 import (
 	"context"
 
+	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental/repo"
+	"github.com/jinzhu/gorm"
+
 	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental"
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
 	"github.com/golang/protobuf/ptypes/empty"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // Mysql 사용할 경우 _ "github.com/jinzhu/gorm/dialects/mysql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // Server is interface for grpc app
 type app struct {
-	u rental.Usecase
+	db *gorm.DB
+	u  rental.Usecase
 }
 
 func (a *app) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequest) (*pb.ResourceStatus, error) {
@@ -59,5 +64,11 @@ func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (
 
 // New initializes app
 func New() pb.RentalServiceServer {
-	return &app{}
+	db, err := gorm.Open("sqlite3", "db/api.db")
+	if err != nil {
+		panic(err)
+	}
+	rentalRepo := repo.New(db)
+	rentalUsecase := rental.NewUsecase(rentalRepo)
+	return &app{db, rentalUsecase}
 }

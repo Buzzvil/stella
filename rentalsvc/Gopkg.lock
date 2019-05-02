@@ -17,9 +17,12 @@
   version = "v1.3.1"
 
 [[projects]]
-  digest = "1:999a99d21fbc91dc128d1774e49669d0e9a7cded86669001e96aa993124f7a89"
+  digest = "1:a6bf43c8f0bfbd9636a3e14eb8c34bb53931fcf0682e7dcad8d1e1b6103807f8"
   name = "github.com/jinzhu/gorm"
-  packages = ["."]
+  packages = [
+    ".",
+    "dialects/sqlite",
+  ]
   pruneopts = "UT"
   revision = "e3987fd4b803c16497aa4dfd2e75db7a6a061a4e"
   version = "v1.9.4"
@@ -31,6 +34,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "04140366298a54a039076d798123ffa108fff46c"
+
+[[projects]]
+  digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"
+  name = "github.com/mattn/go-sqlite3"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c7c4067b79cc51e6dfdcef5c702e74b1e0fa7c75"
+  version = "v1.10.0"
 
 [[projects]]
   branch = "master"
@@ -133,6 +144,7 @@
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/ptypes/empty",
     "github.com/jinzhu/gorm",
+    "github.com/jinzhu/gorm/dialects/sqlite",
     "google.golang.org/grpc",
     "google.golang.org/grpc/codes",
     "google.golang.org/grpc/grpclog",

@@ -3,14 +3,14 @@ package rental
 type ResourceAvailability int
 
 const (
-	Available ResourceAvailability = iota
-	Unavailable
+	Unavailable ResourceAvailability = iota
+	Available
 )
 
 type ResourceStatus struct {
-	EntityID      int64
-	Availablility ResourceAvailability
-	Holder        *int64
+	EntityID     int64
+	Availability ResourceAvailability
+	HolderID     *int64
 }
 
 type ReserveRequest struct {
