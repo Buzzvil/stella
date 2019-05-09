@@ -6,11 +6,10 @@ import (
 
 	"database/sql"
 
-	"google.golang.org/grpc/metadata"
-
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/bookrepo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
+	"google.golang.org/grpc/metadata"
 )
 
 // Server is interface for grpc server
@@ -27,7 +26,7 @@ func NewServer(db *sql.DB) pb.BookServiceServer {
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
 	md, _ := metadata.FromIncomingContext(c)
-	log.Println("gRPC Metadata: +%v", md)
+	log.Printf("gRPC Metadata: %v\n", md)
 	books, err := s.u.ListBooks(r.Filter)
 	if err != nil {
 		return nil, err

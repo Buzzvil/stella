@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
+	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
