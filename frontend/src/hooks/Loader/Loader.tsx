@@ -1,12 +1,24 @@
 import { useState } from "react";
 
-export default () => {
+interface LoadFn {
+    (promise: Promise<any>): [boolean, () => void]
+}
+
+const loader = (): [boolean, LoadFn] => {
     const [loading, setLoading] = useState(false);
-    const load = (p: Promise<any>) => {
+    let cancelled = false;
+    const cancel = () => {
+        cancelled = true;
+    };
+    const load: LoadFn = (promise) => {
         setLoading(true);
-        p.finally(() => {
+        promise.finally(() => {
+            if (cancelled) return;
             setLoading(false);
         });
+        return [cancelled, cancel];
     }
-    return {loading, load};
+    return [loading, load];
 }
+
+export default loader;

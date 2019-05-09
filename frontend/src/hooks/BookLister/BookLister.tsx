@@ -3,14 +3,18 @@ import { Book } from "proto/booksvc_pb";
 import Loader from "../Loader/Loader";
 
 export default (query: any) => {
-  const {loading: loadingBooks, load} = Loader();
+  const [loadingBooks, load] = Loader();
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
   const listBooks = (q: any) => () => {
-      load(Promise.resolve()
-        .then(() => new Promise(r => setTimeout(r, 400)))
-        .then(() => setBooks([]))
+      const [cancelled, cancel] = load(Promise.resolve()
+        .then(() => new Promise(r => setTimeout(r, 1000)))
+        .then(() => {
+          if (cancelled) return;
+          setBooks([])
+        })
       );
+      return cancel;
   };
 
   useEffect(listBooks(query), [query]);
