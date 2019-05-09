@@ -42,11 +42,11 @@ func (a *app) RentResource(c context.Context, req *pb.RentResourceRequest) (*emp
 	case rental.InvalidOperationError:
 		err = status.Error(codes.Unavailable, "resource is not available")
 	}
-	return nil, err
+	return &empty.Empty{}, err
 }
 
 func (a *app) ReturnResource(c context.Context, req *pb.ReturnResourceRequest) (*empty.Empty, error) {
-	return nil, a.u.ReturnResource(req.GetUserId(), req.GetEntityId())
+	return &empty.Empty{}, a.u.ReturnResource(req.GetUserId(), req.GetEntityId())
 }
 
 func (a *app) ReserveResource(c context.Context, req *pb.ReserveResourceRequest) (*empty.Empty, error) {
@@ -55,16 +55,16 @@ func (a *app) ReserveResource(c context.Context, req *pb.ReserveResourceRequest)
 	case rental.InvalidOperationError:
 		err = status.Error(codes.Unavailable, "resource is already available")
 	}
-	return nil, err
+	return &empty.Empty{}, err
 }
 
 func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (*empty.Empty, error) {
-	return nil, a.u.CancelResource(req.GetUserId(), req.GetEntityId())
+	return &empty.Empty{}, a.u.CancelResource(req.GetUserId(), req.GetEntityId())
 }
 
 // New initializes app
 func New() pb.RentalServiceServer {
-	db, err := gorm.Open("sqlite3", "db/api.db")
+	db, err := gorm.Open("sqlite3", "db/rental.db")
 	if err != nil {
 		panic(err)
 	}
