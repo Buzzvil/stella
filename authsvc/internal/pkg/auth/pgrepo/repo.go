@@ -11,8 +11,8 @@ type repo struct {
 	*sql.DB
 }
 
-// NewPGRepo returns a new pgrepo instance.
-func NewPGRepo(db *sql.DB) auth.Repo {
+// New returns a new pgrepo instance.
+func New(db *sql.DB) auth.Repo {
 	return &repo{db}
 }
 

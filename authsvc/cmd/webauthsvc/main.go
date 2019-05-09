@@ -40,7 +40,7 @@ func main() {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	r := pgrepo.NewPGRepo(db)
+	r := pgrepo.New(db)
 	u := auth.NewUsecase(r)
 	c := webauthsrv.Config{
 		WebHost:          webHost,
