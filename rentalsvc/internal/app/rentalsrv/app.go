@@ -33,6 +33,11 @@ func (a *app) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequ
 		rs.Availability = pb.ResourceStatus_UNAVAILABLE
 	}
 	//TODO: rs.GetReservedUserIds
+	userIDs, err := a.u.GetResourceWaitingList(req.GetEntityId())
+	if err != nil {
+		return nil, err
+	}
+	rs.ReservedUserIds = userIDs
 	return &rs, nil
 }
 
@@ -68,6 +73,7 @@ func New() pb.RentalServiceServer {
 	if err != nil {
 		panic(err)
 	}
+	db.LogMode(true)
 	rentalRepo := repo.New(db)
 	rentalUsecase := rental.NewUsecase(rentalRepo)
 	return &app{db, rentalUsecase}

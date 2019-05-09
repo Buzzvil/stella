@@ -2,6 +2,7 @@ package rental
 
 type Usecase interface {
 	GetResourceAvailability(entityID int64) (ResourceAvailability, error)
+	GetResourceWaitingList(entityID int64) ([]int64, error)
 	RentResource(userID int64, entityID int64) error
 	ReturnResource(userID int64, entityID int64) error
 	ReserveResource(userID int64, entityID int64) error
@@ -20,6 +21,18 @@ func (u *usecase) GetResourceAvailability(entityID int64) (ResourceAvailability,
 		return Unavailable, err
 	}
 	return status.Availability, nil
+}
+
+func (u *usecase) GetResourceWaitingList(entityID int64) ([]int64, error) {
+	rrs, err := u.repo.ListReserveRequestByEntityID(entityID)
+	if err != nil {
+		return nil, err
+	}
+	waitings := make([]int64, 0)
+	for _, rr := range rrs {
+		waitings = append(waitings, rr.UserID)
+	}
+	return waitings, nil
 }
 
 func (u *usecase) RentResource(userID int64, entityID int64) error {
