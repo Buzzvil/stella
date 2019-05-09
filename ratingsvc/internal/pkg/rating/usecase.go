@@ -44,7 +44,7 @@ func (u *usecase) GetUserRating(entityID int32, userID int32) (*Rating, error) {
 	return rating, nil
 }
 
-func (u *usecase) ListRatings(entityID int32) ([]Rating, error){
+func (u *usecase) ListRatings(entityID int32) ([]Rating, error) {
 	list, err := u.repo.ListByID(entityID)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (u *usecase) ListRatings(entityID int32) ([]Rating, error){
 }
 
 func (u *usecase) ListUserRatings(entityID int32, userID int32) ([]Rating, error) {
-	list, err := u.repo.ListByUserID(entityID. userID)
+	list, err := u.repo.ListByUserID(entityID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +70,6 @@ func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
 	return r, nil
 }
 
-func (u *usecase) DeleteRating(entityID int32, userID int32) (nil, error) {
+func (u *usecase) DeleteRating(entityID int32, userID int32) error {
 	return u.repo.Delete(entityID, userID)
 }
