@@ -4,9 +4,12 @@ import (
 	"context"
 	"log"
 
+	"database/sql"
+
 	"google.golang.org/grpc/metadata"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/bookrepo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
 )
 
@@ -16,8 +19,9 @@ type server struct {
 }
 
 // NewServer initializes server
-func NewServer() pb.BookServiceServer {
-	u := book.NewUsecase(nil)
+func NewServer(db *sql.DB) pb.BookServiceServer {
+	repo := bookrepo.New(db)
+	u := book.NewUsecase(repo)
 	return &server{u: u}
 }
 
@@ -65,7 +69,10 @@ func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Boo
 		Publisher: r.Publisher,
 		Content:   r.Content,
 	}
-	b, nil := s.u.CreateBook(book)
+	b, err := s.u.CreateBook(book)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.Book{
 		Name:      b.Name,
 		Id:        b.ID,
