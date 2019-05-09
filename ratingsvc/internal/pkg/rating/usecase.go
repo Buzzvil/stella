@@ -20,19 +20,12 @@ func NewUsecase(repo Repository) Usecase {
 }
 
 func (u *usecase) GetRating(entityID int32) (*AggregatedRating, error) {
-	score, err := u.repo.GetAverageByID(entityID)
-	if err != nil {
-		return nil, err
-	}
-	count, err := u.repo.GetCountByID(entityID)
+	aggregatedRating, err := u.repo.GetAggregatedRatingByID(entityID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &AggregatedRating{
-		Score: score,
-		Count: count,
-	}, nil
+	return aggregatedRating, nil
 }
 
 func (u *usecase) GetUserRating(entityID int32, userID int32) (*Rating, error) {
