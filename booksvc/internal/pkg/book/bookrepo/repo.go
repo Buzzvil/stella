@@ -2,9 +2,9 @@ package bookrepo
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
-	_ "github.com/lib/pq"
 )
 
 type repo struct {
@@ -30,7 +30,7 @@ func (r *repo) GetByID(id int64) (*book.Book, error) {
 		return &b, nil
 	}
 
-	return nil, nil
+	return nil, errors.New("Not found")
 }
 
 func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
@@ -55,7 +55,7 @@ func (r *repo) GetByFilter(filter string) ([]book.Book, error) {
 }
 
 func (r *repo) Create(book book.Book) (*book.Book, error) {
-	res, err := r.db.Exec("INSERT INTO books (id, isbn, name, publisher, content) VALUES ($1, $2, $3, $4, $5)", book.ID, book.Isbn, book.Name, book.Publisher, book.Content)
+	res, err := r.db.Exec("INSERT INTO books (isbn, name, publisher, content) VALUES ($1, $2, $3, $4)", book.Isbn, book.Name, book.Publisher, book.Content)
 	if err != nil {
 		return nil, err
 	}

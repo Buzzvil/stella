@@ -101,7 +101,7 @@ func (s *repoTestSuite) TestCreate() {
 	var rb book.Book
 	rows.Scan(&rb.ID, &rb.Name, &rb.Isbn)
 
-	assert.Equal(b.ID, rb.ID)
+	assert.NotNil(rb.ID)
 	assert.Equal(b.Isbn, rb.Isbn)
 	assert.Equal(b.Name, rb.Name)
 }
