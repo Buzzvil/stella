@@ -2,6 +2,8 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import RoundButton from "../RoundButton/RoundButton";
 import styled from "styled-components";
+import CircleButton from "../CircleButton/CircleButton";
+import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
 
 const Header = styled.div`
   display: flex;
@@ -40,7 +42,9 @@ const IndexPage: React.SFC<IndexPageProps> = () => {
     <div>
       <Header>
         <RoundButton>REQUEST A BOOK</RoundButton>
-        <RoundButton>Test</RoundButton>
+        <CircleButton>
+          <FaceProfileIcon />
+        </CircleButton>
       </Header>
       <SearchContainer>
         <SearchForm

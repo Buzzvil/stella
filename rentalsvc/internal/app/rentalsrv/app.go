@@ -3,31 +3,58 @@ package rentalsrv
 import (
 	"context"
 
+	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental"
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
+	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Server is interface for grpc app
 type app struct {
+	u rental.Usecase
 }
 
-func (*app) GetResourceStatus(context.Context, *pb.GetResourceStatusRequest) (*pb.ResourceStatus, error) {
-	panic("implement me")
+func (a *app) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequest) (*pb.ResourceStatus, error) {
+	avail, err := a.u.GetResourceAvailability(req.GetEntityId())
+	if err != nil {
+		return nil, err
+	}
+	rs := pb.ResourceStatus{EntityId: req.GetEntityId()}
+	switch avail {
+	case rental.Available:
+		rs.Availability = pb.ResourceStatus_AVAILABLE
+	case rental.Unavailable:
+		rs.Availability = pb.ResourceStatus_UNAVAILABLE
+	}
+	//TODO: rs.GetReservedUserIds
+	return &rs, nil
 }
 
-func (*app) RentResource(context.Context, *pb.RentResourceRequest) (*pb.ResourceStatus, error) {
-	panic("implement me")
+func (a *app) RentResource(c context.Context, req *pb.RentResourceRequest) (*empty.Empty, error) {
+	err := a.u.RentResource(req.GetUserId(), req.GetEntityId())
+	switch err.(type) {
+	case rental.InvalidOperationError:
+		err = status.Error(codes.Unavailable, "resource is not available")
+	}
+	return nil, err
 }
 
-func (*app) ReturnResource(context.Context, *pb.ReturnResourceRequest) (*pb.ResourceStatus, error) {
-	panic("implement me")
+func (a *app) ReturnResource(c context.Context, req *pb.ReturnResourceRequest) (*empty.Empty, error) {
+	return nil, a.u.ReturnResource(req.GetUserId(), req.GetEntityId())
 }
 
-func (*app) ReserveResource(context.Context, *pb.ReserveResourceRequest) (*pb.ResourceStatus, error) {
-	panic("implement me")
+func (a *app) ReserveResource(c context.Context, req *pb.ReserveResourceRequest) (*empty.Empty, error) {
+	err := a.u.ReserveResource(req.GetUserId(), req.GetEntityId())
+	switch err.(type) {
+	case rental.InvalidOperationError:
+		err = status.Error(codes.Unavailable, "resource is already available")
+	}
+	return nil, err
 }
 
-func (*app) CancelResource(context.Context, *pb.CancelResourceRequest) (*pb.ResourceStatus, error) {
-	panic("implement me")
+func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (*empty.Empty, error) {
+	return nil, a.u.CancelResource(req.GetUserId(), req.GetEntityId())
 }
 
 // New initializes app

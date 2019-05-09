@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: asia.gcr.io/devops-229509/stella/rentalsvc
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 9000
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

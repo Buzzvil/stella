@@ -1,0 +1,56 @@
+authsvc:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+  env: {}
+
+booksvc:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+frontend:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+ratingsvc:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+rentalsvc:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+global:
+  webHost: billy.buzzvil.com
+  hosts:
+  - billy.buzzvil.com
+  gateway:
+    name: stella
+    tls:
+      enabled: true
+      secretName: stella-certs

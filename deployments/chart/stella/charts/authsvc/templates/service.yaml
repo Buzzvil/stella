@@ -2,17 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "authsvc.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "authsvc.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.grpc.port }}
+      targetPort: grpc
       protocol: TCP
-      name: http
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.nodePorts.http)))}}
-      nodePort: {{ .Values.service.nodePorts.http }}
-      {{- end }}
+      name: grpc
   selector:
     {{- include "authsvc.matchLabels" . | nindent 4 }}

@@ -9,7 +9,7 @@ const SizedContainer = Styled.div`
   font-size: 30px;
 `;
 
-storiesOf("Star", module)
+storiesOf("Components|Star", module)
   .add("Empty", () => <Star value={0} />)
   .add("Half", () => <Star value={0.5} />)
   .add("Filled", () => <Star value={1} />)

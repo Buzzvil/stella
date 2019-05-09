@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "authsvc.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "authsvc.labels" . | nindent 4 }}
 spec:
@@ -18,25 +19,20 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/go/bin/authsvc"]
           ports:
-            - name: http
-              containerPort: 8080
+            - name: grpc
+              containerPort: 9000
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /health
-              port: http
+            tcpSocket:
+              port: 9000
           readinessProbe:
-            httpGet:
-              path: /health
-              port: http
+            tcpSocket:
+              port: 9000
           env:
-            - name: SLACK_OAUTH_CLIENT_ID
-              value: '2921750999.570187289585'
-            - name: SLACK_OAUTH_CLIENT_SECRET
-              value: 'c5d10427a5b04db27628f71a57b5686a'
             - name: DATABASE_URL
-              value: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
+              value: {{ .Values.env.DATABASE_URL }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
