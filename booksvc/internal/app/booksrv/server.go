@@ -26,7 +26,7 @@ func NewServer(db *sql.DB) pb.BookServiceServer {
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
 	md, _ := metadata.FromIncomingContext(c)
-	log.Printf("gRPC Metadata: %v\n", md)
+	log.Printf("gRPC Metadata: +%v\n", md)
 	books, err := s.u.ListBooks(r.Filter)
 	if err != nil {
 		return nil, err
