@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Book } from "proto/booksvc_pb";
 import Loader from "../Loader/Loader";
 
-export default (query = {}): [boolean, Book[]] => {
+export default (query: any): [boolean, Book[]] => {
   const [loading, load] = Loader();
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
