@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { Book } from "proto/booksvc_pb";
 import Loader from "../Loader/Loader";
 
-export default (query: any) => {
-  const [loadingBooks, load] = Loader();
+export default (query = {}): [boolean, Book[]] => {
+  const [loading, load] = Loader();
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
   const listBooks = (q: any) => () => {
       const [cancelled, cancel] = load(Promise.resolve()
         .then(() => new Promise(r => setTimeout(r, 1000)))
         .then(() => {
-          if (cancelled) return;
+          if (cancelled()) return;
           setBooks([])
         })
       );
@@ -18,7 +18,7 @@ export default (query: any) => {
   };
 
   useEffect(listBooks(query), [query]);
-  return {loadingBooks, books};
+  return [loading, books];
 };
 
 // import { BookServiceClient } from 'proto/booksvc_grpc_web_pb';

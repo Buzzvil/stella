@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface LoadFn {
-    (promise: Promise<any>): [boolean, () => void]
+    (promise: Promise<any>): [() => boolean, () => void]
 }
 
 const loader = (): [boolean, LoadFn] => {
@@ -16,7 +16,7 @@ const loader = (): [boolean, LoadFn] => {
             if (cancelled) return;
             setLoading(false);
         });
-        return [cancelled, cancel];
+        return [() => cancelled, cancel];
     }
     return [loading, load];
 }
