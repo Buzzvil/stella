@@ -3,19 +3,14 @@ package webauthsrv
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/slack"
-	"github.com/dgrijalva/jwt-go"
-)
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 
-type authClaims struct {
-	UserID int `json:"user_id"`
-	jwt.StandardClaims
-}
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/slack"
+)
 
 func generateStateOauthCookie(w http.ResponseWriter) string {
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
@@ -39,60 +34,41 @@ func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 	oauthState, _ := r.Cookie("oauthstate")
 
 	if r.FormValue("state") != oauthState.Value {
-		log.Println("invalid oauth slack state")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	resp, err := slack.GetUserDataFromOauthCode(s.slackOauthConfig, r.FormValue("code"))
 	if err != nil {
-		log.Println(err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	u, err := s.Usecase.FindOrCreateUserFromIdentity(resp)
-
-	claims := authClaims{
-		u.ID,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-			Issuer:    "authsvc",
-		},
+	u, err := s.u.FindOrCreateUserFromIdentity(resp)
+	if err != nil {
+		log.Printf("failed to fetch user: %s", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	ss, err := token.SignedString(s.jwtSigningKey)
+
+	ss, err := jwt.SignedUserToken(s.jwtSigningKey, u.ID)
 	if err != nil {
 		log.Printf("failed to sign jwt token: %s", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	}
 
-	fmt.Fprintf(w, "%s", ss)
+	c := http.Cookie{
+		Name:   "auth-token",
+		Value:  ss,
+		Secure: true,
+		Path:   "/",
+	}
+	http.SetCookie(w, &c)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	return
 }
 
 /*
-func (*server) verify(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("Authorization") == "" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-	log.Println("verifying request")
-	s := strings.Split(r.Header.Get("Authorization"), " ")[1]
-	token, err := jwt.ParseWithClaims(s, &authClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return jwtSigningKey, nil
-	})
-	if err != nil {
-		log.Printf("failed to parse jwt token: %s", err)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	if claims, ok := token.Claims.(*authClaims); ok && token.Valid {
-		log.Printf("Verified UserID: %d", claims.UserID)
-		w.Header().Set("X-Forwarded-User", strconv.Itoa(claims.UserID))
-		w.WriteHeader(http.StatusOK)
-	} else {
-		w.WriteHeader(http.StatusUnauthorized)
-	}
-}
-
 func (s *server) userProfile(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.Header.Get("X-Forwarded-User"))
 	if err != nil {

@@ -28,7 +28,7 @@ var slackOauthConfig = &oauth2.Config{
 	Endpoint:     slack.Endpoint,
 }
 
-var jwtSigningKey = []byte("test stella signing key")
+var jwtSigningKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
 
 func health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
