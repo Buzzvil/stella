@@ -11,20 +11,20 @@ type Usecase interface {
 }
 
 type usecase struct {
-	Repo
+	r Repo
 }
 
 // NewUsecase creates new auth service.
 func NewUsecase(repo Repo) Usecase {
-	return &usecase{repo}
+	return &usecase{r: repo}
 }
 
 func (uc *usecase) GetUserByID(id int) (*User, error) {
-	return uc.GetUserByID(id)
+	return uc.r.GetUserByID(id)
 }
 
 func (uc *usecase) FindOrCreateUserFromIdentity(r *slack.IdentityResp) (*User, error) {
-	u, err := uc.Repo.GetUserBySlackUserID(r.User.ID)
+	u, err := uc.r.GetUserBySlackUserID(r.User.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (uc *usecase) FindOrCreateUserFromIdentity(r *slack.IdentityResp) (*User, e
 			SlackTeamID: r.Team.ID,
 			Image:       r.User.Image,
 		}
-		err = uc.Repo.CreateUser(u)
+		err = uc.r.CreateUser(u)
 		if err != nil {
 			return nil, err
 		}
