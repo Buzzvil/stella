@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
 
 	_ "github.com/lib/pq"
@@ -54,6 +55,18 @@ func (s *repoTestSuite) TestGetUserByID() {
 	assert.Equal(as.Image, image)
 }
 
+func (s *repoTestSuite) TestGetUserByIDNoRows() {
+	require := require.New(s.T())
+	assert := assert.New(s.T())
+
+	uid := 100
+
+	r := pgrepo.New(s.db)
+	as, err := r.GetUserByID(uid)
+	require.Nil(err)
+	assert.Nil(as)
+}
+
 func (s *repoTestSuite) TestGetUserBySlackUserID() {
 	require := require.New(s.T())
 	assert := assert.New(s.T())
@@ -75,7 +88,33 @@ func (s *repoTestSuite) TestGetUserBySlackUserID() {
 	assert.Equal(as.Image, image)
 }
 
+func (s *repoTestSuite) TestGetUserBySlackUserIDNowRows() {
+	require := require.New(s.T())
+	assert := assert.New(s.T())
+
+	slack_user_id := "suid"
+
+	r := pgrepo.New(s.db)
+	as, err := r.GetUserBySlackUserID(slack_user_id)
+	require.Nil(err)
+	assert.Nil(as, nil)
+}
+
 func (s *repoTestSuite) TestCreateUser() {
+	require := require.New(s.T())
+	assert := assert.New(s.T())
+
+	u := &auth.User{
+		Name:        "Foo",
+		SlackUserID: "suid",
+		SlackTeamID: "stid",
+		Image:       "img_url",
+	}
+
+	r := pgrepo.New(s.db)
+	err := r.CreateUser(u)
+	require.Nil(err)
+	assert.NotZero(u.ID)
 }
 
 func TestRepoTestSuite(t *testing.T) {
