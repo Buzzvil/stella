@@ -1,15 +1,17 @@
 package webauthsrv
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
+	"golang.org/x/oauth2"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/slack"
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 )
 
 func generateStateOauthCookie(w http.ResponseWriter) string {
@@ -22,6 +24,14 @@ func generateStateOauthCookie(w http.ResponseWriter) string {
 	http.SetCookie(w, &cookie)
 
 	return state
+}
+
+func exchangeTokenFromCode(c *oauth2.Config, code string) (*oauth2.Token, error) {
+	token, err := c.Exchange(context.Background(), code)
+	if err != nil {
+		return nil, fmt.Errorf("code exchange wrong: %s", err.Error())
+	}
+	return token, nil
 }
 
 func (s *server) oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
@@ -37,15 +47,22 @@ func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	resp, err := slack.GetUserDataFromOauthCode(s.slackOauthConfig, r.FormValue("code"))
+	token, err := exchangeTokenFromCode(s.slackOauthConfig, r.FormValue("code"))
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	u, err := s.u.FindOrCreateUserFromIdentity(resp)
+	su, err := s.u.GetSlackUser(token)
 	if err != nil {
 		log.Printf("failed to fetch user: %s", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	u, err := s.u.FindOrCreateUserFromSlackUser(su)
+	if err != nil {
+		log.Printf("failed to store slack user: %s", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}

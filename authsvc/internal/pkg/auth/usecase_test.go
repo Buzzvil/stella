@@ -11,7 +11,8 @@ import (
 
 func TestGetUserByID(t *testing.T) {
 	r := new(auth.MockRepo)
-	u := auth.NewUsecase(r)
+	sr := new(auth.MockSlackRepo)
+	u := auth.NewUsecase(r, sr)
 
 	userID := 1000
 	user := auth.User{

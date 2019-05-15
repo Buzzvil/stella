@@ -8,3 +8,11 @@ type User struct {
 	SlackTeamID string
 	Image       string
 }
+
+// SlackUser represents slack user profile.
+type SlackUser struct {
+	ID     string
+	TeamID string
+	Name   string
+	Image  string
+}

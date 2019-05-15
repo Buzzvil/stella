@@ -1,6 +1,9 @@
 package auth
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+	"golang.org/x/oauth2"
+)
 
 type MockRepo struct {
 	mock.Mock
@@ -22,4 +25,13 @@ func (r *MockRepo) GetUserBySlackUserID(sid string) (*User, error) {
 func (r *MockRepo) CreateUser(u *User) error {
 	args := r.Called(u)
 	return args.Error(1)
+}
+
+type MockSlackRepo struct {
+	mock.Mock
+}
+
+func (r *MockSlackRepo) GetUserData(token *oauth2.Token) (*SlackUser, error) {
+	args := r.Called(token)
+	return args.Get(0).(*SlackUser), args.Error(1)
 }

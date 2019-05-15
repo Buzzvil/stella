@@ -29,7 +29,7 @@ func main() {
 	}
 
 	r := pgrepo.New(db)
-	u := auth.NewUsecase(r)
+	u := auth.NewUsecase(r, nil)
 	c := authsrv.Config{
 		JWTSigningKey: jwtSigningKey,
 		Usecase:       u,

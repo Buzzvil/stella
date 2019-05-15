@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/slackrepo"
+
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
 
 	"github.com/Buzzvil/stella/authsvc/internal/app/webauthsrv"
@@ -41,7 +43,8 @@ func main() {
 	}
 
 	r := pgrepo.New(db)
-	u := auth.NewUsecase(r)
+	sr := slackrepo.New(slackOauthConfig)
+	u := auth.NewUsecase(r, sr)
 	c := webauthsrv.Config{
 		WebHost:          webHost,
 		JWTSigningKey:    jwtSigningKey,
