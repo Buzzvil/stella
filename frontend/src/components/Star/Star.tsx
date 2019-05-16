@@ -3,7 +3,7 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import { withTheme } from '@material-ui/core/styles';
 import styled from "styled-components";
 
-import { ReactComponent as StarSVG } from "../../img/Star-empty.svg";
+import { ReactComponent as StarSVG } from "../../img/Star.svg";
 
 enum Color {
   DEFAULT = 1,
