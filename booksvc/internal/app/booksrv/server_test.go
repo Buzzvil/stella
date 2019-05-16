@@ -20,8 +20,8 @@ func (s *mockUsecase) GetBook(id int64) (*book.Book, error) {
 	return args.Get(0).(*book.Book), nil
 }
 
-func (s *mockUsecase) CreateBook(name string, isbn string, authorNames []string, publisher string, content string) (*book.Book, error) {
-	args := s.Called(name, isbn, authorNames, publisher, content)
+func (s *mockUsecase) CreateBook(b book.Book) (*book.Book, error) {
+	args := s.Called(b)
 	return args.Get(0).(*book.Book), nil
 }
 
