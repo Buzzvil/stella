@@ -24,6 +24,7 @@ interface StarColorProps {
 }
 
 const Container = styled.div`
+  display: inline-block;
   position: relative;
   height: 1.5em;
   width: 1.5em;
