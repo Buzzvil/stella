@@ -53,14 +53,7 @@ func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	su, err := s.u.GetSlackUser(token)
-	if err != nil {
-		log.Printf("failed to fetch user: %s", err)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
-	}
-
-	u, err := s.u.FindOrCreateUserFromSlackUser(su)
+	u, err := s.u.FindOrCreateUserFromSlack(token)
 	if err != nil {
 		log.Printf("failed to store slack user: %s", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

@@ -7,8 +7,7 @@ import (
 // Usecase declares auth service interface.
 type Usecase interface {
 	GetUserByID(id int) (*User, error)
-	GetSlackUser(token *oauth2.Token) (*SlackUser, error)
-	FindOrCreateUserFromSlackUser(*SlackUser) (*User, error)
+	FindOrCreateUserFromSlack(*oauth2.Token) (*User, error)
 }
 
 type usecase struct {
@@ -25,22 +24,16 @@ func (uc *usecase) GetUserByID(id int) (*User, error) {
 	return uc.r.GetUserByID(id)
 }
 
-func (uc *usecase) GetSlackUser(token *oauth2.Token) (*SlackUser, error) {
-	return uc.s.GetUserData(token)
-}
-
-func (uc *usecase) FindOrCreateUserFromSlackUser(r *SlackUser) (*User, error) {
-	u, err := uc.r.GetUserBySlackUserID(r.ID)
+func (uc *usecase) FindOrCreateUserFromSlack(token *oauth2.Token) (*User, error) {
+	u, err := uc.s.GetUserData(token)
+	if err != nil {
+		return nil, err
+	}
+	u, err = uc.r.GetUserBySlackUserID(u.SlackUserID)
 	if err != nil {
 		return nil, err
 	}
 	if u == nil {
-		u = &User{
-			Name:        r.Name,
-			SlackUserID: r.ID,
-			SlackTeamID: r.TeamID,
-			Image:       r.Image,
-		}
 		err = uc.r.CreateUser(u)
 		if err != nil {
 			return nil, err

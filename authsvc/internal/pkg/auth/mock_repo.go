@@ -31,7 +31,7 @@ type MockSlackRepo struct {
 	mock.Mock
 }
 
-func (r *MockSlackRepo) GetUserData(token *oauth2.Token) (*SlackUser, error) {
+func (r *MockSlackRepo) GetUserData(token *oauth2.Token) (*User, error) {
 	args := r.Called(token)
-	return args.Get(0).(*SlackUser), args.Error(1)
+	return args.Get(0).(*User), args.Error(1)
 }

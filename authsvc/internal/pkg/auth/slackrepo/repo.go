@@ -36,7 +36,7 @@ func New(c *oauth2.Config) auth.SlackRepo {
 	return &repo{oauthConfig: c}
 }
 
-func (r *repo) GetUserData(token *oauth2.Token) (*auth.SlackUser, error) {
+func (r *repo) GetUserData(token *oauth2.Token) (*auth.User, error) {
 	resp, err := http.Get(slackIdentityAPI + token.AccessToken)
 	if err != nil {
 		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
@@ -48,10 +48,10 @@ func (r *repo) GetUserData(token *oauth2.Token) (*auth.SlackUser, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse user info: %s", err)
 	}
-	return &auth.SlackUser{
-		ID:     ir.User.ID,
-		Name:   ir.User.Name,
-		TeamID: ir.Team.ID,
-		Image:  ir.User.Image,
+	return &auth.User{
+		Name:        ir.User.Name,
+		SlackUserID: ir.User.ID,
+		SlackTeamID: ir.Team.ID,
+		Image:       ir.User.Image,
 	}, nil
 }

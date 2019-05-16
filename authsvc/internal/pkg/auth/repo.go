@@ -12,5 +12,5 @@ type Repo interface {
 }
 
 type SlackRepo interface {
-	GetUserData(token *oauth2.Token) (*SlackUser, error)
+	GetUserData(token *oauth2.Token) (*User, error)
 }
