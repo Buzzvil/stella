@@ -69,7 +69,7 @@ func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (
 
 // New initializes app
 func New() pb.RentalServiceServer {
-	db, err := gorm.Open("sqlite3", "db/rental.db")
+	db, err := gorm.Open("sqlite3", "rental.db")
 	if err != nil {
 		panic(err)
 	}
