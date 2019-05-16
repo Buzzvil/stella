@@ -1,3 +1,15 @@
+export class Empty {
+  constructor ();
+  toObject(): Empty.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => Empty;
+}
+
+export namespace Empty {
+  export type AsObject = {
+  }
+}
+
 export class CancelResourceRequest {
   constructor ();
   getEntityId(): number;
@@ -73,6 +85,8 @@ export class ResourceStatus {
   setEntityId(a: number): void;
   getAvailability(): ResourceStatus.Availability;
   setAvailability(a: ResourceStatus.Availability): void;
+  getHolder(): number;
+  setHolder(a: number): void;
   getReservedUserIdsList(): number[];
   setReservedUserIdsList(a: number[]): void;
   toObject(): ResourceStatus.AsObject;
@@ -84,6 +98,7 @@ export namespace ResourceStatus {
   export type AsObject = {
     EntityId: number;
     Availability: ResourceStatus.Availability;
+    Holder: number;
     ReservedUserIdsList: number[];
   }
 

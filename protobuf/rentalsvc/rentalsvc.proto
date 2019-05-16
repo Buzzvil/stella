@@ -19,7 +19,8 @@ message ResourceStatus {
     UNAVAILABLE = 1;
   }
   Availability availability = 2;
-  repeated int64 reserved_user_ids = 3;
+  int64 holder = 3;
+  repeated int64 reserved_user_ids = 4;
 }
 
 message GetResourceStatusRequest {
