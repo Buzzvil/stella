@@ -112,9 +112,9 @@ func (s *repoTestSuite) TestCreateUser() {
 	}
 
 	r := pgrepo.New(s.db)
-	err := r.CreateUser(u)
+	ru, err := r.CreateUser(u)
 	require.Nil(err)
-	assert.NotZero(u.ID)
+	assert.NotZero(ru.ID)
 }
 
 func TestRepoTestSuite(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 type Repo interface {
 	GetUserByID(id int) (*User, error)
 	GetUserBySlackUserID(sid string) (*User, error)
-	CreateUser(u *User) error
+	CreateUser(u *User) (*User, error)
 }
 
 type SlackRepo interface {

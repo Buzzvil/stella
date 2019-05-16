@@ -19,12 +19,18 @@ func (r *MockRepo) GetUserByID(id int) (*User, error) {
 
 func (r *MockRepo) GetUserBySlackUserID(sid string) (*User, error) {
 	args := r.Called(sid)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).(*User), args.Error(1)
 }
 
-func (r *MockRepo) CreateUser(u *User) error {
+func (r *MockRepo) CreateUser(u *User) (*User, error) {
 	args := r.Called(u)
-	return args.Error(1)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*User), args.Error(1)
 }
 
 type MockSlackRepo struct {

@@ -25,16 +25,16 @@ func (uc *usecase) GetUserByID(id int) (*User, error) {
 }
 
 func (uc *usecase) FindOrCreateUserFromSlack(token *oauth2.Token) (*User, error) {
-	u, err := uc.s.GetUserData(token)
+	su, err := uc.s.GetUserData(token)
 	if err != nil {
 		return nil, err
 	}
-	u, err = uc.r.GetUserBySlackUserID(u.SlackUserID)
+	u, err := uc.r.GetUserBySlackUserID(su.SlackUserID)
 	if err != nil {
 		return nil, err
 	}
 	if u == nil {
-		err = uc.r.CreateUser(u)
+		u, err = uc.r.CreateUser(su)
 		if err != nil {
 			return nil, err
 		}
