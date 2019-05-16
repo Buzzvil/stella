@@ -21,19 +21,27 @@ type app struct {
 }
 
 func (a *app) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequest) (*pb.ResourceStatus, error) {
-	avail, err := a.u.GetResourceAvailability(req.GetEntityId())
+	rs, err := a.u.GetResourceStatus(req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
-	rs := pb.ResourceStatus{EntityId: req.GetEntityId()}
-	switch avail {
+	pbRs := pb.ResourceStatus{EntityId: req.GetEntityId()}
+	switch rs.Availability {
 	case rental.Available:
-		rs.Availability = pb.ResourceStatus_AVAILABLE
+		pbRs.Availability = pb.ResourceStatus_AVAILABLE
 	case rental.Unavailable:
-		rs.Availability = pb.ResourceStatus_UNAVAILABLE
+		pbRs.Availability = pb.ResourceStatus_UNAVAILABLE
 	}
-	//TODO: rs.GetReservedUserIds
-	return &rs, nil
+
+	userIDs, err := a.u.GetResourceWaitingList(req.GetEntityId())
+	if err != nil {
+		return nil, err
+	}
+	if rs.HolderID != nil {
+		pbRs.Holder = *rs.HolderID
+	}
+	pbRs.ReservedUserIds = userIDs
+	return &pbRs, nil
 }
 
 func (a *app) RentResource(c context.Context, req *pb.RentResourceRequest) (*empty.Empty, error) {
@@ -64,10 +72,11 @@ func (a *app) CancelResource(c context.Context, req *pb.CancelResourceRequest) (
 
 // New initializes app
 func New() pb.RentalServiceServer {
-	db, err := gorm.Open("sqlite3", "db/rental.db")
+	db, err := gorm.Open("sqlite3", "rental.db")
 	if err != nil {
 		panic(err)
 	}
+	db.LogMode(true)
 	rentalRepo := repo.New(db)
 	rentalUsecase := rental.NewUsecase(rentalRepo)
 	return &app{db, rentalUsecase}
