@@ -93,7 +93,7 @@ action "Tag booksvc for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/booksvc"
   }
-  args = ["booksvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:"]
+  args = ["booksvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
 }
 
 action "Tag frontend for GCR" {
@@ -106,7 +106,7 @@ action "Tag frontend for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/frontend"
   }
-  args = ["frontend", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:"]
+  args = ["frontend", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
 }
 
 action "Tag ratingsvc for GCR" {
