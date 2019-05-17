@@ -80,7 +80,7 @@ action "Tag authsvc for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/authsvc"
   }
-  args = ["authsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["authsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Tag booksvc for GCR" {
@@ -93,7 +93,7 @@ action "Tag booksvc for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/booksvc"
   }
-  args = ["booksvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["booksvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Tag frontend for GCR" {
@@ -106,7 +106,7 @@ action "Tag frontend for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/frontend"
   }
-  args = ["frontend", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["frontend", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Tag ratingsvc for GCR" {
@@ -119,7 +119,7 @@ action "Tag ratingsvc for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/ratingsvc"
   }
-  args = ["ratingsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["ratingsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Tag rentalsvc for GCR" {
@@ -132,7 +132,7 @@ action "Tag rentalsvc for GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/rentalsvc"
   }
-  args = ["rentalsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["rentalsvc", "asia.gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Set Credential Helper for Docker" {
@@ -146,7 +146,7 @@ action "Set Credential Helper for Docker" {
 action "Deploy branch filter" {
   needs = ["Set Credential Helper for Docker"]
   uses = "actions/bin/filter@master"
-  args = "branch master"
+  args = "branch github-action"
 }
 
 action "Push authsvc to GCR" {
@@ -157,7 +157,7 @@ action "Push authsvc to GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/authsvc"
   }
-  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Push booksvc to GCR" {
@@ -168,7 +168,7 @@ action "Push booksvc to GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/booksvc"
   }
-  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Push frontend to GCR" {
@@ -179,7 +179,7 @@ action "Push frontend to GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/frontend"
   }
-  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Push ratingsvc to GCR" {
@@ -190,7 +190,7 @@ action "Push ratingsvc to GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/ratingsvc"
   }
-  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 action "Push rentalsvc to GCR" {
@@ -201,7 +201,7 @@ action "Push rentalsvc to GCR" {
     PROJECT_ID = "devops-229509"
     APPLICATION_NAME = "stella/rentalsvc"
   }
-  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME"]
+  args = ["docker push gcr.io/$PROJECT_ID/$APPLICATION_NAME:$GITHUB_SHA"]
 }
 
 workflow "Monorepo PR Repo Labeler" {
