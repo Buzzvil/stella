@@ -20,15 +20,21 @@ import (
 	"google.golang.org/grpc"
 )
 
+var jwtSigningKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
+
 func main() {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	r := pgrepo.NewPGRepo(db)
-	u := auth.NewUsecase(r)
-	srv := authsrv.New(u)
+	r := pgrepo.New(db)
+	u := auth.NewUsecase(r, nil)
+	c := authsrv.Config{
+		JWTSigningKey: jwtSigningKey,
+		Usecase:       u,
+	}
+	srv := authsrv.New(c)
 
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

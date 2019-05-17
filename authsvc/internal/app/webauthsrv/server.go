@@ -17,9 +17,9 @@ type Config struct {
 }
 
 type server struct {
-	webHost       string
-	jwtSigningKey []byte
-	auth.Usecase
+	webHost          string
+	jwtSigningKey    []byte
+	u                auth.Usecase
 	slackOauthConfig *oauth2.Config
 }
 
@@ -42,7 +42,6 @@ func New(c Config) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/slack/login", s.oauthSlackLogin)
 	mux.HandleFunc("/slack/callback", s.oauthSlackCallback)
-	// mux.HandleFunc("/verify", s.verify)
 	// mux.HandleFunc("/user", s.userProfile)
 	return mux
 }
