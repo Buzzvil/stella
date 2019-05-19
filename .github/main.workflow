@@ -1,10 +1,38 @@
-workflow "Build and deploy" {
+workflow "Build authsvc" {
   resolves = [
     "Setup Google Cloud",
     "Push authsvc to GCR",
+  ]
+  on = "push"
+}
+
+workflow "Build booksvc" {
+  resolves = [
+    "Setup Google Cloud",
     "Push booksvc to GCR",
+  ]
+  on = "push"
+}
+
+workflow "Build frontendsvc" {
+  resolves = [
+    "Setup Google Cloud",
     "Push frontend to GCR",
+  ]
+  on = "push"
+}
+
+workflow "Build ratingsvc" {
+  resolves = [
+    "Setup Google Cloud",
     "Push ratingsvc to GCR",
+  ]
+  on = "push"
+}
+
+workflow "Build rentalsvc" {
+  resolves = [
+    "Setup Google Cloud",
     "Push rentalsvc to GCR",
   ]
   on = "push"
