@@ -118,5 +118,8 @@ func (s *repoTestSuite) TestCreateUser() {
 }
 
 func TestRepoTestSuite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping repo test")
+	}
 	suite.Run(t, new(repoTestSuite))
 }

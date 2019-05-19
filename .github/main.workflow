@@ -63,10 +63,16 @@ action "rentalsvc changed?" {
   args = "rentalsvc"
 }
 
+action "Test authsvc" {
+  uses = "./.github/actions/golang/"
+  args = ["make unit-test"]
+  needs = ["authsvc changed?"]
+}
+
 action "Build authsvc image" {
   uses = "actions/docker/cli@master"
   args = ["build", "-t", "authsvc", "authsvc"]
-  needs = ["authsvc changed?"]
+  needs = ["Test authsvc"]
 }
 
 action "Build booksvc image" {

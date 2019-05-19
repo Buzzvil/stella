@@ -2,7 +2,6 @@ FROM alpine:latest
 
 LABEL version="1.0.0"
 LABEL repository="http://github.com/Buzzvil/stella"
-LABEL homepage="http://github.com/Buzzvil/stella/actions/diff-includes"
 LABEL maintainer="Buzzvil"
 LABEL "com.github.actions.name"="Diff includes"
 LABEL "com.github.actions.description"="Stop workflow unless changes were made in certain files/directories."
