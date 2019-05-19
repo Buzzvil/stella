@@ -39,27 +39,27 @@ workflow "Build rentalsvc" {
 }
 
 action "authsvc changed?" {
-  uses = "Buzzvil/stella/actions/diff-includes@github-action"
+  uses = "./actions/diff-includes/"
   args = "authsvc"
 }
 
 action "booksvc changed?" {
-  uses = "Buzzvil/stella/actions/diff-includes@github-action"
+  uses = "./actions/diff-includes/"
   args = "booksvc"
 }
 
 action "frontend changed?" {
-  uses = "Buzzvil/stella/actions/diff-includes@github-action"
+  uses = "./actions/diff-includes/"
   args = "frontend"
 }
 
 action "ratingsvc changed?" {
-  uses = "Buzzvil/stella/actions/diff-includes@github-action"
+  uses = "./actions/diff-includes/"
   args = "ratingsvc"
 }
 
 action "rentalsvc changed?" {
-  uses = "Buzzvil/stella/actions/diff-includes@github-action"
+  uses = "./actions/diff-includes/"
   args = "rentalsvc"
 }
 
