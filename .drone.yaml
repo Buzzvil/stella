@@ -22,8 +22,8 @@ steps:
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
-services:
-- name: postgres
-  image: postgres
-  ports:
-  - 5432
+# services:
+# - name: postgres
+#   image: postgres
+#   ports:
+#   - 5432
