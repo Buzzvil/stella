@@ -1,0 +1,19 @@
+kind: pipeline
+name: build
+
+steps:
+- name: test authsvc
+  image: golang:1.11
+  commands:
+  - cd authsvc
+  - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+  - migrate -source file://db/migrations -database $DATABASE_URL up
+  - make integration-test
+  environment:
+    DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+services:
+- name: postgres
+  image: postgres
+  ports:
+  - 5432
