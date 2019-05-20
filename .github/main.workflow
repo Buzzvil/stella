@@ -65,7 +65,7 @@ action "rentalsvc changed?" {
 
 action "Test authsvc" {
   uses = "./.github/actions/golang/"
-  args = ["make unit-test"]
+  args = ["cd authsvc && make unit-test"]
   needs = ["authsvc changed?"]
 }
 
