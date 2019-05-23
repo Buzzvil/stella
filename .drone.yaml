@@ -1,6 +1,10 @@
 kind: pipeline
 name: build
 
+workspace:
+  base: /go
+  path: src/github.com/Buzzvil/stella
+
 steps:
 - name: test authsvc
   image: golang:1.11
