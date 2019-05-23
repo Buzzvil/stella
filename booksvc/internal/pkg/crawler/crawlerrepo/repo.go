@@ -32,7 +32,8 @@ func New(key string) crawler.Repo {
 
 func (r *repo) Search(query string) (*crawler.Book, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://dapi.kakao.com/v3/search/book?query=?"+url.QueryEscape(query), nil)
+	api := "https://dapi.kakao.com/v3/search/book"
+	req, err := http.NewRequest("GET", api+"?query="+url.QueryEscape(query), nil)
 	req.Header.Add("Authorization", "KakaoAK "+r.Key)
 	resp, err := client.Do(req)
 	if err != nil {
