@@ -1,17 +1,7 @@
 kind: pipeline
 name: build
 
-clone:
-  disable: true
-
 steps:
-- name: clone
-  image: docker:git
-  commands:
-    - echo $DRONE_REPO_PRIVATE
-    - cat /root/.netrc
-    - git clone $DRONE_GIT_HTTP_URL
-
 - name: test authsvc
   image: golang:1.11
   commands:
@@ -22,8 +12,8 @@ steps:
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
-# services:
-# - name: postgres
-#   image: postgres
-#   ports:
-#   - 5432
+services:
+- name: postgres
+  image: postgres
+  ports:
+  - 5432
