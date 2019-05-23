@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	"github.com/gogo/googleapis/google/rpc"
@@ -18,16 +21,24 @@ const (
 	headerKeyUserID        = "User-ID"
 )
 
+// Server handles authorization requests.
 type Server interface {
 	ev.AuthorizationServer
 }
 
-type server struct {
-	auth.Usecase
+type Config struct {
+	JWTSigningKey []byte
+	Usecase       auth.Usecase
 }
 
-func New(u auth.Usecase) Server {
-	return &server{u}
+type server struct {
+	jwtSigningKey []byte
+	u             auth.Usecase
+}
+
+// New returns new Server interface.
+func New(c Config) Server {
+	return &server{c.JWTSigningKey, c.Usecase}
 }
 
 func buildDeniedCheckResponse(err error) *ev.CheckResponse {
@@ -63,25 +74,28 @@ func buildOkCheckResponse(uid int) *ev.CheckResponse {
 	}
 }
 
+func parseAuthorizationToken(at string) (string, error) {
+	if len(at) == 0 || strings.Index(at, "Bearer") < 0 {
+		return "", fmt.Errorf("authorization header doesn't contain valid Bearer prefix")
+	}
+
+	return strings.Split(at, " ")[1], nil
+}
+
 func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse, error) {
-	// a, ok := r.GetAttributes().GetRequest().GetHttp().GetHeaders()[headerKeyAuthorization]
-	// if !ok {
-	// 	return buildDeniedCheckResponse(fmt.Errorf("Authorization header is not specified")), nil
-	// }
+	a, ok := r.GetAttributes().GetRequest().GetHttp().GetHeaders()[headerKeyAuthorization]
+	if !ok {
+		return buildDeniedCheckResponse(fmt.Errorf("Authorization header is not specified")), nil
+	}
 
-	// tokenString, err := parseAuthorizationToken(as)
-	// if err != nil {
-	// 	return buildDeniedCheckResponse(err), nil
-	// }
+	ts, err := parseAuthorizationToken(a)
+	if err != nil {
+		return buildDeniedCheckResponse(err), nil
+	}
 
-	// a, err := s.u.GetAuth(tokenString)
-	// if err != nil {
-	// 	return &ev.CheckResponse{
-	// 		Status:       &rpc.Status{Code: int32(rpc.UNAUTHENTICATED)},
-	// 		HttpResponse: &ev.CheckResponse_DeniedResponse{},
-	// 	}, nil
-	// }
-	id := 1
-
-	return buildOkCheckResponse(id), nil
+	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
+	if err != nil {
+		return buildDeniedCheckResponse(err), nil
+	}
+	return buildOkCheckResponse(claims.UserID), nil
 }

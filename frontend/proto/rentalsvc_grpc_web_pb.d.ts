@@ -1,5 +1,6 @@
 import * as grpcWeb from 'grpc-web';
 import {
+  Empty,
   CancelResourceRequest,
   GetResourceStatusRequest,
   RentResourceRequest,
@@ -23,29 +24,29 @@ export class RentalServiceClient {
     request: RentResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
-               response: ResourceStatus) => void
-  ): grpcWeb.ClientReadableStream<ResourceStatus>;
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
 
   returnResource(
     request: ReturnResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
-               response: ResourceStatus) => void
-  ): grpcWeb.ClientReadableStream<ResourceStatus>;
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
 
   reserveResource(
     request: ReserveResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
-               response: ResourceStatus) => void
-  ): grpcWeb.ClientReadableStream<ResourceStatus>;
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
 
   cancelResource(
     request: CancelResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
-               response: ResourceStatus) => void
-  ): grpcWeb.ClientReadableStream<ResourceStatus>;
+               response: Empty) => void
+  ): grpcWeb.ClientReadableStream<Empty>;
 
 }
 
@@ -62,22 +63,22 @@ export class RentalServicePromiseClient {
   rentResource(
     request: RentResourceRequest,
     metadata: grpcWeb.Metadata
-  ): Promise<ResourceStatus>;
+  ): Promise<Empty>;
 
   returnResource(
     request: ReturnResourceRequest,
     metadata: grpcWeb.Metadata
-  ): Promise<ResourceStatus>;
+  ): Promise<Empty>;
 
   reserveResource(
     request: ReserveResourceRequest,
     metadata: grpcWeb.Metadata
-  ): Promise<ResourceStatus>;
+  ): Promise<Empty>;
 
   cancelResource(
     request: CancelResourceRequest,
     metadata: grpcWeb.Metadata
-  ): Promise<ResourceStatus>;
+  ): Promise<Empty>;
 
 }
 

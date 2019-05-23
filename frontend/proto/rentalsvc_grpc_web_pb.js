@@ -11,6 +11,8 @@
 const grpc = {};
 grpc.web = require('grpc-web');
 
+
+var google_protobuf_empty_pb = require('google-protobuf/google/protobuf/empty_pb.js')
 const proto = {};
 proto.stella = {};
 proto.stella.rental = {};
@@ -134,15 +136,15 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.getResourceStatus =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.stella.rental.v1.RentResourceRequest,
- *   !proto.stella.rental.v1.ResourceStatus>}
+ *   !proto.google.protobuf.Empty>}
  */
 const methodInfo_RentalService_RentResource = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.stella.rental.v1.ResourceStatus,
+  google_protobuf_empty_pb.Empty,
   /** @param {!proto.stella.rental.v1.RentResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.stella.rental.v1.ResourceStatus.deserializeBinary
+  google_protobuf_empty_pb.Empty.deserializeBinary
 );
 
 
@@ -151,9 +153,9 @@ const methodInfo_RentalService_RentResource = new grpc.web.AbstractClientBase.Me
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.stella.rental.v1.ResourceStatus)}
+ * @param {function(?grpc.web.Error, ?proto.google.protobuf.Empty)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.stella.rental.v1.ResourceStatus>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServiceClient.prototype.rentResource =
@@ -172,7 +174,7 @@ proto.stella.rental.v1.RentalServiceClient.prototype.rentResource =
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.stella.rental.v1.ResourceStatus>}
+ * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServicePromiseClient.prototype.rentResource =
@@ -190,15 +192,15 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.rentResource =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.stella.rental.v1.ReturnResourceRequest,
- *   !proto.stella.rental.v1.ResourceStatus>}
+ *   !proto.google.protobuf.Empty>}
  */
 const methodInfo_RentalService_ReturnResource = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.stella.rental.v1.ResourceStatus,
+  google_protobuf_empty_pb.Empty,
   /** @param {!proto.stella.rental.v1.ReturnResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.stella.rental.v1.ResourceStatus.deserializeBinary
+  google_protobuf_empty_pb.Empty.deserializeBinary
 );
 
 
@@ -207,9 +209,9 @@ const methodInfo_RentalService_ReturnResource = new grpc.web.AbstractClientBase.
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.stella.rental.v1.ResourceStatus)}
+ * @param {function(?grpc.web.Error, ?proto.google.protobuf.Empty)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.stella.rental.v1.ResourceStatus>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServiceClient.prototype.returnResource =
@@ -228,7 +230,7 @@ proto.stella.rental.v1.RentalServiceClient.prototype.returnResource =
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.stella.rental.v1.ResourceStatus>}
+ * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServicePromiseClient.prototype.returnResource =
@@ -246,15 +248,15 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.returnResource =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.stella.rental.v1.ReserveResourceRequest,
- *   !proto.stella.rental.v1.ResourceStatus>}
+ *   !proto.google.protobuf.Empty>}
  */
 const methodInfo_RentalService_ReserveResource = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.stella.rental.v1.ResourceStatus,
+  google_protobuf_empty_pb.Empty,
   /** @param {!proto.stella.rental.v1.ReserveResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.stella.rental.v1.ResourceStatus.deserializeBinary
+  google_protobuf_empty_pb.Empty.deserializeBinary
 );
 
 
@@ -263,9 +265,9 @@ const methodInfo_RentalService_ReserveResource = new grpc.web.AbstractClientBase
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.stella.rental.v1.ResourceStatus)}
+ * @param {function(?grpc.web.Error, ?proto.google.protobuf.Empty)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.stella.rental.v1.ResourceStatus>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServiceClient.prototype.reserveResource =
@@ -284,7 +286,7 @@ proto.stella.rental.v1.RentalServiceClient.prototype.reserveResource =
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.stella.rental.v1.ResourceStatus>}
+ * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServicePromiseClient.prototype.reserveResource =
@@ -302,15 +304,15 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.reserveResource =
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.stella.rental.v1.CancelResourceRequest,
- *   !proto.stella.rental.v1.ResourceStatus>}
+ *   !proto.google.protobuf.Empty>}
  */
 const methodInfo_RentalService_CancelResource = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.stella.rental.v1.ResourceStatus,
+  google_protobuf_empty_pb.Empty,
   /** @param {!proto.stella.rental.v1.CancelResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
-  proto.stella.rental.v1.ResourceStatus.deserializeBinary
+  google_protobuf_empty_pb.Empty.deserializeBinary
 );
 
 
@@ -319,9 +321,9 @@ const methodInfo_RentalService_CancelResource = new grpc.web.AbstractClientBase.
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.stella.rental.v1.ResourceStatus)}
+ * @param {function(?grpc.web.Error, ?proto.google.protobuf.Empty)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.stella.rental.v1.ResourceStatus>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServiceClient.prototype.cancelResource =
@@ -340,7 +342,7 @@ proto.stella.rental.v1.RentalServiceClient.prototype.cancelResource =
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.stella.rental.v1.ResourceStatus>}
+ * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
 proto.stella.rental.v1.RentalServicePromiseClient.prototype.cancelResource =

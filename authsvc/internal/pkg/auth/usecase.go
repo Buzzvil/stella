@@ -1,41 +1,40 @@
 package auth
 
 import (
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/slack"
+	"golang.org/x/oauth2"
 )
 
 // Usecase declares auth service interface.
 type Usecase interface {
 	GetUserByID(id int) (*User, error)
-	FindOrCreateUserFromIdentity(*slack.IdentityResp) (*User, error)
+	FindOrCreateUserFromSlack(*oauth2.Token) (*User, error)
 }
 
 type usecase struct {
-	Repo
+	r Repo
+	s SlackRepo
 }
 
 // NewUsecase creates new auth service.
-func NewUsecase(repo Repo) Usecase {
-	return &usecase{repo}
+func NewUsecase(r Repo, s SlackRepo) Usecase {
+	return &usecase{r: r, s: s}
 }
 
 func (uc *usecase) GetUserByID(id int) (*User, error) {
-	return uc.GetUserByID(id)
+	return uc.r.GetUserByID(id)
 }
 
-func (uc *usecase) FindOrCreateUserFromIdentity(r *slack.IdentityResp) (*User, error) {
-	u, err := uc.Repo.GetUserBySlackUserID(r.User.ID)
+func (uc *usecase) FindOrCreateUserFromSlack(token *oauth2.Token) (*User, error) {
+	su, err := uc.s.GetUserData(token)
+	if err != nil {
+		return nil, err
+	}
+	u, err := uc.r.GetUserBySlackUserID(su.SlackUserID)
 	if err != nil {
 		return nil, err
 	}
 	if u == nil {
-		u = &User{
-			Name:        r.User.Name,
-			SlackUserID: r.User.ID,
-			SlackTeamID: r.Team.ID,
-			Image:       r.User.Image,
-		}
-		err = uc.Repo.CreateUser(u)
+		u, err = uc.r.CreateUser(su)
 		if err != nil {
 			return nil, err
 		}

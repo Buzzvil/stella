@@ -3,7 +3,7 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import { withTheme } from '@material-ui/core/styles';
 import styled from "styled-components";
 
-import { ReactComponent as StarSVG } from "../../img/Star-empty.svg";
+import { ReactComponent as StarSVG } from "../../img/Star.svg";
 
 enum Color {
   DEFAULT = 1,
@@ -24,6 +24,7 @@ interface StarColorProps {
 }
 
 const Container = styled.div`
+  display: inline-block;
   position: relative;
   height: 1.5em;
   width: 1.5em;

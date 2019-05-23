@@ -24,7 +24,7 @@ func (mapper) resourceStatusToDBResourceStatus(rs rental.ResourceStatus) *Resour
 	}
 }
 
-func (mapper) dbReserveRequestToReserveReques(dbrr ReserveRequest) *rental.ReserveRequest {
+func (mapper) dbReserveRequestToReserveRequest(dbrr ReserveRequest) *rental.ReserveRequest {
 	return &rental.ReserveRequest{
 		ID:       dbrr.ID,
 		EntityID: dbrr.EntityID,
