@@ -53,7 +53,7 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 }
 
 func UpsertRating(rating rating.Rating) (*rating.Rating, error) {
-	dbRating := repo.mapper.reserveRatingToDBRating(rating)
+	dbRating := repo.mapper.RatingToDBRating(rating)
 	if err := repo.db.Where(&dbRating).First(&dbRating).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			return nil, err
@@ -66,7 +66,7 @@ func UpsertRating(rating rating.Rating) (*rating.Rating, error) {
 }
 
 func DeleteRating(rating rating.Rating) error {
-	dbRating := repo.mapper.reserveRatingToDBRating(rating)
+	dbRating := repo.mapper.RatingToDBRating(rating)
 	err := repo.db.Delete(&dbRequest).Error
 	return err
 }
