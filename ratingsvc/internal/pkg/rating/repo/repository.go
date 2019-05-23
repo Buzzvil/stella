@@ -28,43 +28,51 @@ func (repo *gormRepo) GetAggregatedRatingByID(entityID int32) (*rating.Aggregate
 	return repo.mapper.dbAggregatedRatingToAggregatedRating(dbAggregatedRating), nil
 }
 
-func (repo *gormRepo) ListByID(entityID int32) ([]rating.Rating, error) {
-	dbRatingList := Rating{EntityID: entityID}
-	err := repo.db.Where(&dbRatingList).Error
-	if err != nil {
+func (repo *gormRepo) ListByID(entityID int32) ([]*rating.Rating, error) {
+	dbRatingList := make([]Rating, 0)
+	if err := repo.db.Where("entityID = ?", entityID).Find(&dbRatingList).Error; err != nil {
 		return nil, err
 	}
-
-	ratingList = []
-	for dbRating in dbRatingList {
-		RatingList.append(repo.mapper.dbRatingToRating(dbRating))
+	ratingList := make([]*rating.Rating, 0)
+	for _, dbRating := range dbRatingList {
+		ratingList = append(ratingList, repo.mapper.dbRatingToRating(dbRating))
 	}
-
 	return ratingList, nil
 }
 
-func (repo *gormRepo) ListByUserID(userID int32) ([]rating.Rating, error) {
-	dbRatingList := Rating{UserID: userID}
-	err := repo.db.Where(&dbRatingList).Error
-	if err != nil {
+func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
+	dbRatingList := make([]Rating, 0)
+	if err := repo.db.Where("userID = ?", userID).Find(&dbRatingList).Error; err != nil {
 		return nil, err
 	}
-
-	ratingList = []
-	for dbRating in dbRatingList {
-		RatingList.append(repo.mapper.dbRatingToRating(dbRating))
+	ratingList := make([]*rating.Rating, 0)
+	for _, dbRating := range dbRatingList {
+		ratingList = append(ratingList, repo.mapper.dbRatingToRating(dbRating))
 	}
-
 	return ratingList, nil
 }
 
 func UpsertRating(rating rating.Rating) (*rating.Rating, error) {
-	panic("kwaaaag")
-
+	dbRating := repo.mapper.reserveRatingToDBRating(rating)
+	if err := repo.db.Where(&dbRating).First(&dbRating).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			return nil, err
+		}
+		err := repo.db.Create(dbRating).Error
+		return repo.mapper.dbRatingToRating(dbRating), err
+	}
+	err := repo.db.Save(dbRating).Error
+	return repo.mapper.dbRatingToRating(dbRating), err
 }
 
 func DeleteRating(rating rating.Rating) error {
 	dbRating := repo.mapper.reserveRatingToDBRating(rating)
 	err := repo.db.Delete(&dbRequest).Error
 	return err
+}
+
+func New(db *gorm.DB) rating.Repository {
+	db.AutoMigrate(&Rating{})
+	db.AutoMigrate(&AggregatedRating{})
+	return &gormRepo{db, mapper{}}
 }
