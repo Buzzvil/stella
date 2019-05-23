@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/slackrepo"
+
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
 
 	"github.com/Buzzvil/stella/authsvc/internal/app/webauthsrv"
@@ -28,7 +30,7 @@ var slackOauthConfig = &oauth2.Config{
 	Endpoint:     slack.Endpoint,
 }
 
-var jwtSigningKey = []byte("test stella signing key")
+var jwtSigningKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
 
 func health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -40,8 +42,9 @@ func main() {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 
-	r := pgrepo.NewPGRepo(db)
-	u := auth.NewUsecase(r)
+	r := pgrepo.New(db)
+	sr := slackrepo.New(slackOauthConfig)
+	u := auth.NewUsecase(r, sr)
 	c := webauthsrv.Config{
 		WebHost:          webHost,
 		JWTSigningKey:    jwtSigningKey,
