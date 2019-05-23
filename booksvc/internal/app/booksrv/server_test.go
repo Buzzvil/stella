@@ -35,12 +35,11 @@ func TestGetBook(t *testing.T) {
 	s := server{u: u}
 	id := int64(100)
 	book := book.Book{ID: id}
-	ctx := new(context.Context)
 	in := pb.GetBookRequest{Id: id}
 
 	u.On("GetBook", id).Return(&book).Once()
 
-	res, err := s.GetBook(*ctx, &in)
+	res, err := s.GetBook(context.Background(), &in)
 	require.Nil(t, err)
 	assert.Equal(t, id, res.Id)
 }
@@ -51,12 +50,11 @@ func TestCreateBook(t *testing.T) {
 	isbn := "isbn_0001"
 	id := int64(100)
 	book := book.Book{ID: id, Isbn: isbn}
-	ctx := new(context.Context)
 	in := pb.CreateBookRequest{Isbn: isbn}
 
 	u.On("CreateBook", mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(&book).Once()
 
-	res, err := s.CreateBook(*ctx, &in)
+	res, err := s.CreateBook(context.Background(), &in)
 	require.Nil(t, err)
 	assert.Equal(t, isbn, res.Isbn)
 	assert.Equal(t, id, res.Id)
@@ -68,13 +66,12 @@ func TestListBooks(t *testing.T) {
 	isbn := "isbn_0001"
 	id := int64(100)
 	books := []book.Book{book.Book{ID: id, Isbn: isbn}}
-	ctx := new(context.Context)
 	filter := ""
 	in := pb.ListBooksRequest{Filter: filter}
 
 	u.On("ListBooks", mock.Anything).Return(books).Once()
 
-	res, err := s.ListBooks(*ctx, &in)
+	res, err := s.ListBooks(context.Background(), &in)
 	require.Nil(t, err)
 	assert.Equal(t, 1, len(res.Books))
 	assert.Equal(t, id, res.Books[0].Id)
