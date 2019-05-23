@@ -1,5 +1,6 @@
+---
 kind: pipeline
-name: build
+name: authsvc
 
 workspace:
   base: /go
@@ -21,3 +22,14 @@ services:
   image: postgres
   ports:
   - 5432
+---
+kind: pipeline
+name: frontend
+
+steps:
+- name: test frontend
+  image: node:10.15
+  commands:
+  - cd frontend
+  - npm install
+  - npm test
