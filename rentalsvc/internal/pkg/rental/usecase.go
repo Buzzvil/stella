@@ -69,7 +69,7 @@ func (u *usecase) ReserveResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if status.Availability == Available {
+	if status.Availability == Available || *status.HolderID == userID {
 		return InvalidOperationError{}
 	}
 
