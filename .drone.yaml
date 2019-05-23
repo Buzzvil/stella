@@ -8,7 +8,7 @@ steps:
   - cd authsvc
   - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
   - migrate -source file://db/migrations -database $DATABASE_URL up
-  - make integration-test
+  - go test -v ./...
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
