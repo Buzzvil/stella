@@ -1,5 +1,7 @@
 # Stella Project
 
+[![Build Status](https://cloud.drone.io/api/badges/Buzzvil/stella/status.svg)](https://cloud.drone.io/Buzzvil/stella)
+
 ## Prerequisites
 
 - Install `protoc-gen-go`

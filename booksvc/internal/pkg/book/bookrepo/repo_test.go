@@ -2,6 +2,7 @@ package bookrepo
 
 import (
 	"database/sql"
+	"os"
 	"testing"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
@@ -21,7 +22,7 @@ func TestRepoTestSuite(t *testing.T) {
 }
 
 func (s *repoTestSuite) SetupSuite() {
-	db, err := sql.Open("postgres", "postgres://postgres@localhost:30432/stella?sslmode=disable")
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	require.Nil(s.T(), err)
 	s.db = db
 }
