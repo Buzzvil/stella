@@ -22,6 +22,7 @@ services:
   image: postgres
   ports:
   - 5432
+
 ---
 kind: pipeline
 name: booksvc
@@ -46,6 +47,7 @@ services:
   image: postgres
   ports:
   - 5432
+
 ---
 kind: pipeline
 name: frontend
@@ -57,3 +59,33 @@ steps:
   - cd frontend
   - npm install
   - npm test
+
+---
+kind: pipeline
+name: ratingsvc
+
+workspace:
+  base: /go
+  path: src/github.com/Buzzvil/stella
+
+steps:
+- name: test ratingsvc
+  image: golang:1.11
+  commands:
+  - cd ratingsvc
+  - go test -v ./...
+
+---
+kind: pipeline
+name: rentalsvc
+
+workspace:
+  base: /go
+  path: src/github.com/Buzzvil/stella
+
+steps:
+- name: test rentalsvc
+  image: golang:1.11
+  commands:
+  - cd rentalsvc
+  - go test -v ./...
