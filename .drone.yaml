@@ -24,6 +24,30 @@ services:
   - 5432
 ---
 kind: pipeline
+name: booksvc
+
+workspace:
+  base: /go
+  path: src/github.com/Buzzvil/stella
+
+steps:
+- name: test booksvc
+  image: golang:1.11
+  commands:
+  - cd booksvc
+  - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+  - migrate -source file://db/migrations -database $DATABASE_URL up
+  - go test -v ./...
+  environment:
+    DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+services:
+- name: postgres
+  image: postgres
+  ports:
+  - 5432
+---
+kind: pipeline
 name: frontend
 
 steps:
