@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { ReactComponent as StarSVG } from "../../img/Star.svg";
 
-enum Color {
+export enum Color {
   DEFAULT = 1,
   PRIMARY,
 }
@@ -36,19 +36,18 @@ const baseStyle = ({theme, color = Color.DEFAULT, fillWidth}: StarColorProps) =>
     case Color.PRIMARY:
       resolvedColor = theme && theme.palette.primary.main;
       break;
+    default:
+      resolvedColor = "#FFE76A";
   }
-  resolvedColor = resolvedColor || "#FFE76A";
 return `
   position: absolute;
   height: 100%;
   width: 100%;
   top: 0;
   left: 0;
-  g path {
-    fill: ${color};
-  };
   rect {
     width: ${24 * fillWidth}px;
+    fill: ${resolvedColor};
   };
 `
 };
