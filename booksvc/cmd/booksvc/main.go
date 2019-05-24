@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net"
+	"os"
 
 	"github.com/Buzzvil/stella/booksvc/internal/app/booksrv"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
@@ -19,7 +20,7 @@ func main() {
 		grpclog.Fatalf("failed to listen: %v", err)
 	}
 
-	db, err := sql.Open("postgres", "")
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
 	}
