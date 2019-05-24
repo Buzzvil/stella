@@ -1,17 +1,25 @@
 import { useState, useEffect } from "react";
-import { Book } from "proto/booksvc_pb";
+import { BookServiceClient } from 'proto/booksvc_grpc_web_pb';
+import { ListBooksRequest, ListBooksResponse, Book } from 'proto/booksvc_pb';
 import Loader from "../Loader/Loader";
+
+const bookService = new BookServiceClient(process.env.PUBLIC_URL, null, null);
 
 export default (query: any): [boolean, Book[]] => {
   const [loading, load] = Loader();
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
   const listBooks = (q: any) => () => {
-      const [cancelled, cancel] = load(Promise.resolve()
-        .then(() => new Promise(r => setTimeout(r, 1000)))
-        .then(() => {
+      const req = new ListBooksRequest();
+      req.setFilter(q)
+      const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {
+        bookService.listBooks(req, {}, (err: any, resp: ListBooksResponse) => err ? reject(err) : resolve(resp.getBooksList()))
+      });
+
+      const [cancelled, cancel] = load(bookPromise
+        .then(books => {
           if (cancelled()) return;
-          setBooks([])
+          setBooks(books);
         })
       );
       return cancel;
@@ -21,11 +29,6 @@ export default (query: any): [boolean, Book[]] => {
   return [loading, books];
 };
 
-// import { BookServiceClient } from 'proto/booksvc_grpc_web_pb';
-
-// import { ListBooksRequest, ListBooksResponse, Book } from 'proto/booksvc_pb';
-
-// const bookService = new BookServiceClient('https://billy.buzzvil.com', null, null);
 
   // const [query, setQuery] = useState("");
 
