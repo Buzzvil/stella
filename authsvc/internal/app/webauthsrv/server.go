@@ -40,8 +40,8 @@ func New(c Config) http.Handler {
 		c.SlackOauthConfig,
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/slack/login", s.oauthSlackLogin)
-	mux.HandleFunc("/slack/callback", s.oauthSlackCallback)
+	mux.HandleFunc("/slack/login", s.OauthSlackLogin)
+	mux.HandleFunc("/slack/callback", s.OauthSlackCallback)
 	// mux.HandleFunc("/user", s.userProfile)
 	return mux
 }

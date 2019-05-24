@@ -37,14 +37,19 @@ func exchangeTokenFromCode(c *oauth2.Config, code string) (*oauth2.Token, error)
 	return token, nil
 }
 
-func (s *server) oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
+func (s *server) OauthSlackLogin(w http.ResponseWriter, r *http.Request) {
 	oauthState := generateStateOauthCookie(w)
 	u := s.slackOauthConfig.AuthCodeURL(oauthState)
 	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
 }
 
-func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
-	oauthState, _ := r.Cookie(oauthstateCookie)
+func (s *server) OauthSlackCallback(w http.ResponseWriter, r *http.Request) {
+	oauthState, err := r.Cookie(oauthstateCookie)
+	if err != nil {
+		log.Printf("oauth state parse error: %s\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
 
 	if r.FormValue("state") != oauthState.Value {
 		log.Println("invalid oauth state")

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
@@ -75,30 +74,14 @@ func buildOkCheckResponse(uid int) *ev.CheckResponse {
 	}
 }
 
-func parseAuthorizationToken(at string) (string, error) {
-	if len(at) == 0 || strings.Index(at, "Bearer") < 0 {
-		return "", fmt.Errorf("authorization header doesn't contain valid Bearer prefix")
-	}
-
-	return strings.Split(at, " ")[1], nil
-}
-
-func buildHeaderFromMap(m map[string]string) http.Header {
-	h := http.Header{}
-	for k, v := range m {
-		h.Add(k, v)
-	}
-	return h
-}
-
 func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse, error) {
-	headers := buildHeaderFromMap(r.GetAttributes().GetRequest().GetHttp().GetHeaders())
-	cookie, err := (&http.Request{Header: headers}).Cookie("auth-token")
+	h := http.Header{}
+	h.Add("cookie", r.GetAttributes().GetRequest().GetHttp().GetHeaders()["cookie"])
+	cookie, err := (&http.Request{Header: h}).Cookie("auth-token")
 	if err != nil {
 		log.Printf("failed to fetch cookie: %s\n", err)
 		return buildDeniedCheckResponse(err), nil
 	}
-	log.Printf("cookie: %s\n", cookie.Value)
 	ts := cookie.Value
 
 	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
