@@ -68,7 +68,7 @@ func (s *handlerTestSuite) TestOauthSlackCallback() {
 	c := webauthsrv.Config{WebHost: s.webHost, JWTSigningKey: s.signingKey, Usecase: s.usecase, SlackOauthConfig: s.slackOauthConfig}
 	srv := webauthsrv.New(c)
 
-	t.Run("InvalidOauthState", func(t *testing.T) {
+	t.Run("NoOauthState", func(t *testing.T) {
 		req, err := http.NewRequest("GET", "/slack/callback", nil)
 		require.Nil(err)
 
@@ -78,7 +78,6 @@ func (s *handlerTestSuite) TestOauthSlackCallback() {
 		assert.Equal(http.StatusTemporaryRedirect, rr.Code)
 		assert.Zero(req.Cookie("auth-token"))
 	})
-
 }
 
 func TestHandlerTestSuite(t *testing.T) {
