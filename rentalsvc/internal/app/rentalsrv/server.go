@@ -6,7 +6,6 @@ import (
 	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental"
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
 	"github.com/golang/protobuf/ptypes/empty"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" // Mysql 사용할 경우 _ "github.com/jinzhu/gorm/dialects/mysql"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -44,7 +43,7 @@ func (s *server) RentResource(c context.Context, req *pb.RentResourceRequest) (*
 	err := s.u.RentResource(req.GetUserId(), req.GetEntityId())
 	switch err.(type) {
 	case rental.InvalidOperationError:
-		err = status.Error(codes.Unavailable, "resource is not available")
+		err = status.Error(codes.Unavailable, "invalid operation")
 	}
 	return &empty.Empty{}, err
 }
@@ -57,7 +56,7 @@ func (s *server) ReserveResource(c context.Context, req *pb.ReserveResourceReque
 	err := s.u.ReserveResource(req.GetUserId(), req.GetEntityId())
 	switch err.(type) {
 	case rental.InvalidOperationError:
-		err = status.Error(codes.Unavailable, "resource is already available")
+		err = status.Error(codes.Unavailable, "invalid operation")
 	}
 	return &empty.Empty{}, err
 }
