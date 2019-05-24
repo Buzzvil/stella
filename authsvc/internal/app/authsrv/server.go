@@ -3,12 +3,13 @@ package authsrv
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
-
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 	"github.com/gogo/googleapis/google/rpc"
 
 	"github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
@@ -82,16 +83,23 @@ func parseAuthorizationToken(at string) (string, error) {
 	return strings.Split(at, " ")[1], nil
 }
 
-func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse, error) {
-	a, ok := r.GetAttributes().GetRequest().GetHttp().GetHeaders()[headerKeyAuthorization]
-	if !ok {
-		return buildDeniedCheckResponse(fmt.Errorf("Authorization header is not specified")), nil
+func buildHeaderFromMap(m map[string]string) http.Header {
+	h := http.Header{}
+	for k, v := range m {
+		h.Add(k, v)
 	}
+	return h
+}
 
-	ts, err := parseAuthorizationToken(a)
+func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse, error) {
+	headers := buildHeaderFromMap(r.GetAttributes().GetRequest().GetHttp().GetHeaders())
+	cookie, err := (&http.Request{Header: headers}).Cookie("auth-token")
 	if err != nil {
+		log.Printf("failed to fetch cookie: %s\n", err)
 		return buildDeniedCheckResponse(err), nil
 	}
+	log.Printf("cookie: %s\n", cookie.Value)
+	ts := cookie.Value
 
 	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
 	if err != nil {

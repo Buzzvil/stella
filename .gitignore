@@ -6,3 +6,5 @@ deployments/chart/stella/requirements.lock
 
 # sqlite files
 *.db
+
+/values.dev.yaml
