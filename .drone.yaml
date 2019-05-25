@@ -23,6 +23,7 @@ steps:
   settings:
     repo: gcr.io/devops-229509/stella/authsvc
     context: authsvc
+    dockerfile: authsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
@@ -61,6 +62,7 @@ steps:
   settings:
     repo: gcr.io/devops-229509/stella/booksvc
     context: booksvc
+    dockerfile: booksvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
@@ -92,6 +94,7 @@ steps:
   settings:
     repo: gcr.io/devops-229509/stella/frontend
     context: frontend
+    dockerfile: frontend/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
@@ -120,6 +123,7 @@ steps:
   settings:
     repo: gcr.io/devops-229509/stella/ratingsvc
     context: ratingsvc
+    dockerfile: ratingsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
@@ -148,6 +152,7 @@ steps:
   settings:
     repo: gcr.io/devops-229509/stella/rentalsvc
     context: rentalsvc
+    dockerfile: rentalsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
