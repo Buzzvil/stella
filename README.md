@@ -1,6 +1,7 @@
 # Stella Project
 
 [![Build Status](https://cloud.drone.io/api/badges/Buzzvil/stella/status.svg)](https://cloud.drone.io/Buzzvil/stella)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Buzzvil/stella)](https://goreportcard.com/report/github.com/Buzzvil/stella)
 
 ## Prerequisites
 

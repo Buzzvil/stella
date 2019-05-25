@@ -7,15 +7,28 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test authsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd authsvc
   - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
   - migrate -source file://db/migrations -database $DATABASE_URL up
   - go test -v ./...
+  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/authsvc
+    context: authsvc
+    json_key:
+      from_secret: google_credentials
+  when:
+    branch:
+      - master
+      - publish
 
 services:
 - name: postgres
@@ -32,15 +45,28 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test booksvc
+- name: Test
   image: golang:1.11
   commands:
   - cd booksvc
   - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
   - migrate -source file://db/migrations -database $DATABASE_URL up
   - go test -v ./...
+  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/booksvc
+    context: booksvc
+    json_key:
+      from_secret: google_credentials
+  when:
+    branch:
+      - master
+      - publish
 
 services:
 - name: postgres
@@ -59,6 +85,19 @@ steps:
   - cd frontend
   - npm install
   - npm test
+  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/frontend
+    context: frontend
+    json_key:
+      from_secret: google_credentials
+  when:
+    branch:
+      - master
+      - publish
 
 ---
 kind: pipeline
@@ -74,6 +113,19 @@ steps:
   commands:
   - cd ratingsvc
   - go test -v ./...
+  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/ratingsvc
+    context: ratingsvc
+    json_key:
+      from_secret: google_credentials
+  when:
+    branch:
+      - master
+      - publish
 
 ---
 kind: pipeline
@@ -84,8 +136,21 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test rentalsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd rentalsvc
   - go test -v ./...
+  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/rentalsvc
+    context: rentalsvc
+    json_key:
+      from_secret: google_credentials
+  when:
+    branch:
+      - master
+      - publish
