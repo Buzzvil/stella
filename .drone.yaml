@@ -98,6 +98,7 @@ steps:
 - name: Deploy
   image: node:10.15
   commands:
+  - cd frontend
   - npm install
   - npm run deploy-storybook -- --ci
   environment:
@@ -106,4 +107,3 @@ steps:
   when:
     branch:
     - master
-    - deploy-storybook
