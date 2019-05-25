@@ -14,7 +14,6 @@ steps:
   - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
   - migrate -source file://db/migrations -database $DATABASE_URL up
   - go test -v ./...
-  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
@@ -22,14 +21,14 @@ steps:
   image: plugins/gcr
   settings:
     repo: gcr.io/devops-229509/stella/authsvc
+    auto_tag: true
     context: authsvc
     dockerfile: authsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
-    branch:
-      - master
-      - publish
+    event:
+      - tag
 
 services:
 - name: postgres
@@ -53,7 +52,6 @@ steps:
   - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
   - migrate -source file://db/migrations -database $DATABASE_URL up
   - go test -v ./...
-  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
@@ -61,14 +59,14 @@ steps:
   image: plugins/gcr
   settings:
     repo: gcr.io/devops-229509/stella/booksvc
+    auto_tag: true
     context: booksvc
     dockerfile: booksvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
-    branch:
-      - master
-      - publish
+    event:
+      - tag
 
 services:
 - name: postgres
@@ -87,20 +85,19 @@ steps:
   - cd frontend
   - npm install
   - npm test
-  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
 
 - name: Publish
   image: plugins/gcr
   settings:
     repo: gcr.io/devops-229509/stella/frontend
+    auto_tag: true
     context: frontend
     dockerfile: frontend/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
-    branch:
-      - master
-      - publish
+    event:
+      - tag
 
 ---
 kind: pipeline
@@ -116,20 +113,19 @@ steps:
   commands:
   - cd ratingsvc
   - go test -v ./...
-  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
 
 - name: Publish
   image: plugins/gcr
   settings:
     repo: gcr.io/devops-229509/stella/ratingsvc
+    auto_tag: true
     context: ratingsvc
     dockerfile: ratingsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
-    branch:
-      - master
-      - publish
+    event:
+      - tag
 
 ---
 kind: pipeline
@@ -145,17 +141,16 @@ steps:
   commands:
   - cd rentalsvc
   - go test -v ./...
-  - echo -n $DRONE_BRANCH-$(echo $DRONE_COMMIT_SHA | head -c7) > .tags
 
 - name: Publish
   image: plugins/gcr
   settings:
     repo: gcr.io/devops-229509/stella/rentalsvc
+    auto_tag: true
     context: rentalsvc
     dockerfile: rentalsvc/Dockerfile
     json_key:
       from_secret: google_credentials
   when:
-    branch:
-      - master
-      - publish
+    event:
+      - tag
