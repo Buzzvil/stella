@@ -8,7 +8,7 @@ action "Label PR Monorepos" {
   secrets = ["GITHUB_TOKEN"]
 }
 
-workflow "Deploy storybook" {
+workflow "Deploy storybook to gh-pages" {
   resolves = ["Deploy storybook"]
   on = "push"
 }
@@ -21,6 +21,6 @@ action "Filter master branch" {
 
 action "Deploy storybook" {
   uses = "./.github/actions/deploy-storybook/"
-  needs = ["Filter master"]
+  needs = ["Filter master branch"]
   secrets = ["GITHUB_TOKEN"]
 }

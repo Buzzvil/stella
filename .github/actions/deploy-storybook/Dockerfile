@@ -1,4 +1,4 @@
-FROM node:10.15-alpine
+FROM node:10.15
 
 LABEL version="1.0.0"
 LABEL repository="http://github.com/Buzzvil/stella"
