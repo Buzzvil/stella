@@ -79,7 +79,7 @@ kind: pipeline
 name: frontend
 
 steps:
-- name: test frontend
+- name: Test
   image: node:10.15
   commands:
   - cd frontend
@@ -108,7 +108,7 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test ratingsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd ratingsvc
