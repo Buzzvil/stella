@@ -89,3 +89,21 @@ steps:
   commands:
   - cd rentalsvc
   - go test -v ./...
+
+---
+kind: pipeline
+name: storybook
+
+steps:
+- name: Deploy
+  image: node:10.15
+  commands:
+  - npm install
+  - npm run deploy-storybook -- --ci
+  environment:
+    GH_TOKEN:
+      from_secret: gh_token
+  when:
+    branch:
+    - master
+    - deploy-storybook
