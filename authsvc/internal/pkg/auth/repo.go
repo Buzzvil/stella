@@ -5,8 +5,8 @@ import (
 )
 
 // Repo is interface of user repo.
-type Repo interface {
-	GetUserByID(id int) (*User, error)
+type UserRepo interface {
+	GetUserByID(id int64) (*User, error)
 	GetUserBySlackUserID(sid string) (*User, error)
 	CreateUser(u *User) (*User, error)
 }
