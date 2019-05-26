@@ -1,12 +1,10 @@
-package pgrepo
+package userrepo
 
 import (
 	"context"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
 
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	pb "github.com/Buzzvil/stella/usersvc/pkg/proto"
@@ -17,15 +15,8 @@ type repo struct {
 }
 
 // New returns a new pgrepo instance.
-func New(addr string) auth.UserRepo {
-	opts := []grpc.DialOption{grpc.WithInsecure()}
-	conn, err := grpc.Dial(addr, opts...)
-	if err != nil {
-		log.Fatalf("failed to dial usersvc: %s", err)
-	}
-	defer conn.Close()
-	client := pb.NewUserServiceClient(conn)
-	return &repo{client}
+func New(c pb.UserServiceClient) auth.UserRepo {
+	return &repo{c}
 }
 
 func (r *repo) GetUserByID(id int64) (*auth.User, error) {
@@ -54,6 +45,9 @@ func (r *repo) CreateUser(u *auth.User) (*auth.User, error) {
 		Image:       u.Image,
 	}
 	nu, err := r.client.CreateUser(context.Background(), &req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create user: %s", err)
+	}
 
 	return &auth.User{
 		ID:          nu.GetId(),

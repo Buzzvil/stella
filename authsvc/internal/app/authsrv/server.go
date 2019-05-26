@@ -57,7 +57,7 @@ func buildDeniedCheckResponse(err error) *ev.CheckResponse {
 	}
 }
 
-func buildOkCheckResponse(uid int) *ev.CheckResponse {
+func buildOkCheckResponse(uid int64) *ev.CheckResponse {
 	return &ev.CheckResponse{
 		HttpResponse: &ev.CheckResponse_OkResponse{
 			OkResponse: &ev.OkHttpResponse{
@@ -65,7 +65,7 @@ func buildOkCheckResponse(uid int) *ev.CheckResponse {
 					&ec.HeaderValueOption{
 						Header: &ec.HeaderValue{
 							Key:   headerKeyUserID,
-							Value: strconv.Itoa(uid),
+							Value: strconv.FormatInt(uid, 10),
 						},
 					},
 				},
