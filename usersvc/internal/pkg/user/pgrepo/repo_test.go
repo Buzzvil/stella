@@ -1,10 +1,12 @@
 package pgrepo_test
 
 import (
-	"database/sql"
 	"os"
 	"testing"
 
+	"github.com/jmoiron/sqlx"
+
+	"github.com/Buzzvil/stella/usersvc/internal/pkg/user"
 	"github.com/Buzzvil/stella/usersvc/internal/pkg/user/pgrepo"
 
 	_ "github.com/lib/pq"
@@ -15,11 +17,11 @@ import (
 
 type repoTestSuite struct {
 	suite.Suite
-	db *sql.DB
+	db *sqlx.DB
 }
 
 func (s *repoTestSuite) SetupSuite() {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	db, err := sqlx.Open("postgres", os.Getenv("DATABASE_URL"))
 	require.Nil(s.T(), err)
 	s.db = db
 }
@@ -58,7 +60,7 @@ func (s *repoTestSuite) TestGetUserNoRows() {
 	require := require.New(s.T())
 	assert := assert.New(s.T())
 
-	uid := 100
+	uid := int64(100)
 
 	r := pgrepo.New(s.db)
 	as, err := r.GetUser(uid)
@@ -103,7 +105,7 @@ func (s *repoTestSuite) TestCreateUser() {
 	require := require.New(s.T())
 	assert := assert.New(s.T())
 
-	u := &auth.User{
+	u := &user.User{
 		Name:        "Foo",
 		SlackUserID: "suid",
 		SlackTeamID: "stid",
