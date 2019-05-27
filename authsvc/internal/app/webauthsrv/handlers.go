@@ -14,13 +14,16 @@ import (
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 )
 
+const oauthstateCookie = "oauthstate"
+const authTokenCookie = "auth-token"
+
 func generateStateOauthCookie(w http.ResponseWriter) string {
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
 
 	b := make([]byte, 16)
 	rand.Read(b)
 	state := base64.URLEncoding.EncodeToString(b)
-	cookie := http.Cookie{Name: "oauthstate", Value: state, Expires: expiration}
+	cookie := http.Cookie{Name: oauthstateCookie, Value: state, Expires: expiration}
 	http.SetCookie(w, &cookie)
 
 	return state
@@ -34,47 +37,57 @@ func exchangeTokenFromCode(c *oauth2.Config, code string) (*oauth2.Token, error)
 	return token, nil
 }
 
-func (s *server) oauthSlackLogin(w http.ResponseWriter, r *http.Request) {
+func (s *server) OauthSlackLogin(w http.ResponseWriter, r *http.Request) {
 	oauthState := generateStateOauthCookie(w)
 	u := s.slackOauthConfig.AuthCodeURL(oauthState)
 	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
 }
 
-func (s *server) oauthSlackCallback(w http.ResponseWriter, r *http.Request) {
-	oauthState, _ := r.Cookie("oauthstate")
+func (s *server) OauthSlackCallback(w http.ResponseWriter, r *http.Request) {
+	oauthState, err := r.Cookie(oauthstateCookie)
+	if err != nil {
+		log.Printf("oauth state parse error: %s\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
 
 	if r.FormValue("state") != oauthState.Value {
+		log.Println("invalid oauth state")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	token, err := exchangeTokenFromCode(s.slackOauthConfig, r.FormValue("code"))
 	if err != nil {
+		log.Printf("failed to exchange token: %s\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	u, err := s.u.FindOrCreateUserFromSlack(token)
 	if err != nil {
-		log.Printf("failed to store slack user: %s", err)
+		log.Printf("failed to store slack user: %s\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	ss, err := jwt.SignedUserToken(s.jwtSigningKey, u.ID)
 	if err != nil {
-		log.Printf("failed to sign jwt token: %s", err)
+		log.Printf("failed to sign jwt token: %s\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
+	log.Println("successful")
+
 	c := http.Cookie{
-		Name:   "auth-token",
-		Value:  ss,
-		Secure: true,
-		Path:   "/",
+		Name:     authTokenCookie,
+		Value:    ss,
+		Expires:  time.Now().Add(jwt.TokenLifetime),
+		HttpOnly: true,
+		Path:     "/",
 	}
 	http.SetCookie(w, &c)
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusFound)
 	return
 }
 
