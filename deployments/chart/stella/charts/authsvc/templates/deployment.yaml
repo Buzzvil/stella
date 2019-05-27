@@ -31,8 +31,6 @@ spec:
             tcpSocket:
               port: 9000
           env:
-            - name: DATABASE_URL
-              value: {{ .Values.env.DATABASE_URL }}
             - name: USERSVC_ADDR
               value: {{ include "usersvc.fullname" . }}:9000
           resources:
