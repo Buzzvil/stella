@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	pb "github.com/Buzzvil/stella/usersvc/pkg/proto"
@@ -23,6 +25,10 @@ func (r *repo) GetUserByID(id int64) (*auth.User, error) {
 	req := pb.GetUserRequest{Identifier: &pb.GetUserRequest_Id{Id: id}}
 	u, err := r.client.GetUser(context.Background(), &req)
 	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("failed to fetch user: %s", err)
 	}
 	return &auth.User{ID: u.Id}, nil
@@ -32,6 +38,10 @@ func (r *repo) GetUserBySlackUserID(sid string) (*auth.User, error) {
 	req := pb.GetUserRequest{Identifier: &pb.GetUserRequest_SlackUserId{SlackUserId: sid}}
 	u, err := r.client.GetUser(context.Background(), &req)
 	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("failed to fetch user: %s", err)
 	}
 	return &auth.User{ID: u.Id}, nil

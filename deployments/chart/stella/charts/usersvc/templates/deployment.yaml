@@ -13,6 +13,7 @@ spec:
   template:
     metadata:
       labels:
+        stella/authz: 'enabled'
         {{- include "usersvc.labels" . | nindent 8 }}
     spec:
       containers:

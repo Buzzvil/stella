@@ -33,8 +33,8 @@ spec:
               path: /health
               port: http
           env:
-            - name: DATABASE_URL
-              value: {{ .Values.env.DATABASE_URL }}
+            - name: USERSVC_ADDR
+              value: {{ include "usersvc.fullname" . }}:9000
             - name: SLACK_OAUTH_CLIENT_ID
               value: {{ .Values.env.SLACK_OAUTH_CLIENT_ID | quote }}
             - name: SLACK_OAUTH_CLIENT_SECRET

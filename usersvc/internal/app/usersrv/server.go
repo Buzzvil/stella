@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"strconv"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"google.golang.org/grpc/metadata"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -53,11 +56,16 @@ func (s *server) GetUser(c context.Context, r *pb.GetUserRequest) (*pb.User, err
 		u, err = s.u.GetUser(r.GetId())
 	case *pb.GetUserRequest_SlackUserId:
 		u, err = s.u.GetUserBySlackUserID(r.GetSlackUserId())
+	default:
+		return nil, fmt.Errorf("identifier not provided.")
 	}
 	if err != nil {
 		return nil, err
 	}
 
+	if u == nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
 	return userToPBUser(u), nil
 }
 
@@ -65,7 +73,7 @@ func (s *server) GetCurrentUser(c context.Context, _ *empty.Empty) (*pb.User, er
 	var u *user.User
 	var err error
 	md, _ := metadata.FromIncomingContext(c)
-	uids := md.Get("User-ID")
+	uids := md.Get("user-id")
 	if len(uids) < 1 {
 		return nil, fmt.Errorf("User-ID not found")
 	}
@@ -78,6 +86,9 @@ func (s *server) GetCurrentUser(c context.Context, _ *empty.Empty) (*pb.User, er
 		return nil, err
 	}
 
+	if u == nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
 	return userToPBUser(u), nil
 }
 

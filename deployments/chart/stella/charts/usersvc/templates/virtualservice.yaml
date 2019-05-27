@@ -13,7 +13,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /envoy.service.user
+        prefix: "/stella.user.v1.UserService"
     route:
     - destination:
         host: {{ include "usersvc.fullname" . }}
