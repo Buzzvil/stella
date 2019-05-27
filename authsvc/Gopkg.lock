@@ -301,6 +301,8 @@
     "golang.org/x/oauth2",
     "golang.org/x/oauth2/slack",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
