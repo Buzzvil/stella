@@ -80,13 +80,13 @@ func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse
 	cookie, err := (&http.Request{Header: h}).Cookie("auth-token")
 	if err != nil {
 		log.Printf("failed to fetch cookie: %s\n", err)
-		return buildDeniedCheckResponse(err), nil
+		return buildDeniedCheckResponse(fmt.Errorf("failed to authorize")), nil
 	}
 	ts := cookie.Value
 
 	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
 	if err != nil {
-		return buildDeniedCheckResponse(err), nil
+		return buildDeniedCheckResponse(fmt.Errorf("failed to authorize")), nil
 	}
 	return buildOkCheckResponse(claims.UserID), nil
 }

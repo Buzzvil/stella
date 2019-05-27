@@ -2,7 +2,6 @@ package usersrv
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"google.golang.org/grpc/codes"
@@ -39,7 +38,7 @@ func userToPBUser(u *user.User) *pb.User {
 func (s *server) ListUsers(c context.Context, r *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	users, err := s.u.GetUsers(r.Ids)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to fetch users")
 	}
 	userList := []*pb.User{}
 	for _, user := range users {
@@ -57,7 +56,7 @@ func (s *server) GetUser(c context.Context, r *pb.GetUserRequest) (*pb.User, err
 	case *pb.GetUserRequest_SlackUserId:
 		u, err = s.u.GetUserBySlackUserID(r.GetSlackUserId())
 	default:
-		return nil, fmt.Errorf("identifier not provided.")
+		return nil, status.Error(codes.InvalidArgument, "identifier not provided.")
 	}
 	if err != nil {
 		return nil, err
@@ -75,15 +74,15 @@ func (s *server) GetCurrentUser(c context.Context, _ *empty.Empty) (*pb.User, er
 	md, _ := metadata.FromIncomingContext(c)
 	uids := md.Get("user-id")
 	if len(uids) < 1 {
-		return nil, fmt.Errorf("User-ID not found")
+		return nil, status.Error(codes.Unauthenticated, "user-id not found")
 	}
 	id, err := strconv.ParseInt(uids[0], 10, 64)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse id: %s", err)
+		return nil, status.Error(codes.InvalidArgument, "failed to parse user-id")
 	}
 	u, err = s.u.GetUser(id)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "failed to fetch user")
 	}
 
 	if u == nil {
@@ -101,7 +100,7 @@ func (s *server) CreateUser(c context.Context, r *pb.CreateUserRequest) (*pb.Use
 	}
 	u, err := s.u.CreateUser(&user)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.FailedPrecondition, "failed to create user")
 	}
 	return userToPBUser(u), nil
 }
