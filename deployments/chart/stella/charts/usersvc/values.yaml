@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: gcr.io/devops-229509/stella/usersvc
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 9000
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,40 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "authsvc.fullname" . }}
+  name: {{ include "usersvc.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "authsvc.labels" . | nindent 4 }}
+    {{- include "usersvc.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "authsvc.matchLabels" . | nindent 6 }}
+      {{- include "usersvc.matchLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "authsvc.labels" . | nindent 8 }}
+        {{- include "usersvc.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/go/bin/authsvc"]
           ports:
-            - name: grpc
-              containerPort: 9000
+            - name: http
+              containerPort: 80
               protocol: TCP
           livenessProbe:
-            tcpSocket:
-              port: 9000
+            httpGet:
+              path: /
+              port: http
           readinessProbe:
-            tcpSocket:
-              port: 9000
-          env:
-            - name: DATABASE_URL
-              value: {{ .Values.env.DATABASE_URL }}
-            - name: USERSVC_ADDR
-              value: {{ include "usersvc.fullname" . }}:9000
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
