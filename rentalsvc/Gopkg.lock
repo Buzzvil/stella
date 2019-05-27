@@ -36,11 +36,11 @@
   version = "v1.3.1"
 
 [[projects]]
-  digest = "1:a6bf43c8f0bfbd9636a3e14eb8c34bb53931fcf0682e7dcad8d1e1b6103807f8"
+  digest = "1:03663fbc4d2dc1ff985e16e76a06344bfdfe06470b4d079a1536742300c67af7"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
-    "dialects/sqlite",
+    "dialects/postgres",
   ]
   pruneopts = "UT"
   revision = "e3987fd4b803c16497aa4dfd2e75db7a6a061a4e"
@@ -55,12 +55,17 @@
   revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
-  digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"
-  name = "github.com/mattn/go-sqlite3"
-  packages = ["."]
+  digest = "1:0e06e487551e2f9e0d6967a15c42223354e37c2e9869b301b14a42e4b51ea3e0"
+  name = "github.com/lib/pq"
+  packages = [
+    ".",
+    "hstore",
+    "oid",
+    "scram",
+  ]
   pruneopts = "UT"
-  revision = "c7c4067b79cc51e6dfdcef5c702e74b1e0fa7c75"
-  version = "v1.10.0"
+  revision = "bc6a3c0594130b1e34005880bc600b6d3f49fa7f"
+  version = "v1.1.1"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -193,7 +198,7 @@
     "github.com/golang/protobuf/proto",
     "github.com/golang/protobuf/ptypes/empty",
     "github.com/jinzhu/gorm",
-    "github.com/jinzhu/gorm/dialects/sqlite",
+    "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/stretchr/testify/mock",
     "github.com/stretchr/testify/suite",
     "google.golang.org/grpc",
