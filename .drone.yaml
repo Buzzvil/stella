@@ -7,7 +7,7 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test authsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd authsvc
@@ -16,6 +16,19 @@ steps:
   - go test -v ./...
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/authsvc
+    auto_tag: true
+    context: authsvc
+    dockerfile: authsvc/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
 
 services:
 - name: postgres
@@ -32,7 +45,7 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test booksvc
+- name: Test
   image: golang:1.11
   commands:
   - cd booksvc
@@ -41,6 +54,19 @@ steps:
   - go test -v ./...
   environment:
     DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/booksvc
+    auto_tag: true
+    context: booksvc
+    dockerfile: booksvc/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
 
 services:
 - name: postgres
@@ -53,12 +79,25 @@ kind: pipeline
 name: frontend
 
 steps:
-- name: test frontend
+- name: Test
   image: node:10.15
   commands:
   - cd frontend
   - npm install
   - npm test
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/frontend
+    auto_tag: true
+    context: frontend
+    dockerfile: frontend/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
 
 ---
 kind: pipeline
@@ -69,11 +108,24 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test ratingsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd ratingsvc
   - go test -v ./...
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/ratingsvc
+    auto_tag: true
+    context: ratingsvc
+    dockerfile: ratingsvc/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
 
 ---
 kind: pipeline
@@ -84,11 +136,24 @@ workspace:
   path: src/github.com/Buzzvil/stella
 
 steps:
-- name: test rentalsvc
+- name: Test
   image: golang:1.11
   commands:
   - cd rentalsvc
   - go test -v ./...
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/rentalsvc
+    auto_tag: true
+    context: rentalsvc
+    dockerfile: rentalsvc/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
 
 ---
 kind: pipeline

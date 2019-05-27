@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: asia.gcr.io/devops-229509/stella/ratingsvc
+  repository: gcr.io/devops-229509/stella/ratingsvc
   tag: latest
   pullPolicy: IfNotPresent
 
