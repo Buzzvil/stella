@@ -5,11 +5,11 @@ import Loader from "../Loader/Loader";
 
 const bookService = new BookServiceClient(process.env.PUBLIC_URL, null, null);
 
-export default (query: any): [boolean, Book[]] => {
+export default (query: string): [boolean, Book[]] => {
   const [loading, load] = Loader();
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
-  const listBooks = (q: any) => () => {
+  const listBooks = (q: string) => () => {
       const req = new ListBooksRequest();
       req.setFilter(q)
       const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {
@@ -28,25 +28,3 @@ export default (query: any): [boolean, Book[]] => {
   useEffect(listBooks(query), [query]);
   return [loading, books];
 };
-
-
-  // const [query, setQuery] = useState("");
-
-
-  // const listBooks = ((query: string) => {
-  //   const req = new ListBooksRequest();
-  //   req.setFilter(query)
-  //   const meta = {'authorization': 'xxxxx'}
-  //   bookService.listBooks(req, meta, (err: any, resp: ListBooksResponse) => {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       console.log(resp.getBooksList());
-  //       setBooks(resp.getBooksList());
-  //     }
-  //   });
-  // });
-
-  // useEffect(() => {
-  //   listBooks(query);
-  // }, [query]);
