@@ -67,6 +67,7 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 	}
 
 	return &pbRs
+}
 
 func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
     r, err := s.u.UpsertRating(req.GetUserId(), req.GetEntityId())
@@ -78,9 +79,10 @@ func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rat
 		Score: r.Score,
 		UserId: r.UserId,
 		Comment: r.Comment
-	}}
+	}
 
 	return &pbR
+}
 
 func (s *server) DeleteRating(context.Context, *pb.DeleteRequest) (*empty.Empty, error) {
 	return &empty.Empty{}, s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
