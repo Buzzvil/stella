@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"google.golang.org/grpc/codes"
+
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
 	"github.com/gogo/googleapis/google/rpc"
@@ -41,9 +43,9 @@ func New(c Config) Server {
 	return &server{c.JWTSigningKey, c.Usecase}
 }
 
-func buildDeniedCheckResponse(err error) *ev.CheckResponse {
+func buildDeniedCheckResponse(code codes.Code, err error) *ev.CheckResponse {
 	return &ev.CheckResponse{
-		Status: &rpc.Status{Code: int32(rpc.INVALID_ARGUMENT)},
+		Status: &rpc.Status{Code: int32(code)},
 		HttpResponse: &ev.CheckResponse_DeniedResponse{
 			DeniedResponse: &ev.DeniedHttpResponse{
 				Headers: []*core.HeaderValueOption{
@@ -80,13 +82,13 @@ func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse
 	cookie, err := (&http.Request{Header: h}).Cookie("auth-token")
 	if err != nil {
 		log.Printf("failed to fetch cookie: %s\n", err)
-		return buildDeniedCheckResponse(fmt.Errorf("failed to authorize")), nil
+		return buildDeniedCheckResponse(codes.Unauthenticated, fmt.Errorf("failed to authorize")), nil
 	}
 	ts := cookie.Value
 
 	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
 	if err != nil {
-		return buildDeniedCheckResponse(fmt.Errorf("failed to authorize")), nil
+		return buildDeniedCheckResponse(codes.Unauthenticated, fmt.Errorf("failed to authorize")), nil
 	}
 	return buildOkCheckResponse(claims.UserID), nil
 }
