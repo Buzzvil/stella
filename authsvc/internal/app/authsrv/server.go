@@ -2,18 +2,13 @@ package authsrv
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
-	"google.golang.org/grpc/codes"
-
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/jwt"
-	"github.com/gogo/googleapis/google/rpc"
 
-	"github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
 	ec "github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
 	ev "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2"
 )
@@ -43,34 +38,20 @@ func New(c Config) Server {
 	return &server{c.JWTSigningKey, c.Usecase}
 }
 
-func buildDeniedCheckResponse(code codes.Code, err error) *ev.CheckResponse {
-	return &ev.CheckResponse{
-		Status: &rpc.Status{Code: int32(code)},
-		HttpResponse: &ev.CheckResponse_DeniedResponse{
-			DeniedResponse: &ev.DeniedHttpResponse{
-				Headers: []*core.HeaderValueOption{
-					&core.HeaderValueOption{
-						Header: &core.HeaderValue{Key: "Content-Type", Value: "application/json"},
-					},
-				},
-				Body: fmt.Sprintf(`{"error": "%v"}`, err),
-			},
-		},
-	}
-}
-
 func buildOkCheckResponse(uid int64) *ev.CheckResponse {
+	headers := []*ec.HeaderValueOption{}
+	if uid > 0 {
+		headers = append(headers, &ec.HeaderValueOption{
+			Header: &ec.HeaderValue{
+				Key:   headerKeyUserID,
+				Value: strconv.FormatInt(uid, 10),
+			},
+		})
+	}
 	return &ev.CheckResponse{
 		HttpResponse: &ev.CheckResponse_OkResponse{
 			OkResponse: &ev.OkHttpResponse{
-				Headers: []*ec.HeaderValueOption{
-					&ec.HeaderValueOption{
-						Header: &ec.HeaderValue{
-							Key:   headerKeyUserID,
-							Value: strconv.FormatInt(uid, 10),
-						},
-					},
-				},
+				Headers: headers,
 			},
 		},
 	}
@@ -82,13 +63,14 @@ func (s *server) Check(c context.Context, r *ev.CheckRequest) (*ev.CheckResponse
 	cookie, err := (&http.Request{Header: h}).Cookie("auth-token")
 	if err != nil {
 		log.Printf("failed to fetch cookie: %s\n", err)
-		return buildDeniedCheckResponse(codes.Unauthenticated, fmt.Errorf("failed to authorize")), nil
+		return buildOkCheckResponse(-1), nil
 	}
 	ts := cookie.Value
 
 	claims, err := jwt.ParseUserToken(s.jwtSigningKey, ts)
 	if err != nil {
-		return buildDeniedCheckResponse(codes.Unauthenticated, fmt.Errorf("failed to authorize")), nil
+		log.Printf("failed to validate jwt: %s\n", err)
+		return buildOkCheckResponse(-1), nil
 	}
 	return buildOkCheckResponse(claims.UserID), nil
 }
