@@ -69,14 +69,7 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 	return &pbRs
 
 func (a *app) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
-    tempR = Rating{
-		EntityId: req.GetEntityId(),
-		UserId: req.GetUserId(),
-		Score: req.GetScore(),
-		Comment: req.GetComment(),
-	}
-
-	r, err := s.u.GetUserRating(tempRating)
+    r, err := s.u.UpsertRating(req.GetUserId(), req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
