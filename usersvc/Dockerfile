@@ -1,6 +1,7 @@
-FROM golang:1.11
+FROM golang:1.11-alpine
 
-RUN go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+RUN apk add --update git && rm -rf /var/cache/apk/* && \
+    go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
 
 COPY . /go/src/github.com/Buzzvil/stella/usersvc
 
