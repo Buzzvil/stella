@@ -34,9 +34,8 @@ func main() {
 }
 
 func getDB() *gorm.DB {
-	driver := os.Getenv("DATABASE_DRIVER")
 	url := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(driver, url)
+	db, err := gorm.Open("postgres", url)
 	if err != nil {
 		panic(err)
 	}

@@ -52,7 +52,7 @@ func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
 
 func (r *repo) GetByFilter(filter string) ([]book.Book, error) {
 	books := []book.Book{}
-	rows, err := r.db.Query("SELECT id, name, isbn, publisher, content FROM books WHERE name LIKE '%' || $1 || '%'", filter)
+	rows, err := r.db.Query("SELECT id, name, isbn, publisher, content FROM books WHERE name ILIKE '%' || $1 || '%'", filter)
 	if err != nil {
 		return nil, err
 	}
