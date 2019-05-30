@@ -6,12 +6,13 @@ package stella_rental_v1
 import (
 	context "context"
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -480,26 +481,6 @@ func (*UnimplementedRentalServiceServer) ReserveResource(ctx context.Context, re
 	return nil, status.Errorf(codes.Unimplemented, "method ReserveResource not implemented")
 }
 func (*UnimplementedRentalServiceServer) CancelResource(ctx context.Context, req *CancelResourceRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelResource not implemented")
-}
-
-// UnimplementedRentalServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedRentalServiceServer struct {
-}
-
-func (*UnimplementedRentalServiceServer) GetResourceStatus(ctx context.Context, req *GetResourceStatusRequest) (*ResourceStatus, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResourceStatus not implemented")
-}
-func (*UnimplementedRentalServiceServer) RentResource(ctx context.Context, req *RentResourceRequest) (*ResourceStatus, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RentResource not implemented")
-}
-func (*UnimplementedRentalServiceServer) ReturnResource(ctx context.Context, req *ReturnResourceRequest) (*ResourceStatus, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReturnResource not implemented")
-}
-func (*UnimplementedRentalServiceServer) ReserveResource(ctx context.Context, req *ReserveResourceRequest) (*ResourceStatus, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReserveResource not implemented")
-}
-func (*UnimplementedRentalServiceServer) CancelResource(ctx context.Context, req *CancelResourceRequest) (*ResourceStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelResource not implemented")
 }
 

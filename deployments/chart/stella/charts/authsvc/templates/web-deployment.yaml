@@ -38,7 +38,7 @@ spec:
             - name: SLACK_OAUTH_CLIENT_ID
               value: {{ .Values.env.SLACK_OAUTH_CLIENT_ID | quote }}
             - name: SLACK_OAUTH_CLIENT_SECRET
-              value: {{ .Values.env.SLACK_OAUTH_CLIENT_CLIENT | quote }}
+              value: {{ .Values.env.SLACK_OAUTH_CLIENT_SECRET | quote }}
             - name: WEB_HOST
               value: {{ .Values.global.webHost }}
           resources:

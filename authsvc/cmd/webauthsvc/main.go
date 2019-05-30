@@ -56,6 +56,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/auth/", http.StripPrefix("/auth", websrv))
 	mux.HandleFunc("/health", health)
+	mux.HandleFunc("/", health)
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)

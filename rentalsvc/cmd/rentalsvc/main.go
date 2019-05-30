@@ -2,8 +2,13 @@ package main
 
 import (
 	"net"
+	"os"
 
 	"github.com/Buzzvil/stella/rentalsvc/internal/app/rentalsrv"
+	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental"
+	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental/repo"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres" // Mysql 사용할 경우 _ "github.com/jinzhu/gorm/dialects/mysql"
 
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
 	"google.golang.org/grpc"
@@ -20,7 +25,22 @@ func main() {
 	opts := []grpc.ServerOption{}
 	grpcServer := grpc.NewServer(opts...)
 
-	pb.RegisterRentalServiceServer(grpcServer, rentalsrv.New())
+	db := getDB()
+	defer db.Close()
+	rentalUsecase := rental.NewUsecase(repo.New(db))
+	pb.RegisterRentalServiceServer(grpcServer, rentalsrv.New(rentalUsecase))
 
 	_ = grpcServer.Serve(listener)
+}
+
+func getDB() *gorm.DB {
+	driver := os.Getenv("DATABASE_DRIVER")
+	url := os.Getenv("DATABASE_URL")
+	db, err := gorm.Open(driver, url)
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(true)
+
+	return db
 }

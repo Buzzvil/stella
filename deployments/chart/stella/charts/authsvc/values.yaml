@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: asia.gcr.io/devops-229509/stella/authsvc
+  repository: gcr.io/devops-229509/stella/authsvc
   tag: latest
   pullPolicy: IfNotPresent
 

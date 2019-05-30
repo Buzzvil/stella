@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: asia.gcr.io/devops-229509/stella/booksvc
+  repository: gcr.io/devops-229509/stella/booksvc
   tag: latest
   pullPolicy: IfNotPresent
 
