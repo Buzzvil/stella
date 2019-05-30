@@ -2,8 +2,13 @@ package main
 
 import (
 	"net"
+	"os"
 
 	"github.com/Buzzvil/stella/ratingsvc/internal/app/ratingsrv"
+	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating"
+	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating/repo"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres" // Mysql 사용할 경우 _ "github.com/jinzhu/gorm/dialects/mysql"
 
 	pb "github.com/Buzzvil/stella/ratingsvc/pkg/proto"
 	"google.golang.org/grpc"
@@ -20,7 +25,22 @@ func main() {
 	opts := []grpc.ServerOption{}
 	grpcServer := grpc.NewServer(opts...)
 
-	pb.RegisterRatingServiceServer(grpcServer, ratingsrv.New())
+	db := getDB()
+	defer db.Close()
+	ratingUsecase := rating.NewUsecase(repo.New(db))
+	pb.RegisterRatingServiceServer(grpcServer, ratingsrv.New(ratingUsecase))
 
 	_ = grpcServer.Serve(listener)
+}
+
+func getDB() *gorm.DB {
+	driver := os.Getenv("DATABASE_DRIVER")
+	url := os.Getenv("DATABASE_URL")
+	db, err := gorm.Open(driver, url)
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(true)
+
+	return db
 }
