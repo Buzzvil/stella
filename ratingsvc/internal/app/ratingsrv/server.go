@@ -68,7 +68,7 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 
 	return &pbRs
 
-func (a *app) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
+func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
     r, err := s.u.UpsertRating(req.GetUserId(), req.GetEntityId())
 	if err != nil {
 		return nil, err
