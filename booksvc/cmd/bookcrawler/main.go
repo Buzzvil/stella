@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("./book.csv")
+	file, _ := os.Open(os.Getenv("BOOK_CSV_PATH"))
 	rdr := csv.NewReader(bufio.NewReader(file))
 	rows, _ := rdr.ReadAll()
 	r := crawlersrv.NewRunner(os.Getenv("KAKAO_API_KEY"))
