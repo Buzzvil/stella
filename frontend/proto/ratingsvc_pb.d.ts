@@ -1,141 +1,164 @@
-export class Empty {
-  constructor ();
-  toObject(): Empty.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => Empty;
-}
+import * as jspb from "google-protobuf"
 
-export namespace Empty {
-  export type AsObject = {
-  }
-}
+import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
 
-export class DeleteRequest {
-  constructor ();
+export class Rating extends jspb.Message {
   getEntityId(): number;
-  setEntityId(a: number): void;
-  getUserId(): number;
-  setUserId(a: number): void;
-  toObject(): DeleteRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => DeleteRequest;
-}
+  setEntityId(value: number): void;
 
-export namespace DeleteRequest {
-  export type AsObject = {
-    EntityId: number;
-    UserId: number;
-  }
-}
-
-export class GetRatingRequest {
-  constructor ();
-  getEntityId(): number;
-  setEntityId(a: number): void;
-  toObject(): GetRatingRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => GetRatingRequest;
-}
-
-export namespace GetRatingRequest {
-  export type AsObject = {
-    EntityId: number;
-  }
-}
-
-export class GetRatingResponse {
-  constructor ();
   getScore(): number;
-  setScore(a: number): void;
-  getCount(): number;
-  setCount(a: number): void;
-  toObject(): GetRatingResponse.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => GetRatingResponse;
-}
+  setScore(value: number): void;
 
-export namespace GetRatingResponse {
-  export type AsObject = {
-    Score: number;
-    Count: number;
-  }
-}
-
-export class GetUserRatingRequest {
-  constructor ();
   getUserId(): number;
-  setUserId(a: number): void;
-  toObject(): GetUserRatingRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => GetUserRatingRequest;
-}
+  setUserId(value: number): void;
 
-export namespace GetUserRatingRequest {
-  export type AsObject = {
-    UserId: number;
-  }
-}
-
-export class ListRatingsResponse {
-  constructor ();
-  getRatingsList(): Rating[];
-  setRatingsList(a: Rating[]): void;
-  toObject(): ListRatingsResponse.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => ListRatingsResponse;
-}
-
-export namespace ListRatingsResponse {
-  export type AsObject = {
-    RatingsList: Rating[];
-  }
-}
-
-export class Rating {
-  constructor ();
-  getEntityId(): number;
-  setEntityId(a: number): void;
-  getScore(): number;
-  setScore(a: number): void;
-  getUserId(): number;
-  setUserId(a: number): void;
   getComment(): string;
-  setComment(a: string): void;
-  toObject(): Rating.AsObject;
+  setComment(value: string): void;
+
   serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => Rating;
+  toObject(includeInstance?: boolean): Rating.AsObject;
+  static toObject(includeInstance: boolean, msg: Rating): Rating.AsObject;
+  static serializeBinaryToWriter(message: Rating, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Rating;
+  static deserializeBinaryFromReader(message: Rating, reader: jspb.BinaryReader): Rating;
 }
 
 export namespace Rating {
   export type AsObject = {
-    EntityId: number;
-    Score: number;
-    UserId: number;
-    Comment: string;
+    entityId: number,
+    score: number,
+    userId: number,
+    comment: string,
   }
 }
 
-export class UpsertRatingRequest {
-  constructor ();
+export class GetRatingRequest extends jspb.Message {
   getEntityId(): number;
-  setEntityId(a: number): void;
-  getUserId(): number;
-  setUserId(a: number): void;
-  getScore(): number;
-  setScore(a: number): void;
-  getComment(): string;
-  setComment(a: string): void;
-  toObject(): UpsertRatingRequest.AsObject;
+  setEntityId(value: number): void;
+
   serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => UpsertRatingRequest;
+  toObject(includeInstance?: boolean): GetRatingRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetRatingRequest): GetRatingRequest.AsObject;
+  static serializeBinaryToWriter(message: GetRatingRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetRatingRequest;
+  static deserializeBinaryFromReader(message: GetRatingRequest, reader: jspb.BinaryReader): GetRatingRequest;
+}
+
+export namespace GetRatingRequest {
+  export type AsObject = {
+    entityId: number,
+  }
+}
+
+export class GetRatingResponse extends jspb.Message {
+  getScore(): number;
+  setScore(value: number): void;
+
+  getCount(): number;
+  setCount(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetRatingResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetRatingResponse): GetRatingResponse.AsObject;
+  static serializeBinaryToWriter(message: GetRatingResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetRatingResponse;
+  static deserializeBinaryFromReader(message: GetRatingResponse, reader: jspb.BinaryReader): GetRatingResponse;
+}
+
+export namespace GetRatingResponse {
+  export type AsObject = {
+    score: number,
+    count: number,
+  }
+}
+
+export class GetUserRatingRequest extends jspb.Message {
+  getUserId(): number;
+  setUserId(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetUserRatingRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetUserRatingRequest): GetUserRatingRequest.AsObject;
+  static serializeBinaryToWriter(message: GetUserRatingRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetUserRatingRequest;
+  static deserializeBinaryFromReader(message: GetUserRatingRequest, reader: jspb.BinaryReader): GetUserRatingRequest;
+}
+
+export namespace GetUserRatingRequest {
+  export type AsObject = {
+    userId: number,
+  }
+}
+
+export class ListRatingsResponse extends jspb.Message {
+  getRatingsList(): Array<Rating>;
+  setRatingsList(value: Array<Rating>): void;
+  clearRatingsList(): void;
+  addRatings(value?: Rating, index?: number): Rating;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListRatingsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ListRatingsResponse): ListRatingsResponse.AsObject;
+  static serializeBinaryToWriter(message: ListRatingsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListRatingsResponse;
+  static deserializeBinaryFromReader(message: ListRatingsResponse, reader: jspb.BinaryReader): ListRatingsResponse;
+}
+
+export namespace ListRatingsResponse {
+  export type AsObject = {
+    ratingsList: Array<Rating.AsObject>,
+  }
+}
+
+export class UpsertRatingRequest extends jspb.Message {
+  getEntityId(): number;
+  setEntityId(value: number): void;
+
+  getUserId(): number;
+  setUserId(value: number): void;
+
+  getScore(): number;
+  setScore(value: number): void;
+
+  getComment(): string;
+  setComment(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpsertRatingRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpsertRatingRequest): UpsertRatingRequest.AsObject;
+  static serializeBinaryToWriter(message: UpsertRatingRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpsertRatingRequest;
+  static deserializeBinaryFromReader(message: UpsertRatingRequest, reader: jspb.BinaryReader): UpsertRatingRequest;
 }
 
 export namespace UpsertRatingRequest {
   export type AsObject = {
-    EntityId: number;
-    UserId: number;
-    Score: number;
-    Comment: string;
+    entityId: number,
+    userId: number,
+    score: number,
+    comment: string,
+  }
+}
+
+export class DeleteRequest extends jspb.Message {
+  getEntityId(): number;
+  setEntityId(value: number): void;
+
+  getUserId(): number;
+  setUserId(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteRequest): DeleteRequest.AsObject;
+  static serializeBinaryToWriter(message: DeleteRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteRequest;
+  static deserializeBinaryFromReader(message: DeleteRequest, reader: jspb.BinaryReader): DeleteRequest;
+}
+
+export namespace DeleteRequest {
+  export type AsObject = {
+    entityId: number,
+    userId: number,
   }
 }
 

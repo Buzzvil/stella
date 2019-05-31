@@ -21,7 +21,7 @@ type mockUsecase struct {
 	mock.Mock
 }
 
-func (u *mockUsecase) GetUserByID(id int) (*auth.User, error) {
+func (u *mockUsecase) GetUserByID(id int64) (*auth.User, error) {
 	args := u.Called(id)
 	return args.Get(0).(*auth.User), args.Error(1)
 }

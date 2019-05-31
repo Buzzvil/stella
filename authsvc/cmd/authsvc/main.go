@@ -1,15 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net"
 	"os"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
-
 	"github.com/Buzzvil/stella/authsvc/internal/app/authsrv"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/userrepo"
+	pb "github.com/Buzzvil/stella/usersvc/pkg/proto"
 
 	ev "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -23,12 +22,15 @@ import (
 var jwtSigningKey = []byte(os.Getenv("JWT_SIGNING_KEY"))
 
 func main() {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+	conn, err := grpc.Dial(os.Getenv("USERSVC_ADDR"), opts...)
 	if err != nil {
-		log.Fatalf("Failed to open database: %v", err)
+		log.Fatalf("failed to dial usersvc: %s", err)
 	}
+	defer conn.Close()
+	client := pb.NewUserServiceClient(conn)
 
-	r := pgrepo.New(db)
+	r := userrepo.New(client)
 	u := auth.NewUsecase(r, nil)
 	c := authsrv.Config{
 		JWTSigningKey: jwtSigningKey,

@@ -1,6 +1,6 @@
 .PHONY: proto
 
-SERVICES=booksvc rentalsvc ratingsvc
+SERVICES=booksvc rentalsvc ratingsvc usersvc
 CLIENT_OUTPUT_DIR=frontend/proto
 
 proto:

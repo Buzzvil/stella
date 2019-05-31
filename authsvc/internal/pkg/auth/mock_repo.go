@@ -5,11 +5,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type MockRepo struct {
+type MockUserRepo struct {
 	mock.Mock
 }
 
-func (r *MockRepo) GetUserByID(id int) (*User, error) {
+func (r *MockUserRepo) GetUserByID(id int64) (*User, error) {
 	args := r.Called(id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -17,7 +17,7 @@ func (r *MockRepo) GetUserByID(id int) (*User, error) {
 	return args.Get(0).(*User), args.Error(1)
 }
 
-func (r *MockRepo) GetUserBySlackUserID(sid string) (*User, error) {
+func (r *MockUserRepo) GetUserBySlackUserID(sid string) (*User, error) {
 	args := r.Called(sid)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -25,7 +25,7 @@ func (r *MockRepo) GetUserBySlackUserID(sid string) (*User, error) {
 	return args.Get(0).(*User), args.Error(1)
 }
 
-func (r *MockRepo) CreateUser(u *User) (*User, error) {
+func (r *MockUserRepo) CreateUser(u *User) (*User, error) {
 	args := r.Called(u)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
