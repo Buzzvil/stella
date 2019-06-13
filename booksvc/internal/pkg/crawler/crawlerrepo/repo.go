@@ -30,7 +30,7 @@ func New(key string) crawler.Repo {
 	return &repo{Key: key}
 }
 
-func (r *repo) Search(query string) (*crawler.Book, error) {
+func (r *repo) Find(query string) (*crawler.Book, error) {
 	client := &http.Client{}
 	api := "https://dapi.kakao.com/v3/search/book"
 	req, err := http.NewRequest("GET", api+"?query="+url.QueryEscape(query), nil)

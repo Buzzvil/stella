@@ -1,7 +1,7 @@
 package crawler
 
 type Usecase interface {
-	Search(query string) (*Book, error)
+	Find(query string) (*Book, error)
 }
 
 type usecase struct {
@@ -14,6 +14,6 @@ func NewUsecase(repo Repo) Usecase {
 	}
 }
 
-func (u *usecase) Search(query string) (*Book, error) {
-	return u.repo.Search(query)
+func (u *usecase) Find(query string) (*Book, error) {
+	return u.repo.Find(query)
 }

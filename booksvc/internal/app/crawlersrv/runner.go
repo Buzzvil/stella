@@ -28,7 +28,7 @@ func NewRunner(key string, db *sql.DB) Runner {
 
 // Start search book with query
 func (r *Runner) Start(query string) error {
-	b, err := r.u.Search(query)
+	b, err := r.u.Find(query)
 	if err != nil {
 		fmt.Println(err)
 		return err
