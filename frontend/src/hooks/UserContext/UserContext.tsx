@@ -1,34 +1,4 @@
-// import { useEffect, useContext } from "react";
-// import Loader from "../Loader/Loader";
-// import User from "../User/User";
-
-// const Initializer = () => {
-//   const [loading, load] = Loader(true);
-//   const user = useContext(User);
-//   useEffect(() => {
-//       console.log(user)
-//   })
-
-//   const getUser = () =>
-//       load(new Promise(resolve => {
-//           setTimeout(() => resolve({}), 1000)
-//       }).then(user => user));
-
-//       return {
-//           loading,
-//           user,
-//           getUser,
-//       }
-// };
-
-// Initializer.Provider = User.Provider;
-
-// export default Initializer;
-// Context.js
-// new
 import React, { useReducer, useEffect } from "react";
-import Loader from "../Loader/Loader";
-// new
 let reducer = (state: any, {type, user}: any) => {
   switch (type) {
     case "setUser":
