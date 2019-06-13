@@ -32,7 +32,7 @@ func (repo *gormRepo) ListByID(entityID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	if err := repo.db.Where("entityID = ?", entityID).Find(&dbRatingList).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			return nil, nil
+			return []Rating, nil
 		}
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	if err := repo.db.Where("userID = ?", userID).Find(&dbRatingList).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			return nil, nil
+			return []Rating, nil
 		}
 		return nil, err
 	}

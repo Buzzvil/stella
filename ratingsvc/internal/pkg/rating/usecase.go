@@ -36,9 +36,6 @@ func (u *usecase) ListRatings(entityID int32) ([]Rating, error) {
 	if err != nil {
 		return nil, err
 	}
-	if list == nil {
-		list := []Rating
-	}
 
 	return list, nil
 }
@@ -47,9 +44,6 @@ func (u *usecase) ListUserRatings(userID int32) ([]Rating, error) {
 	list, err := u.repo.ListByUserID(userID)
 	if err != nil {
 		return nil, err
-	}
-	if list == nil {
-		list := []Rating
 	}
 
 	return list, nil
