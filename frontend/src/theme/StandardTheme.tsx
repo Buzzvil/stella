@@ -13,6 +13,21 @@ export default createMuiTheme({
     error: {
       main: "#FF6363",
       contrastText: "#FFFFFF"
+    },
+    text: {
+      primary: "#FFFFFF"
+    },
+    background: {
+      default: "#051625",
+      paper: "#051625"
+    }
+  },
+  overrides: {
+    MuiButton: {
+      text: {
+        fontFamily: 'Montserrat',
+        fontWeight: 'bold'
+      }
     }
   }
 });
