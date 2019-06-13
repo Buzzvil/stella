@@ -31,6 +31,9 @@ func (repo *gormRepo) GetAggregatedRatingByID(entityID int32) (*rating.Aggregate
 func (repo *gormRepo) ListByID(entityID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	if err := repo.db.Where("entityID = ?", entityID).Find(&dbRatingList).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	ratingList := make([]*rating.Rating, 0)
@@ -43,6 +46,9 @@ func (repo *gormRepo) ListByID(entityID int32) ([]*rating.Rating, error) {
 func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	if err := repo.db.Where("userID = ?", userID).Find(&dbRatingList).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	ratingList := make([]*rating.Rating, 0)
@@ -66,9 +72,12 @@ func UpsertRating(rating rating.Rating) (*rating.Rating, error) {
 	return repo.mapper.dbRatingToRating(dbRating), err
 }
 
-func DeleteRating(rating rating.Rating) error {
-	dbRating := repo.mapper.RatingToDBRating(rating)
-	err := repo.db.Delete(&dbRequest).Error
+func DeleteRating(entityID int32, userID int32) error {
+	dbRating := Rating{EntityID: entityID, UserID: userID}
+	err := repo.db.Delete(&dbRating).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return InvalidOperationError{}
+	}
 	return err
 }
 

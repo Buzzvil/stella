@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating"
-	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating/repo"
-
 	pb "github.com/Buzzvil/stella/ratingsvc/pkg/proto"
 	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Server is interface for grpc server
@@ -70,7 +70,12 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 }
 
 func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
-    r, err := s.u.UpsertRating(req.GetUserId(), req.GetEntityId())
+    r, err := s.u.UpsertRating(Rating{
+		req.GetUserId(),
+		req.GetEntityId(),
+		req.GetScore(),
+		req.GetComment()
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +90,12 @@ func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rat
 }
 
 func (s *server) DeleteRating(context.Context, *pb.DeleteRequest) (*empty.Empty, error) {
+	err := s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
+	switch err.(type) {
+	case rating.InvalidOperationError:
+		err = status.Error(codes.Unavailable, "invalid operation")
+	}
+	return &empty.Empty{}, err
 	return &empty.Empty{}, s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
 }
 

@@ -6,5 +6,5 @@ type Repository interface {
 	ListByID(entityID int32) ([]Rating, error)
 	ListByUserID(userID int32) ([]Rating, error)
 	UpsertRating(rating Rating) (*Rating, error)
-	DeleteRating(rating Rating) error
+	DeleteRating(entityID int32, userID int32) error
 }

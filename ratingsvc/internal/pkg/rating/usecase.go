@@ -13,12 +13,6 @@ type usecase struct {
 	repo Repository
 }
 
-func NewUsecase(repo Repository) Usecase {
-	return &usecase{
-		repo: repo,
-	}
-}
-
 func (u *usecase) GetRating(entityID int32) (*AggregatedRating, error) {
 	aggregatedRating, err := u.repo.GetAggregatedRatingByID(entityID)
 	if err != nil {
@@ -42,6 +36,9 @@ func (u *usecase) ListRatings(entityID int32) ([]Rating, error) {
 	if err != nil {
 		return nil, err
 	}
+	if list == nil {
+		list := []Rating
+	}
 
 	return list, nil
 }
@@ -51,15 +48,15 @@ func (u *usecase) ListUserRatings(userID int32) ([]Rating, error) {
 	if err != nil {
 		return nil, err
 	}
+	if list == nil {
+		list := []Rating
+	}
 
 	return list, nil
 }
 
-func (u *usecase) UpsertRating(entityID int32, userID int32) (*Rating, error) {
-	r, err := u.repo.UpsertRating(Rating{
-		EntityID: entityID,
-		UserID:   userID,
-	})
+func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
+	r, err := u.repo.UpsertRating(rating)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +64,12 @@ func (u *usecase) UpsertRating(entityID int32, userID int32) (*Rating, error) {
 }
 
 func (u *usecase) DeleteRating(entityID int32, userID int32) error {
-	return u.repo.DeleteRating(Rating{
+	return u.repo.DeleteRating(
 		EntityID: entityID,
 		UserID:   userID,
-	})
+	)
+}
+
+func NewUsecase(repo Repository) Usecase {
+	return &usecase{repo}
 }
