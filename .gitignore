@@ -1,6 +1,7 @@
 # vs code
 .vscode/
 debug
+.DS_Store
 
 deployments/chart/stella/requirements.lock
 
