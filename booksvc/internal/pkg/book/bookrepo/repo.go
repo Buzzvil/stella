@@ -18,7 +18,7 @@ func New(db *sql.DB) book.Repo {
 }
 
 func (r *repo) GetByID(id int64) (*book.Book, error) {
-	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content FROM books WHERE id = $1", id)
+	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE id = $1", id)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (r *repo) GetByID(id int64) (*book.Book, error) {
 	for rows.Next() {
 		b := book.Book{}
 		var authorStr sql.NullString
-		if err := rows.Scan(&b.ID, &b.Name, &b.Isbn, &authorStr, &b.Publisher, &b.Content); err != nil {
+		if err := rows.Scan(&b.ID, &b.Name, &b.Isbn, &authorStr, &b.Publisher, &b.Content, &b.CoverImage); err != nil {
 			return nil, err
 		}
 		if authorStr.Valid {
@@ -39,7 +39,7 @@ func (r *repo) GetByID(id int64) (*book.Book, error) {
 }
 
 func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
-	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content FROM books WHERE isbn = $1", isbn)
+	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE isbn = $1", isbn)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
 	for rows.Next() {
 		b := book.Book{}
 		var authorStr sql.NullString
-		if err := rows.Scan(&b.ID, &b.Name, &b.Isbn, &authorStr, &b.Publisher, &b.Content); err != nil {
+		if err := rows.Scan(&b.ID, &b.Name, &b.Isbn, &authorStr, &b.Publisher, &b.Content, &b.CoverImage); err != nil {
 			return nil, err
 		}
 		if authorStr.Valid {
@@ -82,7 +82,7 @@ func (r *repo) GetByFilter(filter string) ([]book.Book, error) {
 }
 
 func (r *repo) Create(book book.Book) (*book.Book, error) {
-	res, err := r.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content) VALUES ($1, $2, $3, $4, $5)", book.Isbn, book.Name, strings.Join(book.Authors, ","), book.Publisher, book.Content)
+	res, err := r.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, strings.Join(book.Authors, ","), book.Publisher, book.Content, book.CoverImage)
 	if err != nil {
 		return nil, err
 	}
