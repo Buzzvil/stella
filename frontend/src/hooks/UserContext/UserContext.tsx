@@ -30,7 +30,6 @@ import React, { useReducer, useEffect } from "react";
 import Loader from "../Loader/Loader";
 // new
 let reducer = (state: any, {type, user}: any) => {
-  console.log(state, user)
   switch (type) {
     case "setUser":
       return {...state, user, loading: false};
