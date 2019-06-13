@@ -47,11 +47,12 @@ func (r *repo) Find(query string) (*crawler.Book, error) {
 	if len(target.Documents) > 0 {
 		r := target.Documents[0]
 		return &crawler.Book{
-			Authors:   r.Authors,
-			Content:   r.Contents,
-			Isbn:      r.Isbn,
-			Publisher: r.Publisher,
-			Name:      r.Title,
+			Authors:    r.Authors,
+			Content:    r.Contents,
+			Isbn:       r.Isbn,
+			Publisher:  r.Publisher,
+			Name:       r.Title,
+			CoverImage: r.Thumbnail,
 		}, e
 	}
 	return nil, e
