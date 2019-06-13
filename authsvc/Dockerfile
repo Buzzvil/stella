@@ -1,6 +1,4 @@
-FROM golang:1.11
-
-RUN go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+FROM golang:1.11-alpine
 
 COPY . /go/src/github.com/Buzzvil/stella/authsvc
 

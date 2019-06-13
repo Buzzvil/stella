@@ -12,11 +12,11 @@ import (
 )
 
 func TestGetUserByID(t *testing.T) {
-	r := new(auth.MockRepo)
+	r := new(auth.MockUserRepo)
 	sr := new(auth.MockSlackRepo)
 	u := auth.NewUsecase(r, sr)
 
-	userID := 1000
+	userID := int64(1000)
 	user := auth.User{
 		ID:   userID,
 		Name: "Foo",
@@ -41,11 +41,11 @@ func TestGetUserByID(t *testing.T) {
 }
 
 func TestFindOrCreateUserFromSlack(t *testing.T) {
-	r := new(auth.MockRepo)
+	r := new(auth.MockUserRepo)
 	sr := new(auth.MockSlackRepo)
 	u := auth.NewUsecase(r, sr)
 
-	userID := 1000
+	userID := int64(1000)
 	slackUserID := "suid"
 	slackTeamID := "stid"
 	user := auth.User{

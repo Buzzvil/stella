@@ -19,3 +19,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+env: {}
+  # DATABASE_DRIVER: postgres
+  # DATABASE_URL:

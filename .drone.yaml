@@ -11,11 +11,7 @@ steps:
   image: golang:1.11
   commands:
   - cd authsvc
-  - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
-  - migrate -source file://db/migrations -database $DATABASE_URL up
   - go test -v ./...
-  environment:
-    DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
 
 - name: Publish
   image: plugins/gcr
@@ -29,12 +25,6 @@ steps:
   when:
     event:
       - tag
-
-services:
-- name: postgres
-  image: postgres
-  ports:
-  - 5432
 
 ---
 kind: pipeline
@@ -154,6 +144,44 @@ steps:
   when:
     event:
       - tag
+
+---
+kind: pipeline
+name: usersvc
+
+workspace:
+  base: /go
+  path: src/github.com/Buzzvil/stella
+
+steps:
+- name: Test
+  image: golang:1.11
+  commands:
+  - cd usersvc
+  - go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
+  - migrate -source file://db/migrations -database $DATABASE_URL up
+  - go test -v ./...
+  environment:
+    DATABASE_URL: postgres://postgres@postgres:5432/postgres?sslmode=disable
+
+- name: Publish
+  image: plugins/gcr
+  settings:
+    repo: gcr.io/devops-229509/stella/usersvc
+    auto_tag: true
+    context: usersvc
+    dockerfile: usersvc/Dockerfile
+    json_key:
+      from_secret: google_credentials
+  when:
+    event:
+      - tag
+
+services:
+- name: postgres
+  image: postgres
+  ports:
+  - 5432
 
 ---
 kind: pipeline
