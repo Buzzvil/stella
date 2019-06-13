@@ -70,7 +70,7 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 }
 
 func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
-    r, err := s.u.UpsertRating(Rating{
+	r, err := s.u.UpsertRating(Rating{
 		req.GetUserId(),
 		req.GetEntityId(),
 		req.GetScore(),
@@ -96,7 +96,6 @@ func (s *server) DeleteRating(context.Context, *pb.DeleteRequest) (*empty.Empty,
 		err = status.Error(codes.Unavailable, "invalid operation")
 	}
 	return &empty.Empty{}, err
-	return &empty.Empty{}, s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
 }
 
 // New initializes server
