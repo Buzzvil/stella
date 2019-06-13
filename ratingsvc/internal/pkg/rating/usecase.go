@@ -4,7 +4,7 @@ type Usecase interface {
 	GetRating(entityID int32) (*AggregatedRating, error)
 	GetUserRating(entityID int32, userID int32) (*Rating, error)
 	ListRatings(entityID int32) ([]Rating, error)
-	ListUserRatings(entityID int32, userID int32) ([]Rating, error)
+	ListUserRatings(userID int32) ([]Rating, error)
 	UpsertRating(rating Rating) (*Rating, error)
 	DeleteRating(entityID int32, userID int32) error
 }
@@ -58,10 +58,7 @@ func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
 }
 
 func (u *usecase) DeleteRating(entityID int32, userID int32) error {
-	return u.repo.DeleteRating(
-		EntityID: entityID,
-		UserID:   userID,
-	)
+	return u.repo.DeleteRating(entityID, userID)
 }
 
 func NewUsecase(repo Repository) Usecase {
