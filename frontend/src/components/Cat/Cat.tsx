@@ -4,11 +4,15 @@ import Lottie from "react-lottie";
 interface CatProps {
   isStopped?: boolean;
   isPaused?: boolean;
+  width?: string|number|undefined;
+  height?: string|number|undefined;
 }
 
 const Cat: React.SFC<CatProps> = ({
   isStopped = false,
   isPaused = false,
+  width = 300,
+  height = 300,
   ...props
 }) => {
   const defaultOptions = {
@@ -22,8 +26,8 @@ const Cat: React.SFC<CatProps> = ({
 
   return (
     <Lottie options={defaultOptions}
-            height={300}
-            width={300}
+            height={width}
+            width={height}
             isStopped={isStopped}
             isPaused={isPaused} />
   );
