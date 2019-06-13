@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import InitializingDisplay from "./components/InitializingDisplay/InitializingDisplay";
 import BookLister from "./hooks/BookLister/BookLister";
 import AppHeader from './AppHeader';
 import './App.css';

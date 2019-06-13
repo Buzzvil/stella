@@ -4,8 +4,12 @@ interface LoadFn {
     (promise: Promise<any>): [() => boolean, () => void]
 }
 
-const loader = (): [boolean, LoadFn] => {
-    const [loading, setLoading] = useState(false);
+interface LoadCreator {
+    (initial?: boolean): [boolean, LoadFn]
+}
+
+const loader: LoadCreator = (initial = false) => {
+    const [loading, setLoading] = useState(initial);
     let cancelled = false;
     const cancel = () => {
         cancelled = true;
