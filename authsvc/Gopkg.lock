@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "usersvc"
+  digest = "1:c1857b9a6a4b873208511a543448d3e4eea24ab3603e26c1304e554875784fcb"
+  name = "github.com/Buzzvil/stella"
+  packages = ["usersvc/pkg/proto"]
+  pruneopts = "UT"
+  revision = "15fa99ca713ccea624939919dd324ef20791bfb9"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -53,7 +61,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:41a8b3ae20c4103d72769a448f33bae2f13ac3adcc9cef567409a410c2fa3321"
+  digest = "1:fdc9ea0e723e75032421fe141f9e36d8f12f57cf65911b31ffe93720a0c932b2"
   name = "github.com/golang/protobuf"
   packages = [
     "jsonpb",
@@ -62,6 +70,7 @@
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
+    "ptypes/empty",
     "ptypes/struct",
     "ptypes/timestamp",
   ]
@@ -275,6 +284,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Buzzvil/stella/usersvc/pkg/proto",
     "github.com/dgrijalva/jwt-go",
     "github.com/envoyproxy/go-control-plane/envoy/api/v2/core",
     "github.com/envoyproxy/go-control-plane/envoy/service/auth/v2",
@@ -291,6 +301,8 @@
     "golang.org/x/oauth2",
     "golang.org/x/oauth2/slack",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/codes",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

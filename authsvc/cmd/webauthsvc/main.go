@@ -2,22 +2,21 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/slackrepo"
-
-	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/pgrepo"
-
 	"github.com/Buzzvil/stella/authsvc/internal/app/webauthsrv"
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/slackrepo"
+	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth/userrepo"
+	pb "github.com/Buzzvil/stella/usersvc/pkg/proto"
 
 	_ "github.com/lib/pq"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/slack"
+	"google.golang.org/grpc"
 )
 
 var webHost = os.Getenv("WEB_HOST")
@@ -37,12 +36,15 @@ func health(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+	conn, err := grpc.Dial(os.Getenv("USERSVC_ADDR"), opts...)
 	if err != nil {
-		log.Fatalf("Failed to open database: %v", err)
+		log.Fatalf("failed to dial usersvc: %s", err)
 	}
+	defer conn.Close()
+	client := pb.NewUserServiceClient(conn)
 
-	r := pgrepo.New(db)
+	r := userrepo.New(client)
 	sr := slackrepo.New(slackOauthConfig)
 	u := auth.NewUsecase(r, sr)
 	c := webauthsrv.Config{
@@ -56,6 +58,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/auth/", http.StripPrefix("/auth", websrv))
 	mux.HandleFunc("/health", health)
+	mux.HandleFunc("/", health)
 
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)

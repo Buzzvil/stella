@@ -72,9 +72,23 @@ func (ts *UsecaseTestSuite) Test_ReserveResource() {
 	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
 	ts.repo.On("AddReserveRequest", mock.Anything).Return(nil).Once()
 
-	err = ts.usecase.ReserveResource(*rs.HolderID, rs.EntityID)
+	err = ts.usecase.ReserveResource(*rs.HolderID+1, rs.EntityID)
 
 	ts.NoError(err)
+	ts.repo.AssertExpectations(ts.T())
+}
+
+// If the book is already taken by the user, reserveResource request will be failed.
+func (ts *UsecaseTestSuite) Test_ReserveResource_AlreadyTaken() {
+	var rs *rental.ResourceStatus
+	err := faker.FakeData(&rs)
+	ts.NoError(err)
+	rs.Availability = rental.Unavailable
+	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
+
+	err = ts.usecase.ReserveResource(*rs.HolderID, rs.EntityID)
+
+	ts.Error(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
