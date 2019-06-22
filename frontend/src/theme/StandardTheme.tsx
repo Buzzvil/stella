@@ -13,6 +13,36 @@ export default createMuiTheme({
     error: {
       main: "#FF6363",
       contrastText: "#FFFFFF"
+    },
+    text: {
+      primary: "#FFFFFF"
+    },
+    background: {
+      default: "#051625",
+      paper: "#051625"
+    }
+  },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: '200px',
+        height: '50px'
+      },
+      contained: {
+        fontFamily: 'Montserrat',
+        fontWeight: 'bold',
+        textTransform: 'none'
+      },
+      outlined: {
+        fontFamily: 'Montserrat',
+        fontWeight: 'bold',
+        textTransform: 'none',
+        borderWidth: '2px',
+      },
+      outlinedPrimary: {
+        color: '#FFFFFF',
+        borderWidth: '2px',
+      }
     }
   }
 });
