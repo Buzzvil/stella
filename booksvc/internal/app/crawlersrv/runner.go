@@ -38,11 +38,12 @@ func (r *Runner) Start(query string) error {
 	}
 
 	book := book.Book{
-		Name:      b.Name,
-		Isbn:      b.Isbn,
-		Authors:   b.Authors,
-		Publisher: b.Publisher,
-		Content:   b.Content,
+		Name:       b.Name,
+		Isbn:       b.Isbn,
+		Authors:    b.Authors,
+		Publisher:  b.Publisher,
+		Content:    b.Content,
+		CoverImage: b.CoverImage,
 	}
 
 	_, e := r.bu.CreateBook(book)

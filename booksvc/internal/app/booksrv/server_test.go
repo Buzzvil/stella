@@ -25,9 +25,9 @@ func (s *mockUsecase) CreateBook(b book.Book) (*book.Book, error) {
 	return args.Get(0).(*book.Book), nil
 }
 
-func (s *mockUsecase) ListBooks(filter string) ([]book.Book, error) {
+func (s *mockUsecase) ListBooks(filter string) ([]*book.Book, error) {
 	args := s.Called(filter)
-	return args.Get(0).([]book.Book), nil
+	return args.Get(0).([]*book.Book), nil
 }
 
 func TestGetBook(t *testing.T) {
@@ -65,7 +65,7 @@ func TestListBooks(t *testing.T) {
 	s := server{u: u}
 	isbn := "isbn_0001"
 	id := int64(100)
-	books := []book.Book{book.Book{ID: id, Isbn: isbn}}
+	books := []*book.Book{&book.Book{ID: id, Isbn: isbn}}
 	filter := ""
 	in := pb.ListBooksRequest{Filter: filter}
 
