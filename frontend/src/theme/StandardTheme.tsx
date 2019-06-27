@@ -43,6 +43,11 @@ export default createMuiTheme({
         color: '#FFFFFF',
         borderWidth: '2px',
       }
+    },
+    MuiCard: {
+      root: {
+        backgroundColor: '#233443',
+      }
     }
   }
 });
