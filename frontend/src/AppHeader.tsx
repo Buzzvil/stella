@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from "styled-components";
 import { User } from 'proto/usersvc_pb';
-import { Toolbar, Button, Avatar } from '@material-ui/core';
-import RoundButton from './components/RoundButton/RoundButton';
+import { Button, Avatar } from '@material-ui/core';
 
 const Header = styled.div`
   display: flex;
