@@ -1,29 +1,38 @@
 import React, { Component } from 'react';
-import { AppBar, Toolbar, Button, IconButton, Icon, withStyles, createStyles } from '@material-ui/core';
+import styled from "styled-components";
+import { User } from 'proto/usersvc_pb';
+import { Toolbar, Button, Avatar } from '@material-ui/core';
+import RoundButton from './components/RoundButton/RoundButton';
 
-const styles = createStyles({
-  appBar: {
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-  },
-});
+const Header = styled.div`
+  display: flex;
+  min-height: 84px;
+  padding-left: 32px;
+  padding-right: 32px;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-class AppHeader extends Component {
-  render() {
-    return (
-      <AppBar position="fixed">
-        <Toolbar>
-          <div className="grow">
-            <Button variant="contained">Request a book</Button>
-          </div>
-          <Button variant="contained"><a href="/auth/slack/login">Sign In</a></Button>
-          {/* <IconButton>
-            <Icon>account_circle</Icon>
-          </IconButton> */}
-        </Toolbar>
-      </AppBar>
-    )
-  }
+const Actions = styled.div`
+  margin-left: auto;
+`;
+
+interface AppHeaderProps {
+  currentUser?: User | null
 }
 
-export default withStyles(styles)(AppHeader);
+const AppHeader: React.SFC<AppHeaderProps> = ({ currentUser }) => {
+  return (
+    <Header>
+      <Button variant="contained" color="primary">Request a Book</Button>
+      <Actions>
+        {currentUser ?
+          <Avatar alt={currentUser.getName()} src={currentUser.getImage()} /> :
+          <a href="/auth/slack/login"><Button variant="contained" color="primary">Sign In</Button></a>
+        }
+      </Actions>
+    </Header>
+  )
+}
+
+export default AppHeader;

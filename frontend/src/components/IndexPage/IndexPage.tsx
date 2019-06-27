@@ -5,6 +5,8 @@ import CircleButton from "../CircleButton/CircleButton";
 import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
 import { Typography, Card } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
+import { User } from "proto/usersvc_pb";
+import AppHeader from "../../AppHeader";
 
 const Header = styled.div`
   display: flex;
@@ -37,26 +39,25 @@ const SearchInput = styled.input`
 `;
 
 interface IndexPageProps {
+  currentUserLoader?: () => [boolean, User | undefined]
   search?: (query: string) => [boolean, Book[]]
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
+const defaultCurrentUserLoader = () : [boolean, User | undefined] => ([false, undefined])
 
 const IndexPage: React.SFC<IndexPageProps> = ({
-  search = defaultSearch
+  search = defaultSearch,
+  currentUserLoader = defaultCurrentUserLoader
 }) => {
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState('');
   if (!search) return null;
   const [loading, books] = search(query)
+  const [loadingCurrentUser, currentUser] = currentUserLoader();
   return (
     <div>
-      <Header>
-        <RoundButton>REQUEST A BOOK</RoundButton>
-        <CircleButton>
-          <FaceProfileIcon />
-        </CircleButton>
-      </Header>
+      <AppHeader currentUser={currentUser} />
       <SearchContainer>
         <SearchForm
           onSubmit={e => {
