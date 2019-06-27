@@ -1,108 +1,142 @@
-export class Book {
-  constructor ();
+import * as jspb from "google-protobuf"
+
+export class Book extends jspb.Message {
   getId(): number;
-  setId(a: number): void;
+  setId(value: number): void;
+
   getName(): string;
-  setName(a: string): void;
+  setName(value: string): void;
+
   getIsbn(): string;
-  setIsbn(a: string): void;
-  getAuthorsList(): string[];
-  setAuthorsList(a: string[]): void;
+  setIsbn(value: string): void;
+
+  getAuthorsList(): Array<string>;
+  setAuthorsList(value: Array<string>): void;
+  clearAuthorsList(): void;
+  addAuthors(value: string, index?: number): void;
+
   getPublisher(): string;
-  setPublisher(a: string): void;
+  setPublisher(value: string): void;
+
   getContent(): string;
-  setContent(a: string): void;
+  setContent(value: string): void;
+
   getCoverImage(): string;
-  setCoverImage(a: string): void;
-  toObject(): Book.AsObject;
+  setCoverImage(value: string): void;
+
   serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => Book;
+  toObject(includeInstance?: boolean): Book.AsObject;
+  static toObject(includeInstance: boolean, msg: Book): Book.AsObject;
+  static serializeBinaryToWriter(message: Book, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Book;
+  static deserializeBinaryFromReader(message: Book, reader: jspb.BinaryReader): Book;
 }
 
 export namespace Book {
   export type AsObject = {
-    Id: number;
-    Name: string;
-    Isbn: string;
-    AuthorsList: string[];
-    Publisher: string;
-    Content: string;
-    CoverImage: string;
+    id: number,
+    name: string,
+    isbn: string,
+    authorsList: Array<string>,
+    publisher: string,
+    content: string,
+    coverImage: string,
   }
 }
 
-export class CreateBookRequest {
-  constructor ();
-  getName(): string;
-  setName(a: string): void;
-  getIsbn(): string;
-  setIsbn(a: string): void;
-  getAuthorsList(): string[];
-  setAuthorsList(a: string[]): void;
-  getPublisher(): string;
-  setPublisher(a: string): void;
-  getContent(): string;
-  setContent(a: string): void;
-  getCoverImage(): string;
-  setCoverImage(a: string): void;
-  toObject(): CreateBookRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => CreateBookRequest;
-}
-
-export namespace CreateBookRequest {
-  export type AsObject = {
-    Name: string;
-    Isbn: string;
-    AuthorsList: string[];
-    Publisher: string;
-    Content: string;
-    CoverImage: string;
-  }
-}
-
-export class GetBookRequest {
-  constructor ();
-  getId(): number;
-  setId(a: number): void;
-  toObject(): GetBookRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => GetBookRequest;
-}
-
-export namespace GetBookRequest {
-  export type AsObject = {
-    Id: number;
-  }
-}
-
-export class ListBooksRequest {
-  constructor ();
+export class ListBooksRequest extends jspb.Message {
   getFilter(): string;
-  setFilter(a: string): void;
-  toObject(): ListBooksRequest.AsObject;
+  setFilter(value: string): void;
+
   serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => ListBooksRequest;
+  toObject(includeInstance?: boolean): ListBooksRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListBooksRequest): ListBooksRequest.AsObject;
+  static serializeBinaryToWriter(message: ListBooksRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListBooksRequest;
+  static deserializeBinaryFromReader(message: ListBooksRequest, reader: jspb.BinaryReader): ListBooksRequest;
 }
 
 export namespace ListBooksRequest {
   export type AsObject = {
-    Filter: string;
+    filter: string,
   }
 }
 
-export class ListBooksResponse {
-  constructor ();
-  getBooksList(): Book[];
-  setBooksList(a: Book[]): void;
-  toObject(): ListBooksResponse.AsObject;
+export class ListBooksResponse extends jspb.Message {
+  getBooksList(): Array<Book>;
+  setBooksList(value: Array<Book>): void;
+  clearBooksList(): void;
+  addBooks(value?: Book, index?: number): Book;
+
   serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => ListBooksResponse;
+  toObject(includeInstance?: boolean): ListBooksResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ListBooksResponse): ListBooksResponse.AsObject;
+  static serializeBinaryToWriter(message: ListBooksResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListBooksResponse;
+  static deserializeBinaryFromReader(message: ListBooksResponse, reader: jspb.BinaryReader): ListBooksResponse;
 }
 
 export namespace ListBooksResponse {
   export type AsObject = {
-    BooksList: Book[];
+    booksList: Array<Book.AsObject>,
+  }
+}
+
+export class GetBookRequest extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetBookRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetBookRequest): GetBookRequest.AsObject;
+  static serializeBinaryToWriter(message: GetBookRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetBookRequest;
+  static deserializeBinaryFromReader(message: GetBookRequest, reader: jspb.BinaryReader): GetBookRequest;
+}
+
+export namespace GetBookRequest {
+  export type AsObject = {
+    id: number,
+  }
+}
+
+export class CreateBookRequest extends jspb.Message {
+  getName(): string;
+  setName(value: string): void;
+
+  getIsbn(): string;
+  setIsbn(value: string): void;
+
+  getAuthorsList(): Array<string>;
+  setAuthorsList(value: Array<string>): void;
+  clearAuthorsList(): void;
+  addAuthors(value: string, index?: number): void;
+
+  getPublisher(): string;
+  setPublisher(value: string): void;
+
+  getContent(): string;
+  setContent(value: string): void;
+
+  getCoverImage(): string;
+  setCoverImage(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateBookRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateBookRequest): CreateBookRequest.AsObject;
+  static serializeBinaryToWriter(message: CreateBookRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateBookRequest;
+  static deserializeBinaryFromReader(message: CreateBookRequest, reader: jspb.BinaryReader): CreateBookRequest;
+}
+
+export namespace CreateBookRequest {
+  export type AsObject = {
+    name: string,
+    isbn: string,
+    authorsList: Array<string>,
+    publisher: string,
+    content: string,
+    coverImage: string,
   }
 }
 

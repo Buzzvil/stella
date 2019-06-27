@@ -32,6 +32,11 @@ spec:
               port: 9000
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DATABASE_DRIVER
+              value: {{ .Values.env.DATABASE_DRIVER }}
+            - name: DATABASE_URL
+              value: {{ .Values.env.DATABASE_URL }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

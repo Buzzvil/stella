@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: asia.gcr.io/devops-229509/stella/authsvc
+  repository: gcr.io/devops-229509/stella/authsvc
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -24,6 +24,5 @@ tolerations: []
 affinity: {}
 
 env: {}
-  # DATABASE_URL: postgres://stella:stella@stella-postgresql:5432/stella?sslmode=disable
   # SLACK_OAUTH_CLIENT_ID: ''
   # SLACK_OAUTH_CLIENT_SECRET: ''

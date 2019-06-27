@@ -23,14 +23,6 @@ type server struct {
 	slackOauthConfig *oauth2.Config
 }
 
-type user struct {
-	ID          int
-	Name        string
-	SlackUserID string
-	SlackTeamID string
-	Image       string
-}
-
 // New initializes server.
 func New(c Config) http.Handler {
 	s := &server{
@@ -40,8 +32,7 @@ func New(c Config) http.Handler {
 		c.SlackOauthConfig,
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/slack/login", s.oauthSlackLogin)
-	mux.HandleFunc("/slack/callback", s.oauthSlackCallback)
-	// mux.HandleFunc("/user", s.userProfile)
+	mux.HandleFunc("/slack/login", s.OauthSlackLogin)
+	mux.HandleFunc("/slack/callback", s.OauthSlackCallback)
 	return mux
 }

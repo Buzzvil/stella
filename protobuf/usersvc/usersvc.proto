@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package stella.user.v1;
+
+import "google/protobuf/empty.proto";
+
+service UserService {
+  rpc GetCurrentUser(google.protobuf.Empty) returns (User) {}
+  rpc GetUser(GetUserRequest) returns (User) {}
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+  rpc CreateUser(CreateUserRequest) returns (User) {}
+}
+
+message User {
+  int64 id = 1;
+  string name = 2;
+  string slack_user_id = 3;
+  string slack_team_id = 4;
+  string image = 5;
+}
+
+message ListUsersRequest {
+  repeated int64 ids = 1;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message GetUserRequest {
+  oneof identifier {
+    int64 id = 1;
+    string slack_user_id = 2;
+  }
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string slack_user_id = 2;
+  string slack_team_id = 3;
+  string image = 4;
+}

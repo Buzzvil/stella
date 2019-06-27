@@ -17,19 +17,15 @@ type repo struct {
 }
 
 type IdentityResp struct {
-	Ok bool
-	User
-	Team
-}
-
-type User struct {
-	ID    string
-	Name  string
-	Image string `json:"image_512"`
-}
-
-type Team struct {
-	ID string
+	Ok   bool
+	User struct {
+		ID    string
+		Name  string
+		Image string `json:"image_512"`
+	}
+	Team struct {
+		ID string
+	}
 }
 
 func New(c *oauth2.Config) auth.SlackRepo {
@@ -43,7 +39,7 @@ func (r *repo) GetUserData(token *oauth2.Token) (*auth.User, error) {
 	}
 	defer resp.Body.Close()
 
-	ir := &IdentityResp{}
+	ir := IdentityResp{}
 	err = json.NewDecoder(resp.Body).Decode(&ir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse user info: %s", err)

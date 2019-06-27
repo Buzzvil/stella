@@ -6,21 +6,21 @@ import (
 
 // Usecase declares auth service interface.
 type Usecase interface {
-	GetUserByID(id int) (*User, error)
+	GetUserByID(id int64) (*User, error)
 	FindOrCreateUserFromSlack(*oauth2.Token) (*User, error)
 }
 
 type usecase struct {
-	r Repo
+	r UserRepo
 	s SlackRepo
 }
 
 // NewUsecase creates new auth service.
-func NewUsecase(r Repo, s SlackRepo) Usecase {
+func NewUsecase(r UserRepo, s SlackRepo) Usecase {
 	return &usecase{r: r, s: s}
 }
 
-func (uc *usecase) GetUserByID(id int) (*User, error) {
+func (uc *usecase) GetUserByID(id int64) (*User, error) {
 	return uc.r.GetUserByID(id)
 }
 
