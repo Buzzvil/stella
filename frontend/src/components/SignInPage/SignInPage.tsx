@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { ReactComponent as MainLogo } from "../../img/logo-main.svg";
-import { Button } from "@material-ui/core";
+import { Button, Link } from "@material-ui/core";
 
 const Header = styled.div`
   margin-top: 100px;
@@ -22,6 +22,11 @@ const ButtonWrapper = styled.div`
   width: 244px;
   margin: 0 auto;
 
+  a {
+    width: 100%;
+    text-decoration: none;
+  }
+
   button {
     margin-bottom: 20px;
   }
@@ -36,7 +41,7 @@ const SignInPage: React.SFC<SignInPageProps> = () => {
         <MainLogo />
       </Header>
       <ButtonWrapper>
-        <Button variant="contained" color="primary" fullWidth={true}>Login</Button>
+        <a href="/auth/slack/login"><Button variant="contained" color="primary" fullWidth={true}>Login</Button></a>
         <Button variant="outlined" color="primary" fullWidth={true}>Request a Book</Button>
       </ButtonWrapper>
     </div>

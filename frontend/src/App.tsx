@@ -8,14 +8,21 @@ import {Book, ListBooksRequest, ListBooksResponse} from "proto/booksvc_pb";
 import { BookServiceClient } from 'proto/booksvc_grpc_web_pb';
 import BookLister from "./hooks/BookLister/BookLister";
 import CurrentUser from "./hooks/CurrentUser/CurrentUser";
+import SignInPage from './components/SignInPage/SignInPage';
 
 const theme = createMuiTheme(StandardTheme);
 
 function App() {
+  const [loadingCurrentUser, currentUser] = CurrentUser();
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <IndexPage search={BookLister} currentUserLoader={CurrentUser}/>
+      {loadingCurrentUser ?
+        <div>Loading...</div> :
+        currentUser ?
+          <IndexPage search={BookLister} currentUser={currentUser}/> :
+          <SignInPage />
+      }
     </MuiThemeProvider>
   );
 }

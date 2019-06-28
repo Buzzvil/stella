@@ -17,7 +17,7 @@ const Actions = styled.div`
 `;
 
 interface AppHeaderProps {
-  currentUser?: User | null
+  currentUser?: User
 }
 
 const AppHeader: React.SFC<AppHeaderProps> = ({ currentUser }) => {
@@ -25,9 +25,8 @@ const AppHeader: React.SFC<AppHeaderProps> = ({ currentUser }) => {
     <Header>
       <Button variant="contained" color="primary">Request a Book</Button>
       <Actions>
-        {currentUser ?
-          <Avatar alt={currentUser.getName()} src={currentUser.getImage()} /> :
-          <a href="/auth/slack/login"><Button variant="contained" color="primary">Sign In</Button></a>
+        {currentUser &&
+          <Avatar alt={currentUser.getName()} src={currentUser.getImage()} />
         }
       </Actions>
     </Header>

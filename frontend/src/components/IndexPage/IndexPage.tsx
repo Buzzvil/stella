@@ -1,21 +1,9 @@
 import React, { useState } from "react";
-import RoundButton from "../RoundButton/RoundButton";
 import styled from "styled-components";
-import CircleButton from "../CircleButton/CircleButton";
-import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
 import { Typography, Card } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
-import AppHeader from "../../AppHeader";
-
-const Header = styled.div`
-  display: flex;
-  min-height: 84px;
-  padding-left: 32px;
-  padding-right: 32px;
-  align-items: center;
-  justify-content: space-between;
-`;
+import AppHeader from "./AppHeader";
 
 const SearchForm = styled.form`
   display: flex;
@@ -39,22 +27,20 @@ const SearchInput = styled.input`
 `;
 
 interface IndexPageProps {
-  currentUserLoader?: () => [boolean, User | undefined]
+  currentUser?: User
   search?: (query: string) => [boolean, Book[]]
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
-const defaultCurrentUserLoader = () : [boolean, User | undefined] => ([false, undefined])
 
 const IndexPage: React.SFC<IndexPageProps> = ({
   search = defaultSearch,
-  currentUserLoader = defaultCurrentUserLoader
+  currentUser
 }) => {
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState('');
   if (!search) return null;
   const [loading, books] = search(query)
-  const [loadingCurrentUser, currentUser] = currentUserLoader();
   return (
     <div>
       <AppHeader currentUser={currentUser} />
