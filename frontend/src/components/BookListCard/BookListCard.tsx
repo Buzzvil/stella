@@ -2,17 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import { Book } from "../../../proto/booksvc_pb";
 import Star, { Color } from "../Star/Star";
+import { Card, Typography } from "@material-ui/core";
 
 const Img = styled.img`
-    height: 106px
+  height: 135px;
+  border-radius: 12px;
 `
 
-const Container = styled.div`
-    display: flex;
-    min-height: 106px;
-    min-width: 300px;
-    margin: 16px;
-`
+const Container: any = styled(Card)`
+  display: flex;
+  min-height: 106px;
+  margin: 16px;
+  padding: 16px;
+`;
+
 const Content = styled.div`
     display: flex;
     flex-grow: 1;
@@ -48,16 +51,16 @@ export default ({ book }: { book: Book }) => {
     <Container>
       <Img src={book.getCoverImage()} />
       <Content>
-        <span>{book.getName()}</span>
-        <FlexFill>{book.getAuthorsList().join(", ")}</FlexFill>
+        <Typography variant="h5">{book.getName()}</Typography>
+        <FlexFill><Typography variant="h6">{book.getAuthorsList().join(", ")}</Typography></FlexFill>
         <div>{reads} reads - {reviews} reviews</div>
         <Ratings>
-            <Star value={1} /><RatingLabel>{myRating}</RatingLabel>
-            <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
+          <Star value={1} /><RatingLabel>{myRating}</RatingLabel>
+          <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
         </Ratings>
       </Content>
       <Actions>
-          <div>Test</div>
+        <div>Test</div>
       </Actions>
     </Container>
   );

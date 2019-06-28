@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Typography, Card } from "@material-ui/core";
+import { Typography, Card, TextField, Grid } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
 import AppHeader from "./AppHeader";
+import BookListCard from "../BookListCard/BookListCard";
 
 const SearchForm = styled.form`
   display: flex;
@@ -19,11 +20,23 @@ const SearchContainer = styled.div`
   justify-content: space-around;
 `;
 
-const SearchInput = styled.input`
-  width: 750px;
-  font-size: 96px;
-  font-weight: 300;
-  border: none;
+const SearchInput: any = styled(TextField)`
+  width: 738px;
+  input {
+    font-size: 72px;
+    font-weight: 300;
+    letter-spacing: -3px;
+    text-align: center;
+  }
+`;
+
+const SearchResult: any = styled(Grid)`
+  max-width: 960px;
+
+  & > div {
+    width: 50%;
+    box-sizing: border-box;
+  }
 `;
 
 interface IndexPageProps {
@@ -54,19 +67,18 @@ const IndexPage: React.SFC<IndexPageProps> = ({
             setSearched(true);
           }}
         >
-          <SearchInput name="search" placeholder="Search for a book" />
-          <Typography variant="title">
+          <SearchInput type="search" name="search" placeholder="Search for a book" />
+          <Typography variant="title" color="textSecondary">
             Try: #All, #English or #popular to filter
           </Typography>
           {loading && <Typography>Loading</Typography>}
-          <div>
+          <SearchResult container>
             {books.map(b => (
-              <Card key={b.getId()}>
-                <img src={b.getCoverImage()} title={b.getName()} />
-                <Typography>{b.getName()} - {b.getAuthorsList().join(',')}</Typography>
-              </Card>
+              <Grid item xl={4} xs={6} key={b.getId()}>
+                <BookListCard book={b} />
+              </Grid>
             ))}
-          </div>
+          </SearchResult>
         </SearchForm>
       </SearchContainer>
     </div>
