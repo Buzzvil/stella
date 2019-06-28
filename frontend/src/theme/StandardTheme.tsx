@@ -2,6 +2,7 @@ import { createMuiTheme } from "@material-ui/core";
 
 export default createMuiTheme({
   palette: {
+    type: "dark",
     primary: {
       main: "#60C1B6",
       contrastText: "#FFFFFF"
@@ -15,29 +16,28 @@ export default createMuiTheme({
       contrastText: "#FFFFFF"
     },
     text: {
-      primary: "#FFFFFF"
+      primary: "#FFFFFF",
+      secondary: "rgba(255, 255,255, 0.3)"
     },
     background: {
       default: "#051625",
-      paper: "#051625"
+      paper: "#233443"
     }
+  },
+  typography: {
+    fontFamily: [
+      'Roboto',
+      'sans-serif'
+    ].join(','),
   },
   overrides: {
     MuiButton: {
       root: {
-        borderRadius: '200px',
-        height: '50px'
-      },
-      contained: {
-        fontFamily: 'Montserrat',
-        fontWeight: 'bold',
-        textTransform: 'none'
-      },
-      outlined: {
         fontFamily: 'Montserrat',
         fontWeight: 'bold',
         textTransform: 'none',
-        borderWidth: '2px',
+        borderRadius: '200px',
+        height: '50px'
       },
       outlinedPrimary: {
         color: '#FFFFFF',
