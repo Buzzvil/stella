@@ -80,7 +80,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
           {loading && <Typography>Loading</Typography>}
           <SearchResult container>
             {books.map(b => (
-              <Grid item xl={4} xs={6} key={b.getId()}>
+              <Grid item xl={6} xs={6} key={b.getId()}>
                 <BookListCard book={b} currentUser={currentUser} statusFetcher={statusFetcher} />
               </Grid>
             ))}
