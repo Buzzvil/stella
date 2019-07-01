@@ -15,7 +15,7 @@ type server struct {
 	u  rating.Usecase
 }
 
-func (s *server) GetRating(context.Context, req *pb.GetRatingRequest) (*pb.GetRatingResponse, error) {
+func (s *server) GetRating(c context.Context, req *pb.GetRatingRequest) (*pb.GetRatingResponse, error) {
 	r, err := s.u.GetRating(req.GetEntityId())
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (s *server) GetRating(context.Context, req *pb.GetRatingRequest) (*pb.GetRa
 	return &pbRr
 }
 
-func (s *server) GetUserRating(context.Context, req *pb.GetUserRatingRequest) (*pb.Rating, error) {
+func (s *server) GetUserRating(c context.Context, req *pb.GetUserRatingRequest) (*pb.Rating, error) {
 	r, err := s.u.GetUserRating(req.GetEntityId(), req.GetUserId())
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (s *server) GetUserRating(context.Context, req *pb.GetUserRatingRequest) (*
 		EntityId: r.EntityId,
 		Score: r.Score,
 		UserId: r.UserId,
-		Comment: r.Comment
+		Comment: r.Comment,
 	}
 
 	return &pbR
@@ -48,9 +48,9 @@ func (s *server) ListRatings(context.Context, *pb.GetRatingRequest) (*pb.ListRat
 	if err != nil {
 		return nil, err
 	}
-	
+
 	pbRs := pb.ListRatingsResponse{
-		Ratings: rs
+		Ratings: rs,
 	}
 
 	return &pbRs
@@ -61,9 +61,9 @@ func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb
 	if err != nil {
 		return nil, err
 	}
-	
+
 	pbRs := pb.ListRatingsResponse{
-		Ratings: rs
+		Ratings: rs,
 	}
 
 	return &pbRs
