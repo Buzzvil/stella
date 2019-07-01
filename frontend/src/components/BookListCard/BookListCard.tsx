@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { Book } from "../../../proto/booksvc_pb";
 import Star, { Color } from "../Star/Star";
 import { Card, Typography, Button } from "@material-ui/core";
+import { Book } from "proto/booksvc_pb";
 import { ResourceStatus } from "proto/rentalsvc_pb";
 import { User } from "proto/usersvc_pb";
 
@@ -50,10 +50,13 @@ const RatingLabel: any = styled(Typography)`
 interface BookListCardInterface {
   book: Book
   currentUser?: User
-  statusFetcher: (bookId: number) => [boolean, ResourceStatus]
+  statusFetcher?: (bookId: number) => [boolean, ResourceStatus]
 }
 
-export default ({ book, currentUser, statusFetcher }: BookListCardInterface) => {
+const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
+
+export default ({
+  book, currentUser, statusFetcher = defaultStatusFetcher }: BookListCardInterface) => {
   const reads = 12;
   const reviews = 3;
   const myRating = 4;

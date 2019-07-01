@@ -47,11 +47,10 @@ interface IndexPageProps {
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
-const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
 
 const IndexPage: React.SFC<IndexPageProps> = ({
   search = defaultSearch,
-  statusFetcher = defaultStatusFetcher,
+  statusFetcher,
   currentUser
 }) => {
   const [haveSearched, setSearched] = useState(false);
