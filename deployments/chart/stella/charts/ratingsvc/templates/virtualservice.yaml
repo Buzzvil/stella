@@ -13,7 +13,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: "/stella.book.v1.RatingService"
+        prefix: "/stella.rating.v1.RatingService"
     route:
     - destination:
         host: {{ include "ratingsvc.fullname" . }}

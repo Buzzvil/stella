@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Typography, Card, TextField, Grid } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
+import { ResourceStatus } from "proto/rentalsvc_pb";
 import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
 
@@ -42,12 +43,15 @@ const SearchResult: any = styled(Grid)`
 interface IndexPageProps {
   currentUser?: User
   search?: (query: string) => [boolean, Book[]]
+  statusFetcher?: (bookId: number) => [boolean, ResourceStatus]
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
+const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
 
 const IndexPage: React.SFC<IndexPageProps> = ({
   search = defaultSearch,
+  statusFetcher = defaultStatusFetcher,
   currentUser
 }) => {
   const [haveSearched, setSearched] = useState(false);
@@ -68,14 +72,16 @@ const IndexPage: React.SFC<IndexPageProps> = ({
           }}
         >
           <SearchInput type="search" name="search" placeholder="Search for a book" />
-          <Typography variant="title" color="textSecondary">
-            Try: #All, #English or #popular to filter
-          </Typography>
+          {!haveSearched &&
+            <Typography variant="title" color="textSecondary">
+              Try: #All, #English or #popular to filter
+            </Typography>
+          }
           {loading && <Typography>Loading</Typography>}
           <SearchResult container>
             {books.map(b => (
               <Grid item xl={4} xs={6} key={b.getId()}>
-                <BookListCard book={b} />
+                <BookListCard book={b} currentUser={currentUser} statusFetcher={statusFetcher} />
               </Grid>
             ))}
           </SearchResult>
