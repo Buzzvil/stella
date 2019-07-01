@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import RoundButton from "../RoundButton/RoundButton";
 import styled from "styled-components";
-import CircleButton from "../CircleButton/CircleButton";
-import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
-import { Typography, Card } from "@material-ui/core";
+import { Typography, Card, TextField, Grid } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
-
-const Header = styled.div`
-  display: flex;
-  min-height: 84px;
-  padding-left: 32px;
-  padding-right: 32px;
-  align-items: center;
-  justify-content: space-between;
-`;
+import { User } from "proto/usersvc_pb";
+import AppHeader from "./AppHeader";
+import BookListCard from "../BookListCard/BookListCard";
 
 const SearchForm = styled.form`
   display: flex;
@@ -29,21 +20,35 @@ const SearchContainer = styled.div`
   justify-content: space-around;
 `;
 
-const SearchInput = styled.input`
-  width: 750px;
-  font-size: 96px;
-  font-weight: 300;
-  border: none;
+const SearchInput: any = styled(TextField)`
+  width: 738px;
+  input {
+    font-size: 72px;
+    font-weight: 300;
+    letter-spacing: -3px;
+    text-align: center;
+  }
+`;
+
+const SearchResult: any = styled(Grid)`
+  max-width: 960px;
+
+  & > div {
+    width: 50%;
+    box-sizing: border-box;
+  }
 `;
 
 interface IndexPageProps {
+  currentUser?: User
   search?: (query: string) => [boolean, Book[]]
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
 
 const IndexPage: React.SFC<IndexPageProps> = ({
-  search = defaultSearch
+  search = defaultSearch,
+  currentUser
 }) => {
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState('');
@@ -51,12 +56,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
   const [loading, books] = search(query)
   return (
     <div>
-      <Header>
-        <RoundButton>REQUEST A BOOK</RoundButton>
-        <CircleButton>
-          <FaceProfileIcon />
-        </CircleButton>
-      </Header>
+      <AppHeader currentUser={currentUser} />
       <SearchContainer>
         <SearchForm
           onSubmit={e => {
@@ -67,19 +67,18 @@ const IndexPage: React.SFC<IndexPageProps> = ({
             setSearched(true);
           }}
         >
-          <SearchInput name="search" placeholder="Search for a book" />
-          <Typography variant="title">
+          <SearchInput type="search" name="search" placeholder="Search for a book" />
+          <Typography variant="title" color="textSecondary">
             Try: #All, #English or #popular to filter
           </Typography>
           {loading && <Typography>Loading</Typography>}
-          <div>
+          <SearchResult container>
             {books.map(b => (
-              <Card key={b.getId()}>
-                <img src={b.getCoverImage()} title={b.getName()} />
-                <Typography>{b.getName()} - {b.getAuthorsList().join(',')}</Typography>
-              </Card>
+              <Grid item xl={4} xs={6} key={b.getId()}>
+                <BookListCard book={b} />
+              </Grid>
             ))}
-          </div>
+          </SearchResult>
         </SearchForm>
       </SearchContainer>
     </div>
