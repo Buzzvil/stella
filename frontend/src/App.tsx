@@ -4,9 +4,8 @@ import { CssBaseline } from '@material-ui/core';
 import './App.css';
 import StandardTheme from './theme/StandardTheme';
 import IndexPage from './components/IndexPage/IndexPage';
-import {Book, ListBooksRequest, ListBooksResponse} from "proto/booksvc_pb";
-import { BookServiceClient } from 'proto/booksvc_grpc_web_pb';
 import BookLister from "./hooks/BookLister/BookLister";
+import getResourceStatus from "./hooks/RentalStatus/RentalStatus";
 import CurrentUser from "./hooks/CurrentUser/CurrentUser";
 import SignInPage from './components/SignInPage/SignInPage';
 
@@ -20,7 +19,10 @@ function App() {
       {loadingCurrentUser ?
         <div>Loading...</div> :
         currentUser ?
-          <IndexPage search={BookLister} currentUser={currentUser}/> :
+          <IndexPage
+            search={BookLister}
+            statusFetcher={getResourceStatus}
+            currentUser={currentUser}/> :
           <SignInPage />
       }
     </MuiThemeProvider>

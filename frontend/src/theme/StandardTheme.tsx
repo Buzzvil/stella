@@ -8,8 +8,8 @@ export default createMuiTheme({
       contrastText: "#FFFFFF"
     },
     secondary: {
-      main: "#FF9F1C",
-      contrastText: "#FFFFFF"
+      main: "#FFE76A",
+      contrastText: "#051625"
     },
     error: {
       main: "#FF6363",
@@ -29,6 +29,16 @@ export default createMuiTheme({
       'Roboto',
       'sans-serif'
     ].join(','),
+    h5: {
+      fontSize: '21px',
+      fontWeight: 'bold'
+    },
+    h6: {
+      fontSize: '16px',
+    },
+    body2: {
+      fontSize: '12px'
+    }
   },
   overrides: {
     MuiButton: {
@@ -36,17 +46,23 @@ export default createMuiTheme({
         fontFamily: 'Montserrat',
         fontWeight: 'bold',
         textTransform: 'none',
+      },
+      contained: {
+        borderRadius: '10px',
+      },
+      containedPrimary: {
         borderRadius: '200px',
-        height: '50px'
       },
       outlinedPrimary: {
         color: '#FFFFFF',
         borderWidth: '2px',
+        borderRadius: '200px',
       }
     },
     MuiCard: {
       root: {
         backgroundColor: '#233443',
+        borderRadius: '24px',
       }
     }
   }
