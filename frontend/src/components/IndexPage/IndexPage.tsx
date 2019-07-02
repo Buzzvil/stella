@@ -43,7 +43,7 @@ const SearchResult: any = styled(Grid)`
 interface IndexPageProps {
   currentUser?: User
   search?: (query: string) => [boolean, Book[]]
-  statusFetcher?: (bookId: number) => [boolean, ResourceStatus]
+  statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])

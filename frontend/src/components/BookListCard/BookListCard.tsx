@@ -50,7 +50,7 @@ const RatingLabel: any = styled(Typography)`
 interface BookListCardInterface {
   book: Book
   currentUser?: User
-  statusFetcher?: (bookId: number) => [boolean, ResourceStatus]
+  statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
 }
 
 const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
@@ -75,12 +75,13 @@ export default ({
           <Star value={1} /><RatingLabel variant="body1">{myRating}</RatingLabel>
           <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
         </Ratings>
-        {status && status.getAvailability() === ResourceStatus.Availability.AVAILABLE ?
-          <Button variant="contained" color="secondary" disabled={loadingStatus}>Book it</Button> :
-          currentUser && currentUser.getId() === status.getHolder() ?
-            <Button variant="contained" color="default" disabled={loadingStatus}>Return</Button> :
-            <Button variant="contained" color="default" disabled={loadingStatus}>Get Notified</Button>
-        }
+        {status && (
+          status.getAvailability() === ResourceStatus.Availability.AVAILABLE ?
+            <Button variant="contained" color="secondary" disabled={loadingStatus}>Book it</Button> :
+            currentUser && currentUser.getId() === status.getHolder() ?
+              <Button variant="contained" color="default" disabled={loadingStatus}>Return</Button> :
+              <Button variant="contained" color="default" disabled={loadingStatus}>Get Notified</Button>
+        )}
       </Actions>
     </Container>
   );
