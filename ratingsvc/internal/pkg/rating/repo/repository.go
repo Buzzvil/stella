@@ -63,7 +63,12 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 
 // TODO: When Upsert rating, AggregatedRating also should be updated.
 func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error) {
-	dbRating := repo.mapper.RatingToDBRating(rating)
+	dbRating := Rating{
+		EntityID: rating.EntityID,
+		Score:    rating.Score,
+		UserID:   rating.UserID,
+		Comment:  rating.Comment,
+	}
 	if err := repo.db.Where(&dbRating).First(&dbRating).Error; err != nil {
 		if err != gorm.ErrRecordNotFound {
 			return nil, err
