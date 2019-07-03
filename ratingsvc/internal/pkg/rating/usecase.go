@@ -1,5 +1,7 @@
 package rating
 
+import "github.com/jinzhu/gorm"
+
 type Usecase interface {
 	GetRating(entityID int32) (*AggregatedRating, error)
 	GetUserRating(entityID int32, userID int32) (*Rating, error)
@@ -12,6 +14,8 @@ type Usecase interface {
 type usecase struct {
 	repo Repository
 }
+
+var _ Usecase = &usecase{}
 
 func (u *usecase) GetRating(entityID int32) (*AggregatedRating, error) {
 	aggregatedRating, err := u.repo.GetAggregatedRatingByID(entityID)
@@ -58,7 +62,11 @@ func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
 }
 
 func (u *usecase) DeleteRating(entityID int32, userID int32) error {
-	return u.repo.DeleteRating(entityID, userID)
+	err := u.repo.DeleteRating(entityID, userID)
+	if gorm.IsRecordNotFoundError(err) {
+		return InvalidOperationError{}
+	}
+	return err
 }
 
 func NewUsecase(repo Repository) Usecase {

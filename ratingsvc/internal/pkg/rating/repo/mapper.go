@@ -25,8 +25,8 @@ func (mapper) dbAggregatedRatingToAggregatedRating(dbar AggregatedRating) *ratin
 func (mapper) RatingToDBRating(r rating.Rating) *Rating {
 	return &Rating{
 		EntityID: r.EntityID,
-		Score     r.Score,
-		UserID    r.UserID,
-		Comment   r.Comment,
+		Score:    r.Score,
+		UserID:   r.UserID,
+		Comment:  r.Comment,
 	}
 }

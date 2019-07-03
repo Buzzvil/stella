@@ -12,84 +12,96 @@ import (
 
 // Server is interface for grpc server
 type server struct {
-	u  rating.Usecase
+	u rating.Usecase
 }
 
-func (s *server) GetRating(context.Context, req *pb.GetRatingRequest) (*pb.GetRatingResponse, error) {
+func (s *server) GetRating(c context.Context, req *pb.GetRatingRequest) (*pb.GetRatingResponse, error) {
 	r, err := s.u.GetRating(req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
 	pbRr := pb.GetRatingResponse{
 		Score: r.Score,
-		Count: r.count,
+		Count: r.Count,
 	}
 
-	return &pbRr
+	return &pbRr, nil
 }
 
-func (s *server) GetUserRating(context.Context, req *pb.GetUserRatingRequest) (*pb.Rating, error) {
+func (s *server) GetUserRating(c context.Context, req *pb.GetUserRatingRequest) (*pb.Rating, error) {
 	r, err := s.u.GetUserRating(req.GetEntityId(), req.GetUserId())
 	if err != nil {
 		return nil, err
 	}
 	pbR := pb.Rating{
-		EntityId: r.EntityId,
-		Score: r.Score,
-		UserId: r.UserId,
-		Comment: r.Comment
+		EntityId: r.EntityID,
+		Score:    r.Score,
+		UserId:   r.UserID,
+		Comment:  r.Comment,
 	}
 
-	return &pbR
+	return &pbR, nil
 }
 
-func (s *server) ListRatings(context.Context, *pb.GetRatingRequest) (*pb.ListRatingsResponse, error) {
+func (s *server) ListRatings(c context.Context, req *pb.GetRatingRequest) (*pb.ListRatingsResponse, error) {
 	rs, err := s.u.ListRatings(req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
-	
-	pbRs := pb.ListRatingsResponse{
-		Ratings: rs
+
+	ratings := []*pb.Rating{}
+	for _, r := range rs {
+		ratings = append(ratings, &pb.Rating{
+			EntityId: r.EntityID,
+			UserId:   r.UserID,
+			Score:    r.Score,
+			Comment:  r.Comment,
+		})
 	}
 
-	return &pbRs
+	return &pb.ListRatingsResponse{Ratings: ratings}, nil
 }
 
-func (s *server) ListUserRatings(context.Context, *pb.GetUserRatingRequest) (*pb.ListRatingsResponse, error) {
+func (s *server) ListUserRatings(c context.Context, req *pb.GetUserRatingRequest) (*pb.ListRatingsResponse, error) {
 	rs, err := s.u.ListUserRatings(req.GetUserId())
 	if err != nil {
 		return nil, err
 	}
-	
-	pbRs := pb.ListRatingsResponse{
-		Ratings: rs
+
+	ratings := []*pb.Rating{}
+	for _, r := range rs {
+		ratings = append(ratings, &pb.Rating{
+			EntityId: r.EntityID,
+			UserId:   r.UserID,
+			Score:    r.Score,
+			Comment:  r.Comment,
+		})
 	}
 
-	return &pbRs
+	return &pb.ListRatingsResponse{Ratings: ratings}, nil
 }
 
-func (s *server) UpsertRating(context.Context, *pb.UpsertRatingRequest) (*pb.Rating, error) {
-	r, err := s.u.UpsertRating(Rating{
+func (s *server) UpsertRating(c context.Context, req *pb.UpsertRatingRequest) (*pb.Rating, error) {
+	r, err := s.u.UpsertRating(rating.Rating{
 		req.GetUserId(),
-		req.GetEntityId(),
 		req.GetScore(),
-		req.GetComment()
+		req.GetEntityId(),
+		req.GetComment(),
 	})
 	if err != nil {
 		return nil, err
 	}
 	pbR := pb.Rating{
-		EntityId: r.EntityId,
-		Score: r.Score,
-		UserId: r.UserId,
-		Comment: r.Comment
+		EntityId: r.EntityID,
+		Score:    r.Score,
+		UserId:   r.UserID,
+		Comment:  r.Comment,
 	}
 
-	return &pbR
+	return &pbR, nil
 }
 
-func (s *server) DeleteRating(context.Context, *pb.DeleteRequest) (*empty.Empty, error) {
+func (s *server) DeleteRating(c context.Context, req *pb.DeleteRequest) (*empty.Empty, error) {
 	err := s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
 	switch err.(type) {
 	case rating.InvalidOperationError:
