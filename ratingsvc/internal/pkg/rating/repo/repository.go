@@ -32,7 +32,7 @@ func (repo *gormRepo) ListByID(entityID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	ratingList := make([]*rating.Rating, 0)
 
-	if err := repo.db.Where("entityID = ?", entityID).Find(&dbRatingList).Error; err != nil {
+	if err := repo.db.Where("entity_id = ?", entityID).Find(&dbRatingList).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return ratingList, nil
 		}
@@ -49,7 +49,7 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 	dbRatingList := make([]Rating, 0)
 	ratingList := make([]*rating.Rating, 0)
 
-	if err := repo.db.Where("userID = ?", userID).Find(&dbRatingList).Error; err != nil {
+	if err := repo.db.Where("user_id = ?", userID).Find(&dbRatingList).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return ratingList, nil
 		}
@@ -73,7 +73,7 @@ func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error)
 		if err != gorm.ErrRecordNotFound {
 			return nil, err
 		}
-		err := repo.db.Create(dbRating).Error
+		err := repo.db.Create(&dbRating).Error
 		return repo.mapper.dbRatingToRating(dbRating), err
 	}
 	err := repo.db.Save(dbRating).Error

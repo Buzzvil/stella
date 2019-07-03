@@ -8,6 +8,7 @@ import (
 	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating"
 	"github.com/Buzzvil/stella/ratingsvc/internal/pkg/rating/repo"
 	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 
 	pb "github.com/Buzzvil/stella/ratingsvc/pkg/proto"
 	"google.golang.org/grpc"
