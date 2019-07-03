@@ -4,12 +4,12 @@ import { storiesOf } from "@storybook/react";
 import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 
 import StandardTheme from "../../theme/StandardTheme";
-import IndexPage from "./IndexPage";
+import SignInPage from "./SignInPage";
 
-storiesOf("Pages|IndexPage", module)
+storiesOf("Pages|SignInPage", module)
   .add("default", () => (
     <MuiThemeProvider theme={StandardTheme}>
       <CssBaseline />
-      <IndexPage />
+      <SignInPage />
     </MuiThemeProvider>
   ));

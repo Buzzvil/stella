@@ -7,7 +7,7 @@ module.exports = async ({ config }) => {
             ...(config && config.resolve || {}),
             alias: {
                 ...(config && config.resolve && config.resolve.alias || {}),
-                "proto": path.resolve(__dirname, "./proto"),
+                "proto": path.resolve(__dirname, "../proto"),
             }
         }
     };

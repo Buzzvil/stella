@@ -1,4 +1,4 @@
-package book
+package crawler
 
 type Book struct {
 	ID         int64

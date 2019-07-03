@@ -18,9 +18,9 @@ func (r *mockRepo) GetByISBN(isbn string) (*Book, error) {
 	return args.Get(0).(*Book), nil
 }
 
-func (r *mockRepo) GetByFilter(filter string) ([]Book, error) {
+func (r *mockRepo) GetByFilter(filter string) ([]*Book, error) {
 	args := r.Called(filter)
-	return args.Get(0).([]Book), nil
+	return args.Get(0).([]*Book), nil
 }
 
 func (r *mockRepo) Create(book Book) (*Book, error) {

@@ -10,6 +10,10 @@ export default (query: string): [boolean, Book[]] => {
   const [books, setBooks] = useState<Book[]>([]);
   // Fetch Books
   const listBooks = (q: string) => () => {
+      if (q === "") {
+        setBooks([]);
+        return () => {};
+      }
       const req = new ListBooksRequest();
       req.setFilter(q)
       const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {

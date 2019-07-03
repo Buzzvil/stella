@@ -93,12 +93,12 @@ proto.stella.user.v1.UserServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.google.protobuf.Empty,
+ *   !proto.stella.user.v1.GetCurrentUserRequest,
  *   !proto.stella.user.v1.User>}
  */
 const methodInfo_UserService_GetCurrentUser = new grpc.web.AbstractClientBase.MethodInfo(
   proto.stella.user.v1.User,
-  /** @param {!proto.google.protobuf.Empty} request */
+  /** @param {!proto.stella.user.v1.GetCurrentUserRequest} request */
   function(request) {
     return request.serializeBinary();
   },
@@ -107,7 +107,7 @@ const methodInfo_UserService_GetCurrentUser = new grpc.web.AbstractClientBase.Me
 
 
 /**
- * @param {!proto.google.protobuf.Empty} request The
+ * @param {!proto.stella.user.v1.GetCurrentUserRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
@@ -128,7 +128,7 @@ proto.stella.user.v1.UserServiceClient.prototype.getCurrentUser =
 
 
 /**
- * @param {!proto.google.protobuf.Empty} request The
+ * @param {!proto.stella.user.v1.GetCurrentUserRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata

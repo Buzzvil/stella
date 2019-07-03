@@ -34,11 +34,12 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 	bookList := []*pb.Book{}
 	for _, book := range books {
 		bookList = append(bookList, &pb.Book{
-			Id:        book.ID,
-			Name:      book.Name,
-			Publisher: book.Publisher,
-			Isbn:      book.Isbn,
-			Authors:   book.Authors,
+			Id:         book.ID,
+			Name:       book.Name,
+			Publisher:  book.Publisher,
+			Isbn:       book.Isbn,
+			Authors:    book.Authors,
+			CoverImage: book.CoverImage,
 		})
 	}
 	return &pb.ListBooksResponse{Books: bookList}, nil
@@ -51,33 +52,36 @@ func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, err
 	}
 
 	return &pb.Book{
-		Name:      book.Name,
-		Id:        book.ID,
-		Isbn:      book.Isbn,
-		Authors:   book.Authors,
-		Publisher: book.Publisher,
-		Content:   book.Content,
+		Name:       book.Name,
+		Id:         book.ID,
+		Isbn:       book.Isbn,
+		Authors:    book.Authors,
+		Publisher:  book.Publisher,
+		Content:    book.Content,
+		CoverImage: book.CoverImage,
 	}, nil
 }
 
 func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Book, error) {
 	book := book.Book{
-		Name:      r.Name,
-		Isbn:      r.Isbn,
-		Authors:   r.Authors,
-		Publisher: r.Publisher,
-		Content:   r.Content,
+		Name:       r.Name,
+		Isbn:       r.Isbn,
+		Authors:    r.Authors,
+		Publisher:  r.Publisher,
+		Content:    r.Content,
+		CoverImage: r.CoverImage,
 	}
 	b, err := s.u.CreateBook(book)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.Book{
-		Name:      b.Name,
-		Id:        b.ID,
-		Isbn:      b.Isbn,
-		Authors:   b.Authors,
-		Publisher: b.Publisher,
-		Content:   b.Content,
+		Name:       b.Name,
+		Id:         b.ID,
+		Isbn:       b.Isbn,
+		Authors:    b.Authors,
+		Publisher:  b.Publisher,
+		Content:    b.Content,
+		CoverImage: b.CoverImage,
 	}, nil
 }

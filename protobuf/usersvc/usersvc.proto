@@ -5,7 +5,7 @@ package stella.user.v1;
 import "google/protobuf/empty.proto";
 
 service UserService {
-  rpc GetCurrentUser(google.protobuf.Empty) returns (User) {}
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (User) {}
   rpc GetUser(GetUserRequest) returns (User) {}
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
   rpc CreateUser(CreateUserRequest) returns (User) {}
@@ -18,6 +18,8 @@ message User {
   string slack_team_id = 4;
   string image = 5;
 }
+
+message GetCurrentUserRequest {}
 
 message ListUsersRequest {
   repeated int64 ids = 1;
