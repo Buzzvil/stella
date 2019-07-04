@@ -2,15 +2,12 @@ package usersrv
 
 import (
 	"context"
-	"log"
 	"strconv"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"google.golang.org/grpc/metadata"
-
-	"github.com/golang/protobuf/ptypes/empty"
 
 	"github.com/Buzzvil/stella/usersvc/internal/pkg/user"
 	pb "github.com/Buzzvil/stella/usersvc/pkg/proto"
@@ -69,14 +66,13 @@ func (s *server) GetUser(c context.Context, r *pb.GetUserRequest) (*pb.User, err
 	return userToPBUser(u), nil
 }
 
-func (s *server) GetCurrentUser(c context.Context, _ *empty.Empty) (*pb.User, error) {
+func (s *server) GetCurrentUser(c context.Context, _ *pb.GetCurrentUserRequest) (*pb.User, error) {
 	var u *user.User
 	var err error
 	md, _ := metadata.FromIncomingContext(c)
-	log.Printf("md: %+v", md)
 	uids := md.Get("user-id")
 	if len(uids) < 1 {
-		return nil, status.Error(codes.Unauthenticated, "user-id not found")
+		return nil, status.Error(codes.Unauthenticated, "unauthenticated")
 	}
 	id, err := strconv.ParseInt(uids[0], 10, 64)
 	if err != nil {

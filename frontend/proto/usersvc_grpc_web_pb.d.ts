@@ -4,6 +4,7 @@ import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty
 
 import {
   CreateUserRequest,
+  GetCurrentUserRequest,
   GetUserRequest,
   ListUsersRequest,
   ListUsersResponse,
@@ -15,7 +16,7 @@ export class UserServiceClient {
                options: null | { [index: string]: string; });
 
   getCurrentUser(
-    request: google_protobuf_empty_pb.Empty,
+    request: GetCurrentUserRequest,
     metadata: grpcWeb.Metadata | undefined,
     callback: (err: grpcWeb.Error,
                response: User) => void
@@ -50,7 +51,7 @@ export class UserServicePromiseClient {
                options: null | { [index: string]: string; });
 
   getCurrentUser(
-    request: google_protobuf_empty_pb.Empty,
+    request: GetCurrentUserRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<User>;
 

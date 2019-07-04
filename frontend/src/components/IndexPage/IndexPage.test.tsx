@@ -11,6 +11,6 @@ it("renders at least one button", () => {
 
 it("renders at least one input", () => {
   const instance = renderer.create(<IndexPage />).root;
-  const buttons = instance.findAllByType("input");
-  expect(buttons.length).toBeGreaterThan(0);
+  const inputs = instance.findAllByType("input");
+  expect(inputs.length).toBeGreaterThan(0);
 });

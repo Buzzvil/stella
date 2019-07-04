@@ -36,6 +36,20 @@ export namespace User {
   }
 }
 
+export class GetCurrentUserRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetCurrentUserRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetCurrentUserRequest): GetCurrentUserRequest.AsObject;
+  static serializeBinaryToWriter(message: GetCurrentUserRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetCurrentUserRequest;
+  static deserializeBinaryFromReader(message: GetCurrentUserRequest, reader: jspb.BinaryReader): GetCurrentUserRequest;
+}
+
+export namespace GetCurrentUserRequest {
+  export type AsObject = {
+  }
+}
+
 export class ListUsersRequest extends jspb.Message {
   getIdsList(): Array<number>;
   setIdsList(value: Array<number>): void;

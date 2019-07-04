@@ -1,18 +1,11 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import RoundButton from "../RoundButton/RoundButton";
+import React, { useState } from "react";
 import styled from "styled-components";
-import CircleButton from "../CircleButton/CircleButton";
-import { ReactComponent as FaceProfileIcon } from "../../img/face-profile.svg";
-
-const Header = styled.div`
-  display: flex;
-  min-height: 84px;
-  padding-left: 32px;
-  padding-right: 32px;
-  align-items: center;
-  justify-content: space-between;
-`;
+import { Typography, Card, TextField, Grid } from "@material-ui/core";
+import { Book } from "proto/booksvc_pb";
+import { User } from "proto/usersvc_pb";
+import { ResourceStatus } from "proto/rentalsvc_pb";
+import AppHeader from "./AppHeader";
+import BookListCard from "../BookListCard/BookListCard";
 
 const SearchForm = styled.form`
   display: flex;
@@ -28,35 +21,69 @@ const SearchContainer = styled.div`
   justify-content: space-around;
 `;
 
-const SearchInput = styled.input`
-  width: 750px;
-  font-size: 96px;
-  font-weight: 300;
-  border: none;
+const SearchInput: any = styled(TextField)`
+  width: 738px;
+  input {
+    font-size: 72px;
+    font-weight: 300;
+    letter-spacing: -3px;
+    text-align: center;
+  }
 `;
 
-interface IndexPageProps {}
+const SearchResult: any = styled(Grid)`
+  max-width: 960px;
 
-const IndexPage: React.SFC<IndexPageProps> = () => {
+  & > div {
+    width: 50%;
+    box-sizing: border-box;
+  }
+`;
+
+interface IndexPageProps {
+  currentUser?: User
+  search?: (query: string) => [boolean, Book[]]
+  statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
+}
+
+const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
+
+const IndexPage: React.SFC<IndexPageProps> = ({
+  search = defaultSearch,
+  statusFetcher,
+  currentUser
+}) => {
+  const [haveSearched, setSearched] = useState(false);
+  const [query, setQuery] = useState('');
+  if (!search) return null;
+  const [loading, books] = search(query)
   return (
     <div>
-      <Header>
-        <RoundButton>REQUEST A BOOK</RoundButton>
-        <CircleButton>
-          <FaceProfileIcon />
-        </CircleButton>
-      </Header>
+      <AppHeader currentUser={currentUser} />
       <SearchContainer>
         <SearchForm
           onSubmit={e => {
             e.preventDefault();
-            console.log("Searching");
+            const target = e.target as HTMLFormElement;
+            const input = target.elements.namedItem('search') as HTMLInputElement;
+            input && setQuery(input.value);
+            setSearched(true);
           }}
         >
-          <SearchInput name="search" placeholder="Search for a book" />
-          <Typography variant="title">
-            Try: #All, #English or #popular to filter
-          </Typography>
+          <SearchInput type="search" name="search" placeholder="Search for a book" />
+          {!haveSearched &&
+            <Typography variant="title" color="textSecondary">
+              Try: #All, #English or #popular to filter
+            </Typography>
+          }
+          {loading && <Typography>Loading</Typography>}
+          <SearchResult container>
+            {books.map(b => (
+              <Grid item xl={6} xs={6} key={b.getId()}>
+                <BookListCard book={b} currentUser={currentUser} statusFetcher={statusFetcher} />
+              </Grid>
+            ))}
+          </SearchResult>
         </SearchForm>
       </SearchContainer>
     </div>

@@ -13,7 +13,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: "/stella.book.v1.RentalService"
+        prefix: "/stella.rental.v1.RentalService"
     route:
     - destination:
         host: {{ include "rentalsvc.fullname" . }}
