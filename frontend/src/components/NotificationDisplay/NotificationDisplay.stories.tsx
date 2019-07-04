@@ -30,8 +30,8 @@ const NotificationMonitor: React.SFC = () => {
       <div
         style={{
           maxWidth: "200px",
-          minHeight: "calc(1em + 6px)",
-          padding: "2px",
+          minHeight: "calc(1em + 4px)",
+          padding: "4px",
           border: "1px solid rgba(0, 0, 0, 0.2)",
           borderRadius: "4px"
         }}
