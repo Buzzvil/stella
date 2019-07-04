@@ -119,6 +119,10 @@ func (u *mockUsecase) GetResourceStatus(entityID int64) (*rental.ResourceStatus,
 	ret := u.Called(entityID)
 	return ret.Get(0).(*rental.ResourceStatus), ret.Error(1)
 }
+func (u *mockUsecase) GetUserStatus(userID int64) (*rental.UserStatus, error) {
+	ret := u.Called(userID)
+	return ret.Get(0).(*rental.UserStatus), ret.Error(1)
+}
 func (u *mockUsecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 	ret := u.Called(entityID)
 	return ret.Get(0).([]int64), ret.Error(1)
