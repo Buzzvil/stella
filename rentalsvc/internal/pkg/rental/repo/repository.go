@@ -31,32 +31,32 @@ func (repo *gormRepo) SetResourceStatus(status rental.ResourceStatus) error {
 	return err
 }
 
-func (repo *gormRepo) ListReserveRequestByEntityID(entityID int64) ([]*rental.ReserveRequest, error) {
-	dbrrs := make([]ReserveRequest, 0)
+func (repo *gormRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
+	dbrrs := make([]WatchRequest, 0)
 	if err := repo.db.Where("entity_id = ?", entityID).Find(&dbrrs).Error; err != nil {
 		return nil, err
 	}
-	rrs := make([]*rental.ReserveRequest, 0)
+	rrs := make([]*rental.WatchRequest, 0)
 	for _, dbrr := range dbrrs {
-		rrs = append(rrs, repo.mapper.dbReserveRequestToReserveRequest(dbrr))
+		rrs = append(rrs, repo.mapper.dbWatchRequestToWatchRequest(dbrr))
 	}
 	return rrs, nil
 }
 
-func (repo *gormRepo) AddReserveRequest(request rental.ReserveRequest) error {
-	dbRequest := repo.mapper.reserveRequestToDBReserveRequest(request)
+func (repo *gormRepo) AddWatchRequest(request rental.WatchRequest) error {
+	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
-func (repo *gormRepo) RemoveReserveRequest(request rental.ReserveRequest) error {
-	dbRequest := repo.mapper.reserveRequestToDBReserveRequest(request)
+func (repo *gormRepo) RemoveWatchRequest(request rental.WatchRequest) error {
+	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
 	err := repo.db.Where(dbRequest).Delete(dbRequest).Error
 	return err
 }
 
 func New(db *gorm.DB) rental.Repository {
 	db.AutoMigrate(&ResourceStatus{})
-	db.AutoMigrate(&ReserveRequest{})
+	db.AutoMigrate(&WatchRequest{})
 	return &gormRepo{db, mapper{}}
 }

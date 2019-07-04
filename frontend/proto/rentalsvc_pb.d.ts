@@ -1,36 +1,84 @@
-import * as jspb from "google-protobuf"
-
-import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
-
-export class ResourceStatus extends jspb.Message {
-  getEntityId(): number;
-  setEntityId(value: number): void;
-
-  getAvailability(): ResourceStatus.Availability;
-  setAvailability(value: ResourceStatus.Availability): void;
-
-  getHolder(): number;
-  setHolder(value: number): void;
-
-  getReservedUserIdsList(): Array<number>;
-  setReservedUserIdsList(value: Array<number>): void;
-  clearReservedUserIdsList(): void;
-  addReservedUserIds(value: number, index?: number): void;
-
+export class Empty {
+  constructor ();
+  toObject(): Empty.AsObject;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ResourceStatus.AsObject;
-  static toObject(includeInstance: boolean, msg: ResourceStatus): ResourceStatus.AsObject;
-  static serializeBinaryToWriter(message: ResourceStatus, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ResourceStatus;
-  static deserializeBinaryFromReader(message: ResourceStatus, reader: jspb.BinaryReader): ResourceStatus;
+  static deserializeBinary: (bytes: {}) => Empty;
+}
+
+export namespace Empty {
+  export type AsObject = {
+  }
+}
+
+export class GetResourceStatusRequest {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  toObject(): GetResourceStatusRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => GetResourceStatusRequest;
+}
+
+export namespace GetResourceStatusRequest {
+  export type AsObject = {
+    EntityId: number;
+  }
+}
+
+export class GetUserStatusRequest {
+  constructor ();
+  getUserId(): number;
+  setUserId(a: number): void;
+  toObject(): GetUserStatusRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => GetUserStatusRequest;
+}
+
+export namespace GetUserStatusRequest {
+  export type AsObject = {
+    UserId: number;
+  }
+}
+
+export class RentResourceRequest {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  getUserId(): number;
+  setUserId(a: number): void;
+  toObject(): RentResourceRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => RentResourceRequest;
+}
+
+export namespace RentResourceRequest {
+  export type AsObject = {
+    EntityId: number;
+    UserId: number;
+  }
+}
+
+export class ResourceStatus {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  getAvailability(): ResourceStatus.Availability;
+  setAvailability(a: ResourceStatus.Availability): void;
+  getHolder(): number;
+  setHolder(a: number): void;
+  getWatchingUserIdsList(): number[];
+  setWatchingUserIdsList(a: number[]): void;
+  toObject(): ResourceStatus.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => ResourceStatus;
 }
 
 export namespace ResourceStatus {
   export type AsObject = {
-    entityId: number,
-    availability: ResourceStatus.Availability,
-    holder: number,
-    reservedUserIdsList: Array<number>,
+    EntityId: number;
+    Availability: ResourceStatus.Availability;
+    Holder: number;
+    WatchingUserIdsList: number[];
   }
 
   export enum Availability { 
@@ -39,109 +87,78 @@ export namespace ResourceStatus {
   }
 }
 
-export class GetResourceStatusRequest extends jspb.Message {
+export class ReturnResourceRequest {
+  constructor ();
   getEntityId(): number;
-  setEntityId(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetResourceStatusRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetResourceStatusRequest): GetResourceStatusRequest.AsObject;
-  static serializeBinaryToWriter(message: GetResourceStatusRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetResourceStatusRequest;
-  static deserializeBinaryFromReader(message: GetResourceStatusRequest, reader: jspb.BinaryReader): GetResourceStatusRequest;
-}
-
-export namespace GetResourceStatusRequest {
-  export type AsObject = {
-    entityId: number,
-  }
-}
-
-export class RentResourceRequest extends jspb.Message {
-  getEntityId(): number;
-  setEntityId(value: number): void;
-
+  setEntityId(a: number): void;
   getUserId(): number;
-  setUserId(value: number): void;
-
+  setUserId(a: number): void;
+  toObject(): ReturnResourceRequest.AsObject;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): RentResourceRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: RentResourceRequest): RentResourceRequest.AsObject;
-  static serializeBinaryToWriter(message: RentResourceRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): RentResourceRequest;
-  static deserializeBinaryFromReader(message: RentResourceRequest, reader: jspb.BinaryReader): RentResourceRequest;
-}
-
-export namespace RentResourceRequest {
-  export type AsObject = {
-    entityId: number,
-    userId: number,
-  }
-}
-
-export class ReturnResourceRequest extends jspb.Message {
-  getEntityId(): number;
-  setEntityId(value: number): void;
-
-  getUserId(): number;
-  setUserId(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ReturnResourceRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ReturnResourceRequest): ReturnResourceRequest.AsObject;
-  static serializeBinaryToWriter(message: ReturnResourceRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ReturnResourceRequest;
-  static deserializeBinaryFromReader(message: ReturnResourceRequest, reader: jspb.BinaryReader): ReturnResourceRequest;
+  static deserializeBinary: (bytes: {}) => ReturnResourceRequest;
 }
 
 export namespace ReturnResourceRequest {
   export type AsObject = {
-    entityId: number,
-    userId: number,
+    EntityId: number;
+    UserId: number;
   }
 }
 
-export class ReserveResourceRequest extends jspb.Message {
+export class UnwatchResourceRequest {
+  constructor ();
   getEntityId(): number;
-  setEntityId(value: number): void;
-
+  setEntityId(a: number): void;
   getUserId(): number;
-  setUserId(value: number): void;
-
+  setUserId(a: number): void;
+  toObject(): UnwatchResourceRequest.AsObject;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ReserveResourceRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ReserveResourceRequest): ReserveResourceRequest.AsObject;
-  static serializeBinaryToWriter(message: ReserveResourceRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ReserveResourceRequest;
-  static deserializeBinaryFromReader(message: ReserveResourceRequest, reader: jspb.BinaryReader): ReserveResourceRequest;
+  static deserializeBinary: (bytes: {}) => UnwatchResourceRequest;
 }
 
-export namespace ReserveResourceRequest {
+export namespace UnwatchResourceRequest {
   export type AsObject = {
-    entityId: number,
-    userId: number,
+    EntityId: number;
+    UserId: number;
   }
 }
 
-export class CancelResourceRequest extends jspb.Message {
-  getEntityId(): number;
-  setEntityId(value: number): void;
-
+export class UserStatus {
+  constructor ();
   getUserId(): number;
-  setUserId(value: number): void;
-
+  setUserId(a: number): void;
+  getHoldingEntityIdsList(): number[];
+  setHoldingEntityIdsList(a: number[]): void;
+  getWatchingEntityIdsList(): number[];
+  setWatchingEntityIdsList(a: number[]): void;
+  toObject(): UserStatus.AsObject;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): CancelResourceRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: CancelResourceRequest): CancelResourceRequest.AsObject;
-  static serializeBinaryToWriter(message: CancelResourceRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): CancelResourceRequest;
-  static deserializeBinaryFromReader(message: CancelResourceRequest, reader: jspb.BinaryReader): CancelResourceRequest;
+  static deserializeBinary: (bytes: {}) => UserStatus;
 }
 
-export namespace CancelResourceRequest {
+export namespace UserStatus {
   export type AsObject = {
-    entityId: number,
-    userId: number,
+    UserId: number;
+    HoldingEntityIdsList: number[];
+    WatchingEntityIdsList: number[];
+  }
+}
+
+export class WatchResourceRequest {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  getUserId(): number;
+  setUserId(a: number): void;
+  toObject(): WatchResourceRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => WatchResourceRequest;
+}
+
+export namespace WatchResourceRequest {
+  export type AsObject = {
+    EntityId: number;
+    UserId: number;
   }
 }
 

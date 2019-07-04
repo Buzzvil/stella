@@ -6,10 +6,17 @@ import "google/protobuf/empty.proto";
 
 service RentalService {
   rpc GetResourceStatus(GetResourceStatusRequest) returns (ResourceStatus) {}
+  rpc GetUserStatus(GetUserStatusRequest) returns (UserStatus) {}
   rpc RentResource(RentResourceRequest) returns (google.protobuf.Empty) {}
   rpc ReturnResource(ReturnResourceRequest) returns (google.protobuf.Empty) {}
-  rpc ReserveResource(ReserveResourceRequest) returns (google.protobuf.Empty) {}
-  rpc CancelResource(CancelResourceRequest) returns (google.protobuf.Empty) {}
+  rpc WatchResource(WatchResourceRequest) returns (google.protobuf.Empty) {}
+  rpc UnwatchResource(UnwatchResourceRequest) returns (google.protobuf.Empty) {}
+}
+
+message UserStatus {
+  int64 user_id = 1;
+  repeated int64 holding_entity_ids = 2;
+  repeated int64 watching_entity_ids = 3;
 }
 
 message ResourceStatus {
@@ -20,7 +27,11 @@ message ResourceStatus {
   }
   Availability availability = 2;
   int64 holder = 3;
-  repeated int64 reserved_user_ids = 4;
+  repeated int64 watching_user_ids = 4;
+}
+
+message GetUserStatusRequest {
+  int64 user_id = 1;
 }
 
 message GetResourceStatusRequest {
@@ -37,12 +48,12 @@ message ReturnResourceRequest {
   int64 user_id = 2;
 }
 
-message ReserveResourceRequest {
+message WatchResourceRequest {
   int64 entity_id = 1;
   int64 user_id = 2;
 }
 
-message CancelResourceRequest {
+message UnwatchResourceRequest {
   int64 entity_id = 1;
   int64 user_id = 2;
 }
