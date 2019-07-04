@@ -14,7 +14,7 @@ type ResourceStatus struct {
 	HolderID     *int64
 }
 
-type ReserveRequest struct {
+type WatchRequest struct {
 	ID       uint
 	UserID   int64
 	EntityID int64

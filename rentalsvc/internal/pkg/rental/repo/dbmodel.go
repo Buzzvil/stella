@@ -13,7 +13,7 @@ type ResourceStatus struct {
 	UpdatedAt    time.Time
 }
 
-type ReserveRequest struct {
+type WatchRequest struct {
 	ID        uint  `gorm:"primary_key"`
 	UserID    int64 `gorm:"unique_index:idx_user_entity"`
 	EntityID  int64 `gorm:"unique_index:idx_user_entity"`

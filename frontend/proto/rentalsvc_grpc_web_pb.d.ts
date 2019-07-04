@@ -1,14 +1,14 @@
 import * as grpcWeb from 'grpc-web';
 import {
   Empty,
-  CancelResourceRequest,
   GetResourceStatusRequest,
   GetUserStatusRequest,
   RentResourceRequest,
-  ReserveResourceRequest,
   ResourceStatus,
   ReturnResourceRequest,
-  UserStatus} from './rentalsvc_pb';
+  UnwatchResourceRequest,
+  UserStatus,
+  WatchResourceRequest} from './rentalsvc_pb';
 
 export class RentalServiceClient {
   constructor (hostname: string,
@@ -43,15 +43,15 @@ export class RentalServiceClient {
                response: Empty) => void
   ): grpcWeb.ClientReadableStream<Empty>;
 
-  reserveResource(
-    request: ReserveResourceRequest,
+  watchResource(
+    request: WatchResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: Empty) => void
   ): grpcWeb.ClientReadableStream<Empty>;
 
-  cancelResource(
-    request: CancelResourceRequest,
+  unwatchResource(
+    request: UnwatchResourceRequest,
     metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: Empty) => void
@@ -84,13 +84,13 @@ export class RentalServicePromiseClient {
     metadata: grpcWeb.Metadata
   ): Promise<Empty>;
 
-  reserveResource(
-    request: ReserveResourceRequest,
+  watchResource(
+    request: WatchResourceRequest,
     metadata: grpcWeb.Metadata
   ): Promise<Empty>;
 
-  cancelResource(
-    request: CancelResourceRequest,
+  unwatchResource(
+    request: UnwatchResourceRequest,
     metadata: grpcWeb.Metadata
   ): Promise<Empty>;
 

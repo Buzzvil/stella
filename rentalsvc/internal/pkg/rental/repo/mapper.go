@@ -24,16 +24,16 @@ func (mapper) resourceStatusToDBResourceStatus(rs rental.ResourceStatus) *Resour
 	}
 }
 
-func (mapper) dbReserveRequestToReserveRequest(dbrr ReserveRequest) *rental.ReserveRequest {
-	return &rental.ReserveRequest{
+func (mapper) dbWatchRequestToWatchRequest(dbrr WatchRequest) *rental.WatchRequest {
+	return &rental.WatchRequest{
 		ID:       dbrr.ID,
 		EntityID: dbrr.EntityID,
 		UserID:   dbrr.UserID,
 	}
 }
 
-func (mapper) reserveRequestToDBReserveRequest(rr rental.ReserveRequest) *ReserveRequest {
-	return &ReserveRequest{
+func (mapper) reserveRequestToDBWatchRequest(rr rental.WatchRequest) *WatchRequest {
+	return &WatchRequest{
 		ID:       rr.ID,
 		EntityID: rr.EntityID,
 		UserID:   rr.UserID,

@@ -21,13 +21,13 @@ func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
 	ts.repo.AssertExpectations(ts.T())
 }
 
-func (ts *UsecaseTestSuite) Test_GetResourceWaitingList() {
-	var rrs []*rental.ReserveRequest
+func (ts *UsecaseTestSuite) Test_GetResourceWatchingList() {
+	var rrs []*rental.WatchRequest
 	err := faker.FakeData(&rrs)
 	ts.NoError(err)
-	ts.repo.On("ListReserveRequestByEntityID", mock.Anything).Return(rrs, nil).Once()
+	ts.repo.On("ListWatchRequestByEntityID", mock.Anything).Return(rrs, nil).Once()
 
-	ids, err := ts.usecase.GetResourceWaitingList(1234)
+	ids, err := ts.usecase.GetResourceWatchingList(1234)
 
 	ts.NoError(err)
 	for i, rr := range rrs {
@@ -64,38 +64,38 @@ func (ts *UsecaseTestSuite) Test_ReturnResource() {
 	ts.repo.AssertExpectations(ts.T())
 }
 
-func (ts *UsecaseTestSuite) Test_ReserveResource() {
+func (ts *UsecaseTestSuite) Test_WatchResource() {
 	var rs *rental.ResourceStatus
 	err := faker.FakeData(&rs)
 	ts.NoError(err)
 	rs.Availability = rental.Unavailable
 	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.repo.On("AddReserveRequest", mock.Anything).Return(nil).Once()
+	ts.repo.On("AddWatchRequest", mock.Anything).Return(nil).Once()
 
-	err = ts.usecase.ReserveResource(*rs.HolderID+1, rs.EntityID)
+	err = ts.usecase.WatchResource(*rs.HolderID+1, rs.EntityID)
 
 	ts.NoError(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
 // If the book is already taken by the user, reserveResource request will be failed.
-func (ts *UsecaseTestSuite) Test_ReserveResource_AlreadyTaken() {
+func (ts *UsecaseTestSuite) Test_WatchResource_AlreadyTaken() {
 	var rs *rental.ResourceStatus
 	err := faker.FakeData(&rs)
 	ts.NoError(err)
 	rs.Availability = rental.Unavailable
 	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
 
-	err = ts.usecase.ReserveResource(*rs.HolderID, rs.EntityID)
+	err = ts.usecase.WatchResource(*rs.HolderID, rs.EntityID)
 
 	ts.Error(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
-func (ts *UsecaseTestSuite) Test_CancelResource() {
-	ts.repo.On("RemoveReserveRequest", mock.Anything).Return(nil).Once()
+func (ts *UsecaseTestSuite) Test_UnwatchResource() {
+	ts.repo.On("RemoveWatchRequest", mock.Anything).Return(nil).Once()
 
-	err := ts.usecase.CancelResource(1111, 2222)
+	err := ts.usecase.UnwatchResource(1111, 2222)
 
 	ts.NoError(err)
 	ts.repo.AssertExpectations(ts.T())
@@ -134,15 +134,15 @@ func (r *mockRepo) SetResourceStatus(status rental.ResourceStatus) error {
 	ret := r.Called(status)
 	return ret.Error(0)
 }
-func (r *mockRepo) ListReserveRequestByEntityID(entityID int64) ([]*rental.ReserveRequest, error) {
+func (r *mockRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
 	ret := r.Called(entityID)
-	return ret.Get(0).([]*rental.ReserveRequest), ret.Error(1)
+	return ret.Get(0).([]*rental.WatchRequest), ret.Error(1)
 }
-func (r *mockRepo) AddReserveRequest(request rental.ReserveRequest) error {
+func (r *mockRepo) AddWatchRequest(request rental.WatchRequest) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }
-func (r *mockRepo) RemoveReserveRequest(request rental.ReserveRequest) error {
+func (r *mockRepo) RemoveWatchRequest(request rental.WatchRequest) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }

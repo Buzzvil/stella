@@ -10,24 +10,6 @@ export namespace Empty {
   }
 }
 
-export class CancelResourceRequest {
-  constructor ();
-  getEntityId(): number;
-  setEntityId(a: number): void;
-  getUserId(): number;
-  setUserId(a: number): void;
-  toObject(): CancelResourceRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => CancelResourceRequest;
-}
-
-export namespace CancelResourceRequest {
-  export type AsObject = {
-    EntityId: number;
-    UserId: number;
-  }
-}
-
 export class GetResourceStatusRequest {
   constructor ();
   getEntityId(): number;
@@ -76,24 +58,6 @@ export namespace RentResourceRequest {
   }
 }
 
-export class ReserveResourceRequest {
-  constructor ();
-  getEntityId(): number;
-  setEntityId(a: number): void;
-  getUserId(): number;
-  setUserId(a: number): void;
-  toObject(): ReserveResourceRequest.AsObject;
-  serializeBinary(): Uint8Array;
-  static deserializeBinary: (bytes: {}) => ReserveResourceRequest;
-}
-
-export namespace ReserveResourceRequest {
-  export type AsObject = {
-    EntityId: number;
-    UserId: number;
-  }
-}
-
 export class ResourceStatus {
   constructor ();
   getEntityId(): number;
@@ -102,8 +66,8 @@ export class ResourceStatus {
   setAvailability(a: ResourceStatus.Availability): void;
   getHolder(): number;
   setHolder(a: number): void;
-  getReservedUserIdsList(): number[];
-  setReservedUserIdsList(a: number[]): void;
+  getWatchingUserIdsList(): number[];
+  setWatchingUserIdsList(a: number[]): void;
   toObject(): ResourceStatus.AsObject;
   serializeBinary(): Uint8Array;
   static deserializeBinary: (bytes: {}) => ResourceStatus;
@@ -114,7 +78,7 @@ export namespace ResourceStatus {
     EntityId: number;
     Availability: ResourceStatus.Availability;
     Holder: number;
-    ReservedUserIdsList: number[];
+    WatchingUserIdsList: number[];
   }
 
   export enum Availability { 
@@ -141,12 +105,32 @@ export namespace ReturnResourceRequest {
   }
 }
 
+export class UnwatchResourceRequest {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  getUserId(): number;
+  setUserId(a: number): void;
+  toObject(): UnwatchResourceRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => UnwatchResourceRequest;
+}
+
+export namespace UnwatchResourceRequest {
+  export type AsObject = {
+    EntityId: number;
+    UserId: number;
+  }
+}
+
 export class UserStatus {
   constructor ();
   getUserId(): number;
   setUserId(a: number): void;
   getHoldingEntityIdsList(): number[];
   setHoldingEntityIdsList(a: number[]): void;
+  getWatchingEntityIdsList(): number[];
+  setWatchingEntityIdsList(a: number[]): void;
   toObject(): UserStatus.AsObject;
   serializeBinary(): Uint8Array;
   static deserializeBinary: (bytes: {}) => UserStatus;
@@ -156,6 +140,25 @@ export namespace UserStatus {
   export type AsObject = {
     UserId: number;
     HoldingEntityIdsList: number[];
+    WatchingEntityIdsList: number[];
+  }
+}
+
+export class WatchResourceRequest {
+  constructor ();
+  getEntityId(): number;
+  setEntityId(a: number): void;
+  getUserId(): number;
+  setUserId(a: number): void;
+  toObject(): WatchResourceRequest.AsObject;
+  serializeBinary(): Uint8Array;
+  static deserializeBinary: (bytes: {}) => WatchResourceRequest;
+}
+
+export namespace WatchResourceRequest {
+  export type AsObject = {
+    EntityId: number;
+    UserId: number;
   }
 }
 

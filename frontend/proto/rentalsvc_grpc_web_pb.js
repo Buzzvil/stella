@@ -303,12 +303,12 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.returnResource =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.stella.rental.v1.ReserveResourceRequest,
+ *   !proto.stella.rental.v1.WatchResourceRequest,
  *   !proto.google.protobuf.Empty>}
  */
-const methodInfo_RentalService_ReserveResource = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RentalService_WatchResource = new grpc.web.AbstractClientBase.MethodInfo(
   google_protobuf_empty_pb.Empty,
-  /** @param {!proto.stella.rental.v1.ReserveResourceRequest} request */
+  /** @param {!proto.stella.rental.v1.WatchResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
@@ -317,7 +317,7 @@ const methodInfo_RentalService_ReserveResource = new grpc.web.AbstractClientBase
 
 
 /**
- * @param {!proto.stella.rental.v1.ReserveResourceRequest} request The
+ * @param {!proto.stella.rental.v1.WatchResourceRequest} request The
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
@@ -326,29 +326,29 @@ const methodInfo_RentalService_ReserveResource = new grpc.web.AbstractClientBase
  * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.stella.rental.v1.RentalServiceClient.prototype.reserveResource =
+proto.stella.rental.v1.RentalServiceClient.prototype.watchResource =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/stella.rental.v1.RentalService/ReserveResource',
+      '/stella.rental.v1.RentalService/WatchResource',
       request,
       metadata,
-      methodInfo_RentalService_ReserveResource,
+      methodInfo_RentalService_WatchResource,
       callback);
 };
 
 
 /**
- * @param {!proto.stella.rental.v1.ReserveResourceRequest} request The
+ * @param {!proto.stella.rental.v1.WatchResourceRequest} request The
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
-proto.stella.rental.v1.RentalServicePromiseClient.prototype.reserveResource =
+proto.stella.rental.v1.RentalServicePromiseClient.prototype.watchResource =
     function(request, metadata) {
   return new Promise((resolve, reject) => {
-    this.delegateClient_.reserveResource(
+    this.delegateClient_.watchResource(
       request, metadata, (error, response) => {
         error ? reject(error) : resolve(response);
       });
@@ -359,12 +359,12 @@ proto.stella.rental.v1.RentalServicePromiseClient.prototype.reserveResource =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.stella.rental.v1.CancelResourceRequest,
+ *   !proto.stella.rental.v1.UnwatchResourceRequest,
  *   !proto.google.protobuf.Empty>}
  */
-const methodInfo_RentalService_CancelResource = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RentalService_UnwatchResource = new grpc.web.AbstractClientBase.MethodInfo(
   google_protobuf_empty_pb.Empty,
-  /** @param {!proto.stella.rental.v1.CancelResourceRequest} request */
+  /** @param {!proto.stella.rental.v1.UnwatchResourceRequest} request */
   function(request) {
     return request.serializeBinary();
   },
@@ -373,7 +373,7 @@ const methodInfo_RentalService_CancelResource = new grpc.web.AbstractClientBase.
 
 
 /**
- * @param {!proto.stella.rental.v1.CancelResourceRequest} request The
+ * @param {!proto.stella.rental.v1.UnwatchResourceRequest} request The
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
@@ -382,29 +382,29 @@ const methodInfo_RentalService_CancelResource = new grpc.web.AbstractClientBase.
  * @return {!grpc.web.ClientReadableStream<!proto.google.protobuf.Empty>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.stella.rental.v1.RentalServiceClient.prototype.cancelResource =
+proto.stella.rental.v1.RentalServiceClient.prototype.unwatchResource =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/stella.rental.v1.RentalService/CancelResource',
+      '/stella.rental.v1.RentalService/UnwatchResource',
       request,
       metadata,
-      methodInfo_RentalService_CancelResource,
+      methodInfo_RentalService_UnwatchResource,
       callback);
 };
 
 
 /**
- * @param {!proto.stella.rental.v1.CancelResourceRequest} request The
+ * @param {!proto.stella.rental.v1.UnwatchResourceRequest} request The
  *     request proto
  * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.google.protobuf.Empty>}
  *     The XHR Node Readable Stream
  */
-proto.stella.rental.v1.RentalServicePromiseClient.prototype.cancelResource =
+proto.stella.rental.v1.RentalServicePromiseClient.prototype.unwatchResource =
     function(request, metadata) {
   return new Promise((resolve, reject) => {
-    this.delegateClient_.cancelResource(
+    this.delegateClient_.unwatchResource(
       request, metadata, (error, response) => {
         error ? reject(error) : resolve(response);
       });
