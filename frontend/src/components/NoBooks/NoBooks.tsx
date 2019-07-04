@@ -15,7 +15,6 @@ const Card = styled.div`
     position: relative;
     width: 472px;
     background: #233443;
-    margin-top: 91px;
     padding-top: 35px;
     padding-bottom: 24px;
     text-align: center;
