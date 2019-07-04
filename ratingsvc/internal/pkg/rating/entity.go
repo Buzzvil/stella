@@ -9,5 +9,5 @@ type Rating struct {
 
 type AggregatedRating struct {
 	Score float32
-	Count int
+	Count int32
 }

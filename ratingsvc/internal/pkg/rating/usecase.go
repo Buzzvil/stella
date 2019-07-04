@@ -1,10 +1,12 @@
 package rating
 
+import "github.com/jinzhu/gorm"
+
 type Usecase interface {
 	GetRating(entityID int32) (*AggregatedRating, error)
 	GetUserRating(entityID int32, userID int32) (*Rating, error)
-	ListRatings(entityID int32) ([]Rating, error)
-	ListUserRatings(entityID int32, userID int32) ([]Rating, error)
+	ListRatings(entityID int32) ([]*Rating, error)
+	ListUserRatings(userID int32) ([]*Rating, error)
 	UpsertRating(rating Rating) (*Rating, error)
 	DeleteRating(entityID int32, userID int32) error
 }
@@ -13,11 +15,7 @@ type usecase struct {
 	repo Repository
 }
 
-func NewUsecase(repo Repository) Usecase {
-	return &usecase{
-		repo: repo,
-	}
-}
+var _ Usecase = &usecase{}
 
 func (u *usecase) GetRating(entityID int32) (*AggregatedRating, error) {
 	aggregatedRating, err := u.repo.GetAggregatedRatingByID(entityID)
@@ -37,7 +35,7 @@ func (u *usecase) GetUserRating(entityID int32, userID int32) (*Rating, error) {
 	return rating, nil
 }
 
-func (u *usecase) ListRatings(entityID int32) ([]Rating, error) {
+func (u *usecase) ListRatings(entityID int32) ([]*Rating, error) {
 	list, err := u.repo.ListByID(entityID)
 	if err != nil {
 		return nil, err
@@ -46,8 +44,8 @@ func (u *usecase) ListRatings(entityID int32) ([]Rating, error) {
 	return list, nil
 }
 
-func (u *usecase) ListUserRatings(entityID int32, userID int32) ([]Rating, error) {
-	list, err := u.repo.ListByUserID(entityID, userID)
+func (u *usecase) ListUserRatings(userID int32) ([]*Rating, error) {
+	list, err := u.repo.ListByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +54,7 @@ func (u *usecase) ListUserRatings(entityID int32, userID int32) ([]Rating, error
 }
 
 func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
-	r, err := u.repo.Upsert(rating)
+	r, err := u.repo.UpsertRating(rating)
 	if err != nil {
 		return nil, err
 	}
@@ -64,5 +62,13 @@ func (u *usecase) UpsertRating(rating Rating) (*Rating, error) {
 }
 
 func (u *usecase) DeleteRating(entityID int32, userID int32) error {
-	return u.repo.Delete(entityID, userID)
+	err := u.repo.DeleteRating(entityID, userID)
+	if gorm.IsRecordNotFoundError(err) {
+		return InvalidOperationError{}
+	}
+	return err
+}
+
+func NewUsecase(repo Repository) Usecase {
+	return &usecase{repo}
 }
