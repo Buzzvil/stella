@@ -25,8 +25,30 @@ func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 	return status, nil
 }
 
-func (u *usecase) GetUserStatus(entityID int64) (*UserStatus, error) {
-	return nil, nil
+func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
+	holdingResources, err := u.repo.ListResourceStatusesByHolderID(userID)
+	if err != nil {
+		return nil, err
+	}
+	watchingResources, err := u.repo.ListWatchRequestByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	us := UserStatus{
+		WatchingEntities: make([]int64, 0),
+		HoldingEntities:  make([]int64, 0),
+	}
+
+	for _, hs := range holdingResources {
+		us.HoldingEntities = append(us.HoldingEntities, hs.EntityID)
+	}
+
+	for _, hs := range watchingResources {
+		us.WatchingEntities = append(us.WatchingEntities, hs.EntityID)
+	}
+
+	return &us, nil
 }
 
 func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {

@@ -31,16 +31,40 @@ func (repo *gormRepo) SetResourceStatus(status rental.ResourceStatus) error {
 	return err
 }
 
-func (repo *gormRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
-	dbrrs := make([]WatchRequest, 0)
-	if err := repo.db.Where("entity_id = ?", entityID).Find(&dbrrs).Error; err != nil {
+func (repo *gormRepo) ListResourceStatusesByHolderID(userID int64) ([]*rental.ResourceStatus, error) {
+	dbrss := make([]ResourceStatus, 0)
+	if err := repo.db.Where("holder_id = ?", userID).Find(&dbrss).Error; err != nil {
 		return nil, err
 	}
-	rrs := make([]*rental.WatchRequest, 0)
-	for _, dbrr := range dbrrs {
-		rrs = append(rrs, repo.mapper.dbWatchRequestToWatchRequest(dbrr))
+	rss := make([]*rental.ResourceStatus, 0)
+	for _, dbrs := range dbrss {
+		rss = append(rss, repo.mapper.dbResourceStatusToResourceStatus(dbrs))
 	}
-	return rrs, nil
+	return rss, nil
+}
+
+func (repo *gormRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
+	dbwrs := make([]WatchRequest, 0)
+	if err := repo.db.Where("entity_id = ?", entityID).Find(&dbwrs).Error; err != nil {
+		return nil, err
+	}
+	wrs := make([]*rental.WatchRequest, 0)
+	for _, dbwr := range dbwrs {
+		wrs = append(wrs, repo.mapper.dbWatchRequestToWatchRequest(dbwr))
+	}
+	return wrs, nil
+}
+
+func (repo *gormRepo) ListWatchRequestByUserID(userID int64) ([]*rental.WatchRequest, error) {
+	dbwrs := make([]WatchRequest, 0)
+	if err := repo.db.Where("user_id = ?", userID).Find(&dbwrs).Error; err != nil {
+		return nil, err
+	}
+	wrs := make([]*rental.WatchRequest, 0)
+	for _, dbwr := range dbwrs {
+		wrs = append(wrs, repo.mapper.dbWatchRequestToWatchRequest(dbwr))
+	}
+	return wrs, nil
 }
 
 func (repo *gormRepo) AddWatchRequest(request rental.WatchRequest) error {
@@ -55,6 +79,7 @@ func (repo *gormRepo) RemoveWatchRequest(request rental.WatchRequest) error {
 	return err
 }
 
+//New returns new rental repository
 func New(db *gorm.DB) rental.Repository {
 	db.AutoMigrate(&ResourceStatus{})
 	db.AutoMigrate(&WatchRequest{})
