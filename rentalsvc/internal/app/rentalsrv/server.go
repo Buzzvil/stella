@@ -39,6 +39,10 @@ func (s *server) GetResourceStatus(c context.Context, req *pb.GetResourceStatusR
 	return &pbRs, nil
 }
 
+func (s *server) GetUserStatus(c context.Context, req *pb.GetUserStatusRequest) (*pb.UserStatus, error) {
+	return nil, nil
+}
+
 func (s *server) RentResource(c context.Context, req *pb.RentResourceRequest) (*empty.Empty, error) {
 	err := s.u.RentResource(req.GetUserId(), req.GetEntityId())
 	switch err.(type) {
