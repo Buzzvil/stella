@@ -13,14 +13,10 @@ export default () => {
     delay(1000).then(() => NextMsg(dispatch));
   }, [state[0]]);
 
-  return (
+  return state.length ? (
     <div>
-      {state.length ? (
-        <div>
-          <h1>Displaying:</h1>
-          <pre>{JSON.stringify(state[0])}</pre>
-        </div>
-      ) : null}
+      <h1>Displaying:</h1>
+      <pre>{JSON.stringify(state[0])}</pre>
     </div>
-  );
+  ) : null;
 };
