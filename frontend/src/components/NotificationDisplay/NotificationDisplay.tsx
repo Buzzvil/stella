@@ -30,12 +30,12 @@ export default () => {
       >
         Add New Message
       </button>
-      {state[0] === undefined ? null : (
+      {state.length ? (
         <div>
           <h1>Displaying:</h1>
           <pre>{JSON.stringify(state[0])}</pre>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
