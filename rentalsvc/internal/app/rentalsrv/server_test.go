@@ -19,7 +19,7 @@ func (ts *ServerTestSuite) Test_GetResourceStatus() {
 	ts.NoError(faker.FakeData(&rs))
 	ts.NoError(faker.FakeData(&wl))
 	ts.usecase.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.usecase.On("GetResourceWatchingList", rs.EntityID).Return(wl, nil).Once()
+	ts.usecase.On("ListResourceWatchers", rs.EntityID).Return(wl, nil).Once()
 	pbReq := pb.GetResourceStatusRequest{EntityId: rs.EntityID}
 
 	pbRes, err := ts.server.GetResourceStatus(context.Background(), &pbReq)
@@ -119,7 +119,7 @@ func (u *mockUsecase) GetResourceStatus(entityID int64) (*rental.ResourceStatus,
 	ret := u.Called(entityID)
 	return ret.Get(0).(*rental.ResourceStatus), ret.Error(1)
 }
-func (u *mockUsecase) GetResourceWatchingList(entityID int64) ([]int64, error) {
+func (u *mockUsecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 	ret := u.Called(entityID)
 	return ret.Get(0).([]int64), ret.Error(1)
 }

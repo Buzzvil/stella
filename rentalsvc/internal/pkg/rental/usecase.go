@@ -1,8 +1,10 @@
 package rental
 
+// Usecase interface definition
 type Usecase interface {
 	GetResourceStatus(entityID int64) (*ResourceStatus, error)
-	GetResourceWatchingList(entityID int64) ([]int64, error)
+	GetUserStatus(userID int64) (*UserStatus, error)
+	ListResourceWatchers(entityID int64) ([]int64, error)
 	RentResource(userID int64, entityID int64) error
 	ReturnResource(userID int64, entityID int64) error
 	WatchResource(userID int64, entityID int64) error
@@ -23,7 +25,11 @@ func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 	return status, nil
 }
 
-func (u *usecase) GetResourceWatchingList(entityID int64) ([]int64, error) {
+func (u *usecase) GetUserStatus(entityID int64) (*UserStatus, error) {
+	return nil, nil
+}
+
+func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 	rrs, err := u.repo.ListWatchRequestByEntityID(entityID)
 	if err != nil {
 		return nil, err

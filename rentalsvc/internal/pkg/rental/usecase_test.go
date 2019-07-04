@@ -21,13 +21,13 @@ func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
 	ts.repo.AssertExpectations(ts.T())
 }
 
-func (ts *UsecaseTestSuite) Test_GetResourceWatchingList() {
+func (ts *UsecaseTestSuite) Test_ListResourceWatchers() {
 	var rrs []*rental.WatchRequest
 	err := faker.FakeData(&rrs)
 	ts.NoError(err)
 	ts.repo.On("ListWatchRequestByEntityID", mock.Anything).Return(rrs, nil).Once()
 
-	ids, err := ts.usecase.GetResourceWatchingList(1234)
+	ids, err := ts.usecase.ListResourceWatchers(1234)
 
 	ts.NoError(err)
 	for i, rr := range rrs {

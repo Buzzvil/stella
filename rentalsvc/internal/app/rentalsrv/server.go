@@ -28,7 +28,7 @@ func (s *server) GetResourceStatus(c context.Context, req *pb.GetResourceStatusR
 		pbRs.Availability = pb.ResourceStatus_UNAVAILABLE
 	}
 
-	userIDs, err := s.u.GetResourceWatchingList(req.GetEntityId())
+	userIDs, err := s.u.ListResourceWatchers(req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +40,7 @@ func (s *server) GetResourceStatus(c context.Context, req *pb.GetResourceStatusR
 }
 
 func (s *server) GetUserStatus(c context.Context, req *pb.GetUserStatusRequest) (*pb.UserStatus, error) {
+
 	return nil, nil
 }
 
