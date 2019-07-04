@@ -82,7 +82,7 @@ func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error)
 
 func (repo *gormRepo) DeleteRating(entityID int32, userID int32) error {
 	dbRating := Rating{EntityID: entityID, UserID: userID}
-	return repo.db.Delete(&dbRating).Error
+	return repo.db.Where(&dbRating).Delete(&dbRating).Error
 }
 
 func New(db *gorm.DB) rating.Repository {
