@@ -5,16 +5,17 @@ import { ReactComponent as CatIcon} from "../../img/sad-cat.svg";
 
 const Frame = styled.div`
     position: absolute;
-    bottom: 70%
-    left: 0px;
-
+    top: -91px;
+    left: 20px;
     width: 472px;
-    text-align: center;
+    text-align: left;
 `;
 
 const Card = styled.div`
+    position: relative;
     width: 472px;
     background: #233443;
+    margin-top: 91px;
     padding-top: 35px;
     padding-bottom: 24px;
     text-align: center;
