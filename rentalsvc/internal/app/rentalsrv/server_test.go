@@ -27,7 +27,7 @@ func (ts *ServerTestSuite) Test_GetResourceStatus() {
 	ts.NoError(err)
 	ts.Equal(pbRes.EntityId, rs.EntityID)
 	for i := range wl {
-		ts.Equal(wl[i], pbRes.ReservedUserIds[i])
+		ts.Equal(wl[i], pbRes.WatchingUserIds[i])
 	}
 }
 
