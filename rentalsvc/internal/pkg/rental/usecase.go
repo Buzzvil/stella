@@ -1,5 +1,9 @@
 package rental
 
+import (
+	"fmt"
+)
+
 // Usecase interface definition
 type Usecase interface {
 	GetResourceStatus(entityID int64) (*ResourceStatus, error)
@@ -18,15 +22,21 @@ type usecase struct {
 var _ Usecase = &usecase{}
 
 func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
-	status, err := u.repo.GetResourceStatus(entityID)
+	rs := ResourceStatus{EntityID: entityID}
+	rentRequest, err := u.repo.GetLastRentRequestByEntityID(entityID)
 	if err != nil {
 		return &ResourceStatus{Availability: Unavailable}, err
 	}
-	return status, nil
+	if rentRequest != nil && rentRequest.IsReturned == false {
+		rs.Availability = Unavailable
+	} else {
+		rs.Availability = Available
+	}
+	return &rs, nil
 }
 
 func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
-	holdingResources, err := u.repo.ListResourceStatusesByHolderID(userID)
+	holdingResources, err := u.repo.ListRentRequestByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -64,56 +74,67 @@ func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 }
 
 func (u *usecase) RentResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability != Available {
+	if lastRentReq != nil && lastRentReq.IsReturned != true {
 		return InvalidOperationError{}
 	}
-	status.Availability = Unavailable
-	status.HolderID = &userID
-	if err != nil {
-		return err
+
+	rentReq := RentRequest{
+		UserID:   userID,
+		EntityID: entityID,
 	}
-	return u.repo.SetResourceStatus(*status)
+
+	return u.repo.UpsertRentRequest(rentReq)
 }
 
 func (u *usecase) ReturnResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability == Available {
+
+	if lastRentReq.IsReturned == true {
 		return nil
 	}
-	status.Availability = Available
-	status.HolderID = nil
-	return u.repo.SetResourceStatus(*status)
+
+	if lastRentReq == nil {
+		return fmt.Errorf("entity %v wasn't rented", entityID)
+	}
+
+	if lastRentReq.UserID != userID {
+		return fmt.Errorf("entity %v wasn't rented by %v", entityID, userID)
+	}
+
+	lastRentReq.IsReturned = true
+	return u.repo.UpsertRentRequest(*lastRentReq)
 }
 
 func (u *usecase) WatchResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability == Available || *status.HolderID == userID {
+	if lastRentReq.IsReturned == true || lastRentReq.UserID == userID {
 		return InvalidOperationError{}
 	}
 
-	return u.repo.AddWatchRequest(WatchRequest{
+	return u.repo.InsertWatchRequest(WatchRequest{
 		EntityID: entityID,
 		UserID:   userID,
 	})
 }
 
 func (u *usecase) UnwatchResource(userID int64, entityID int64) error {
-	return u.repo.RemoveWatchRequest(WatchRequest{
+	return u.repo.DeleteWatchRequest(WatchRequest{
 		EntityID: entityID,
 		UserID:   userID,
 	})
 }
 
+// NewUsecase returns an Usecase
 func NewUsecase(repo Repository) Usecase {
 	return &usecase{repo}
 }

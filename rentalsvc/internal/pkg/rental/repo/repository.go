@@ -10,35 +10,55 @@ type gormRepo struct {
 	mapper
 }
 
-func (repo *gormRepo) GetResourceStatus(entityID int64) (*rental.ResourceStatus, error) {
-	dbStatus := ResourceStatus{EntityID: entityID}
-	if err := repo.db.Where(&dbStatus).First(&dbStatus).Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			return nil, err
-		}
-		status := rental.ResourceStatus{
-			EntityID:     entityID,
-			Availability: rental.Available,
-		}
-		return &status, nil
-	}
-	return repo.mapper.dbResourceStatusToResourceStatus(dbStatus), nil
-}
+// func (repo *gormRepo) GetResourceStatus(entityID int64) (*rental.ResourceStatus, error) {
+// 	dbStatus := ResourceStatus{EntityID: entityID}
+// 	if err := repo.db.Where(&dbStatus).First(&dbStatus).Error; err != nil {
+// 		if err != gorm.ErrRecordNotFound {
+// 			return nil, err
+// 		}
+// 		status := rental.ResourceStatus{
+// 			EntityID:     entityID,
+// 			Availability: rental.Available,
+// 		}
+// 		return &status, nil
+// 	}
+// 	return repo.mapper.dbResourceStatusToResourceStatus(dbStatus), nil
+// }
 
-func (repo *gormRepo) SetResourceStatus(status rental.ResourceStatus) error {
-	dbStatus := repo.resourceStatusToDBResourceStatus(status)
-	err := repo.db.Save(dbStatus).Error
+// func (repo *gormRepo) SetResourceStatus(status rental.ResourceStatus) error {
+// 	dbStatus := repo.resourceStatusToDBResourceStatus(status)
+// 	err := repo.db.Save(dbStatus).Error
+// 	return err
+// }
+
+func (repo *gormRepo) UpsertRentRequest(request rental.RentRequest) error {
+	dbRequest := repo.mapper.rentRequestToDBRentRequest(request)
+	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
-func (repo *gormRepo) ListResourceStatusesByHolderID(userID int64) ([]*rental.ResourceStatus, error) {
-	dbrss := make([]ResourceStatus, 0)
+func (repo *gormRepo) GetLastRentRequestByEntityID(entityID int64) (*rental.RentRequest, error) {
+	dbrr := RentRequest{
+		EntityID: entityID,
+	}
+	err := repo.db.Where(&dbrr).Last(&dbrr).Error
+	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return repo.mapper.dbRentRequestToRentRequest(dbrr), nil
+}
+
+func (repo *gormRepo) ListRentRequestByUserID(userID int64) ([]*rental.RentRequest, error) {
+	dbrss := make([]RentRequest, 0)
 	if err := repo.db.Where("holder_id = ?", userID).Find(&dbrss).Error; err != nil {
 		return nil, err
 	}
-	rss := make([]*rental.ResourceStatus, 0)
+	rss := make([]*rental.RentRequest, 0)
 	for _, dbrs := range dbrss {
-		rss = append(rss, repo.mapper.dbResourceStatusToResourceStatus(dbrs))
+		rss = append(rss, repo.mapper.dbRentRequestToRentRequest(dbrs))
 	}
 	return rss, nil
 }
@@ -67,13 +87,13 @@ func (repo *gormRepo) ListWatchRequestByUserID(userID int64) ([]*rental.WatchReq
 	return wrs, nil
 }
 
-func (repo *gormRepo) AddWatchRequest(request rental.WatchRequest) error {
+func (repo *gormRepo) InsertWatchRequest(request rental.WatchRequest) error {
 	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
-func (repo *gormRepo) RemoveWatchRequest(request rental.WatchRequest) error {
+func (repo *gormRepo) DeleteWatchRequest(request rental.WatchRequest) error {
 	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
 	err := repo.db.Where(dbRequest).Delete(dbRequest).Error
 	return err
@@ -81,7 +101,7 @@ func (repo *gormRepo) RemoveWatchRequest(request rental.WatchRequest) error {
 
 //New returns new rental repository
 func New(db *gorm.DB) rental.Repository {
-	db.AutoMigrate(&ResourceStatus{})
+	db.AutoMigrate(&RentRequest{})
 	db.AutoMigrate(&WatchRequest{})
 	return &gormRepo{db, mapper{}}
 }

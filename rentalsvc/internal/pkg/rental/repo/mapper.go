@@ -6,21 +6,19 @@ import (
 
 type mapper struct{}
 
-func (mapper) dbResourceStatusToResourceStatus(dbrs ResourceStatus) *rental.ResourceStatus {
-	return &rental.ResourceStatus{
-		ID:           dbrs.ID,
-		EntityID:     dbrs.EntityID,
-		Availability: rental.ResourceAvailability(dbrs.Availability),
-		HolderID:     dbrs.HolderID,
+func (mapper) dbRentRequestToRentRequest(dbrr RentRequest) *rental.RentRequest {
+	return &rental.RentRequest{
+		ID:         dbrr.ID,
+		EntityID:   dbrr.EntityID,
+		IsReturned: dbrr.IsReturned,
 	}
 }
 
-func (mapper) resourceStatusToDBResourceStatus(rs rental.ResourceStatus) *ResourceStatus {
-	return &ResourceStatus{
-		ID:           rs.ID,
-		EntityID:     rs.EntityID,
-		Availability: int(rs.Availability),
-		HolderID:     rs.HolderID,
+func (mapper) rentRequestToDBRentRequest(rr rental.RentRequest) *RentRequest {
+	return &RentRequest{
+		ID:         rr.ID,
+		EntityID:   rr.EntityID,
+		IsReturned: rr.IsReturned,
 	}
 }
 

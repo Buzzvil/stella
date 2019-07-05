@@ -18,10 +18,17 @@ type UserStatus struct {
 
 // ResourceStatus model definition
 type ResourceStatus struct {
-	ID           uint
 	EntityID     int64
 	Availability ResourceAvailability
 	HolderID     *int64
+}
+
+// RentRequest model definition
+type RentRequest struct {
+	ID         uint
+	UserID     int64
+	EntityID   int64
+	IsReturned bool
 }
 
 // WatchRequest model definition

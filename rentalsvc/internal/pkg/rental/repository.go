@@ -2,11 +2,12 @@ package rental
 
 //Repository interface definition
 type Repository interface {
-	GetResourceStatus(entityID int64) (*ResourceStatus, error)
-	SetResourceStatus(status ResourceStatus) error
-	ListResourceStatusesByHolderID(userID int64) ([]*ResourceStatus, error)
+	UpsertRentRequest(request RentRequest) error
+	GetLastRentRequestByEntityID(entityID int64) (*RentRequest, error)
+	ListRentRequestByUserID(userID int64) ([]*RentRequest, error)
+
+	InsertWatchRequest(request WatchRequest) error
+	DeleteWatchRequest(request WatchRequest) error
 	ListWatchRequestByEntityID(entityID int64) ([]*WatchRequest, error)
 	ListWatchRequestByUserID(userID int64) ([]*WatchRequest, error)
-	AddWatchRequest(request WatchRequest) error
-	RemoveWatchRequest(request WatchRequest) error
 }
