@@ -36,7 +36,7 @@ func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 }
 
 func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
-	holdingResources, err := u.repo.ListRentRequestByUserID(userID)
+	rentedResources, err := u.repo.ListRentRequestByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,11 +47,11 @@ func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
 
 	us := UserStatus{
 		WatchingEntities: make([]int64, 0),
-		HoldingEntities:  make([]int64, 0),
+		RentedEntities:   make([]int64, 0),
 	}
 
-	for _, hs := range holdingResources {
-		us.HoldingEntities = append(us.HoldingEntities, hs.EntityID)
+	for _, hs := range rentedResources {
+		us.RentedEntities = append(us.RentedEntities, hs.EntityID)
 	}
 
 	for _, hs := range watchingResources {

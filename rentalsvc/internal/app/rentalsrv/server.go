@@ -44,7 +44,7 @@ func (s *server) GetUserStatus(c context.Context, req *pb.GetUserStatusRequest) 
 	if err != nil {
 		return nil, err
 	}
-	pbUS := pb.UserStatus{HoldingEntityIds: us.HoldingEntities, WatchingEntityIds: us.WatchingEntities}
+	pbUS := pb.UserStatus{RentedEntityIds: us.RentedEntities, WatchingEntityIds: us.WatchingEntities}
 	return &pbUS, nil
 }
 

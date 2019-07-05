@@ -13,7 +13,7 @@ const (
 // UserStatus model definition
 type UserStatus struct {
 	WatchingEntities []int64
-	HoldingEntities  []int64
+	RentedEntities   []int64
 }
 
 // ResourceStatus model definition
