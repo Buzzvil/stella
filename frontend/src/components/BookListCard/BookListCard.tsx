@@ -51,19 +51,20 @@ interface BookListCardInterface {
   book: Book
   currentUser?: User
   statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
+  openBookDetail?: () => void
 }
 
 const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
 
 export default ({
-  book, currentUser, statusFetcher = defaultStatusFetcher }: BookListCardInterface) => {
+  book, currentUser, openBookDetail, statusFetcher = defaultStatusFetcher }: BookListCardInterface) => {
   const reads = 12;
   const reviews = 3;
   const myRating = 4;
   const avgRating = 3.5;
   const [loadingStatus, status] = statusFetcher(book.getId())
   return (
-    <Container>
+    <Container onClick={() => openBookDetail && openBookDetail()}>
       <Img src={book.getCoverImage()} />
       <Content>
         <Typography variant="h5">{book.getName()}</Typography>
