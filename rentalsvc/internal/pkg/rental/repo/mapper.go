@@ -6,8 +6,8 @@ import (
 
 type mapper struct{}
 
-func (mapper) dbRentRequestToRentRequest(dbrr RentRequest) *rental.RentRequest {
-	return &rental.RentRequest{
+func (mapper) dbRentalToRental(dbrr Rental) *rental.Rental {
+	return &rental.Rental{
 		ID:         dbrr.ID,
 		EntityID:   dbrr.EntityID,
 		UserID:     dbrr.UserID,
@@ -15,8 +15,8 @@ func (mapper) dbRentRequestToRentRequest(dbrr RentRequest) *rental.RentRequest {
 	}
 }
 
-func (mapper) rentRequestToDBRentRequest(rr rental.RentRequest) *RentRequest {
-	return &RentRequest{
+func (mapper) rentRequestToDBRental(rr rental.Rental) *Rental {
+	return &Rental{
 		ID:         rr.ID,
 		EntityID:   rr.EntityID,
 		UserID:     rr.UserID,

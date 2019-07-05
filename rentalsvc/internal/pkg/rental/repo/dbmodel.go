@@ -4,8 +4,8 @@ import (
 	"time"
 )
 
-// RentRequest model definition
-type RentRequest struct {
+// Rental model definition
+type Rental struct {
 	ID         uint  `gorm:"primary_key"`
 	UserID     int64 `gorm:"unique_index"`
 	EntityID   int64 `gorm:"unique_index"`

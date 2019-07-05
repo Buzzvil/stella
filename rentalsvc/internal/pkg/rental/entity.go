@@ -23,8 +23,8 @@ type ResourceStatus struct {
 	HolderID     *int64
 }
 
-// RentRequest model definition
-type RentRequest struct {
+// Rental model definition
+type Rental struct {
 	ID         uint
 	UserID     int64
 	EntityID   int64

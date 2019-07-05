@@ -10,14 +10,14 @@ type gormRepo struct {
 	mapper
 }
 
-func (repo *gormRepo) UpsertRentRequest(request rental.RentRequest) error {
-	dbRequest := repo.mapper.rentRequestToDBRentRequest(request)
+func (repo *gormRepo) UpsertRental(request rental.Rental) error {
+	dbRequest := repo.mapper.rentRequestToDBRental(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
-func (repo *gormRepo) GetLastRentRequestByEntityID(entityID int64) (*rental.RentRequest, error) {
-	dbrr := RentRequest{
+func (repo *gormRepo) GetLastRentalByEntityID(entityID int64) (*rental.Rental, error) {
+	dbrr := Rental{
 		EntityID: entityID,
 	}
 	err := repo.db.Where(&dbrr).Last(&dbrr).Error
@@ -27,17 +27,17 @@ func (repo *gormRepo) GetLastRentRequestByEntityID(entityID int64) (*rental.Rent
 		}
 		return nil, err
 	}
-	return repo.mapper.dbRentRequestToRentRequest(dbrr), nil
+	return repo.mapper.dbRentalToRental(dbrr), nil
 }
 
-func (repo *gormRepo) ListRentRequestByUserID(userID int64) ([]*rental.RentRequest, error) {
-	dbrss := make([]RentRequest, 0)
+func (repo *gormRepo) ListRentalByUserID(userID int64) ([]*rental.Rental, error) {
+	dbrss := make([]Rental, 0)
 	if err := repo.db.Where("user_id = ?", userID).Find(&dbrss).Error; err != nil {
 		return nil, err
 	}
-	rss := make([]*rental.RentRequest, 0)
+	rss := make([]*rental.Rental, 0)
 	for _, dbrs := range dbrss {
-		rss = append(rss, repo.mapper.dbRentRequestToRentRequest(dbrs))
+		rss = append(rss, repo.mapper.dbRentalToRental(dbrs))
 	}
 	return rss, nil
 }
@@ -80,7 +80,7 @@ func (repo *gormRepo) DeleteWatchRequest(request rental.WatchRequest) error {
 
 //New returns new rental repository
 func New(db *gorm.DB) rental.Repository {
-	db.AutoMigrate(&RentRequest{})
+	db.AutoMigrate(&Rental{})
 	db.AutoMigrate(&WatchRequest{})
 	return &gormRepo{db, mapper{}}
 }

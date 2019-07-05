@@ -23,7 +23,7 @@ var _ Usecase = &usecase{}
 
 func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 	rs := ResourceStatus{EntityID: entityID}
-	rentRequest, err := u.repo.GetLastRentRequestByEntityID(entityID)
+	rentRequest, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return &ResourceStatus{Availability: Unavailable}, err
 	}
@@ -36,7 +36,7 @@ func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 }
 
 func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
-	rentedResources, err := u.repo.ListRentRequestByUserID(userID)
+	rentedResources, err := u.repo.ListRentalByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 }
 
 func (u *usecase) RentResource(userID int64, entityID int64) error {
-	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}
@@ -82,16 +82,16 @@ func (u *usecase) RentResource(userID int64, entityID int64) error {
 		return InvalidOperationError{}
 	}
 
-	rentReq := RentRequest{
+	rentReq := Rental{
 		UserID:   userID,
 		EntityID: entityID,
 	}
 
-	return u.repo.UpsertRentRequest(rentReq)
+	return u.repo.UpsertRental(rentReq)
 }
 
 func (u *usecase) ReturnResource(userID int64, entityID int64) error {
-	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}
@@ -109,11 +109,11 @@ func (u *usecase) ReturnResource(userID int64, entityID int64) error {
 	}
 
 	lastRentReq.IsReturned = true
-	return u.repo.UpsertRentRequest(*lastRentReq)
+	return u.repo.UpsertRental(*lastRentReq)
 }
 
 func (u *usecase) WatchResource(userID int64, entityID int64) error {
-	lastRentReq, err := u.repo.GetLastRentRequestByEntityID(entityID)
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}

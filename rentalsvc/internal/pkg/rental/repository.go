@@ -2,9 +2,9 @@ package rental
 
 //Repository interface definition
 type Repository interface {
-	UpsertRentRequest(request RentRequest) error
-	GetLastRentRequestByEntityID(entityID int64) (*RentRequest, error)
-	ListRentRequestByUserID(userID int64) ([]*RentRequest, error)
+	UpsertRental(request Rental) error
+	GetLastRentalByEntityID(entityID int64) (*Rental, error)
+	ListRentalByUserID(userID int64) ([]*Rental, error)
 
 	InsertWatchRequest(request WatchRequest) error
 	DeleteWatchRequest(request WatchRequest) error
