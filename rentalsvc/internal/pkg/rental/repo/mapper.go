@@ -24,16 +24,16 @@ func (mapper) rentalToDBRental(rr rental.Rental) *Rental {
 	}
 }
 
-func (mapper) dbWatchRequestToWatchRequest(dbrr WatchRequest) *rental.WatchRequest {
-	return &rental.WatchRequest{
+func (mapper) dbWatchToWatch(dbrr Watch) *rental.Watch {
+	return &rental.Watch{
 		ID:       dbrr.ID,
 		EntityID: dbrr.EntityID,
 		UserID:   dbrr.UserID,
 	}
 }
 
-func (mapper) watchRequestToDBWatchRequest(rr rental.WatchRequest) *WatchRequest {
-	return &WatchRequest{
+func (mapper) watchToDBWatch(rr rental.Watch) *Watch {
+	return &Watch{
 		ID:       rr.ID,
 		EntityID: rr.EntityID,
 		UserID:   rr.UserID,

@@ -31,8 +31,8 @@ type Rental struct {
 	IsReturned bool
 }
 
-// WatchRequest model definition
-type WatchRequest struct {
+// Watch model definition
+type Watch struct {
 	ID       uint
 	UserID   int64
 	EntityID int64

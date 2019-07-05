@@ -26,9 +26,9 @@ func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
 }
 
 func (ts *UsecaseTestSuite) Test_ListResourceWatchers() {
-	var rrs []*rental.WatchRequest
+	var rrs []*rental.Watch
 	ts.NoError(faker.FakeData(&rrs))
-	ts.repo.On("ListWatchRequestByEntityID", mock.Anything).Return(rrs, nil).Once()
+	ts.repo.On("ListWatchByEntityID", mock.Anything).Return(rrs, nil).Once()
 
 	ids, err := ts.usecase.ListResourceWatchers(1234)
 
@@ -70,7 +70,7 @@ func (ts *UsecaseTestSuite) Test_WatchResource() {
 	ts.NoError(faker.FakeData(&rr))
 	rr.IsReturned = false
 	ts.repo.On("GetLastRentalByEntityID", rr.EntityID).Return(rr, nil).Once()
-	ts.repo.On("InsertWatchRequest", mock.Anything).Return(nil).Once()
+	ts.repo.On("InsertWatch", mock.Anything).Return(nil).Once()
 
 	err := ts.usecase.WatchResource(rr.UserID+1, rr.EntityID)
 
@@ -92,7 +92,7 @@ func (ts *UsecaseTestSuite) Test_WatchResource_AlreadyTaken() {
 }
 
 func (ts *UsecaseTestSuite) Test_UnwatchResource() {
-	ts.repo.On("DeleteWatchRequest", mock.Anything).Return(nil).Once()
+	ts.repo.On("DeleteWatch", mock.Anything).Return(nil).Once()
 
 	err := ts.usecase.UnwatchResource(1111, 2222)
 
@@ -140,22 +140,22 @@ func (r *mockRepo) ListRentalByUserID(userID int64) ([]*rental.Rental, error) {
 	return ret.Get(0).([]*rental.Rental), ret.Error(1)
 }
 
-func (r *mockRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
+func (r *mockRepo) ListWatchByEntityID(entityID int64) ([]*rental.Watch, error) {
 	ret := r.Called(entityID)
-	return ret.Get(0).([]*rental.WatchRequest), ret.Error(1)
+	return ret.Get(0).([]*rental.Watch), ret.Error(1)
 }
 
-func (r *mockRepo) ListWatchRequestByUserID(userID int64) ([]*rental.WatchRequest, error) {
+func (r *mockRepo) ListWatchByUserID(userID int64) ([]*rental.Watch, error) {
 	ret := r.Called(userID)
-	return ret.Get(0).([]*rental.WatchRequest), ret.Error(1)
+	return ret.Get(0).([]*rental.Watch), ret.Error(1)
 }
 
-func (r *mockRepo) InsertWatchRequest(request rental.WatchRequest) error {
+func (r *mockRepo) InsertWatch(request rental.Watch) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }
 
-func (r *mockRepo) DeleteWatchRequest(request rental.WatchRequest) error {
+func (r *mockRepo) DeleteWatch(request rental.Watch) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }

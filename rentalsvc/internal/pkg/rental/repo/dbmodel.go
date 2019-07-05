@@ -14,8 +14,8 @@ type Rental struct {
 	UpdatedAt  time.Time
 }
 
-// WatchRequest model definition
-type WatchRequest struct {
+// Watch model definition
+type Watch struct {
 	ID        uint  `gorm:"primary_key"`
 	UserID    int64 `gorm:"unique_index:idx_user_entity"`
 	EntityID  int64 `gorm:"unique_index:idx_user_entity"`

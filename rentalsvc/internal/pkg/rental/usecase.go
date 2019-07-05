@@ -40,7 +40,7 @@ func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
 	if err != nil {
 		return nil, err
 	}
-	watchingResources, err := u.repo.ListWatchRequestByUserID(userID)
+	watchingResources, err := u.repo.ListWatchByUserID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
 }
 
 func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {
-	rrs, err := u.repo.ListWatchRequestByEntityID(entityID)
+	rrs, err := u.repo.ListWatchByEntityID(entityID)
 	if err != nil {
 		return nil, err
 	}
@@ -121,14 +121,14 @@ func (u *usecase) WatchResource(userID int64, entityID int64) error {
 		return InvalidOperationError{}
 	}
 
-	return u.repo.InsertWatchRequest(WatchRequest{
+	return u.repo.InsertWatch(Watch{
 		EntityID: entityID,
 		UserID:   userID,
 	})
 }
 
 func (u *usecase) UnwatchResource(userID int64, entityID int64) error {
-	return u.repo.DeleteWatchRequest(WatchRequest{
+	return u.repo.DeleteWatch(Watch{
 		EntityID: entityID,
 		UserID:   userID,
 	})

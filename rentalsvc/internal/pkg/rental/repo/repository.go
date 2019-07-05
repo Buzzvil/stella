@@ -42,38 +42,38 @@ func (repo *gormRepo) ListRentalByUserID(userID int64) ([]*rental.Rental, error)
 	return rss, nil
 }
 
-func (repo *gormRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
-	dbwrs := make([]WatchRequest, 0)
+func (repo *gormRepo) ListWatchByEntityID(entityID int64) ([]*rental.Watch, error) {
+	dbwrs := make([]Watch, 0)
 	if err := repo.db.Where("entity_id = ?", entityID).Find(&dbwrs).Error; err != nil {
 		return nil, err
 	}
-	wrs := make([]*rental.WatchRequest, 0)
+	wrs := make([]*rental.Watch, 0)
 	for _, dbwr := range dbwrs {
-		wrs = append(wrs, repo.mapper.dbWatchRequestToWatchRequest(dbwr))
+		wrs = append(wrs, repo.mapper.dbWatchToWatch(dbwr))
 	}
 	return wrs, nil
 }
 
-func (repo *gormRepo) ListWatchRequestByUserID(userID int64) ([]*rental.WatchRequest, error) {
-	dbwrs := make([]WatchRequest, 0)
+func (repo *gormRepo) ListWatchByUserID(userID int64) ([]*rental.Watch, error) {
+	dbwrs := make([]Watch, 0)
 	if err := repo.db.Where("user_id = ?", userID).Find(&dbwrs).Error; err != nil {
 		return nil, err
 	}
-	wrs := make([]*rental.WatchRequest, 0)
+	wrs := make([]*rental.Watch, 0)
 	for _, dbwr := range dbwrs {
-		wrs = append(wrs, repo.mapper.dbWatchRequestToWatchRequest(dbwr))
+		wrs = append(wrs, repo.mapper.dbWatchToWatch(dbwr))
 	}
 	return wrs, nil
 }
 
-func (repo *gormRepo) InsertWatchRequest(request rental.WatchRequest) error {
-	dbRequest := repo.mapper.watchRequestToDBWatchRequest(request)
+func (repo *gormRepo) InsertWatch(request rental.Watch) error {
+	dbRequest := repo.mapper.watchToDBWatch(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
-func (repo *gormRepo) DeleteWatchRequest(request rental.WatchRequest) error {
-	dbRequest := repo.mapper.watchRequestToDBWatchRequest(request)
+func (repo *gormRepo) DeleteWatch(request rental.Watch) error {
+	dbRequest := repo.mapper.watchToDBWatch(request)
 	err := repo.db.Where(dbRequest).Delete(dbRequest).Error
 	return err
 }
@@ -81,6 +81,6 @@ func (repo *gormRepo) DeleteWatchRequest(request rental.WatchRequest) error {
 //New returns new rental repository
 func New(db *gorm.DB) rental.Repository {
 	db.AutoMigrate(&Rental{})
-	db.AutoMigrate(&WatchRequest{})
+	db.AutoMigrate(&Watch{})
 	return &gormRepo{db, mapper{}}
 }
