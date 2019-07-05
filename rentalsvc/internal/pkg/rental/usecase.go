@@ -78,7 +78,7 @@ func (u *usecase) RentResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if lastRentReq != nil && lastRentReq.IsReturned != true {
+	if lastRentReq != nil && !lastRentReq.IsReturned {
 		return InvalidOperationError{}
 	}
 
