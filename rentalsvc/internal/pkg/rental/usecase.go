@@ -117,7 +117,7 @@ func (u *usecase) WatchResource(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	if lastRentReq != nil && (lastRentReq.IsReturned == true || lastRentReq.UserID == userID) {
+	if lastRentReq != nil && (lastRentReq.IsReturned || lastRentReq.UserID == userID) {
 		return InvalidOperationError{}
 	}
 
