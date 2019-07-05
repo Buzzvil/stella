@@ -25,6 +25,25 @@ func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
 	ts.repo.AssertExpectations(ts.T())
 }
 
+func (ts *UsecaseTestSuite) Test_GetUserStatus() {
+	var rentals []*rental.Rental
+	var watches []*rental.Watch
+	ts.NoError(faker.FakeData(&rentals))
+	ts.NoError(faker.FakeData(&watches))
+	userID := rentals[0].UserID
+
+	ts.repo.On("ListRentalByUserID", userID).Return(rentals, nil).Once()
+	ts.repo.On("ListWatchByUserID", userID).Return(watches, nil).Once()
+
+	result, err := ts.usecase.GetUserStatus(userID)
+
+	ts.NoError(err)
+	ts.Equal(len(rentals), len(result.RentedEntities))
+	ts.Equal(len(watches), len(result.WatchingEntities))
+
+	ts.repo.AssertExpectations(ts.T())
+}
+
 func (ts *UsecaseTestSuite) Test_ListResourceWatchers() {
 	var rrs []*rental.Watch
 	ts.NoError(faker.FakeData(&rrs))
