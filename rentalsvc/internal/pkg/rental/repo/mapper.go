@@ -30,7 +30,7 @@ func (mapper) dbWatchRequestToWatchRequest(dbrr WatchRequest) *rental.WatchReque
 	}
 }
 
-func (mapper) reserveRequestToDBWatchRequest(rr rental.WatchRequest) *WatchRequest {
+func (mapper) watchRequestToDBWatchRequest(rr rental.WatchRequest) *WatchRequest {
 	return &WatchRequest{
 		ID:       rr.ID,
 		EntityID: rr.EntityID,

@@ -67,13 +67,13 @@ func (repo *gormRepo) ListWatchRequestByUserID(userID int64) ([]*rental.WatchReq
 }
 
 func (repo *gormRepo) InsertWatchRequest(request rental.WatchRequest) error {
-	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
+	dbRequest := repo.mapper.watchRequestToDBWatchRequest(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }
 
 func (repo *gormRepo) DeleteWatchRequest(request rental.WatchRequest) error {
-	dbRequest := repo.mapper.reserveRequestToDBWatchRequest(request)
+	dbRequest := repo.mapper.watchRequestToDBWatchRequest(request)
 	err := repo.db.Where(dbRequest).Delete(dbRequest).Error
 	return err
 }
