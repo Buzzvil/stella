@@ -23,11 +23,11 @@ var _ Usecase = &usecase{}
 
 func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 	rs := ResourceStatus{EntityID: entityID}
-	rentRequest, err := u.repo.GetLastRentalByEntityID(entityID)
+	rental, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return &ResourceStatus{Availability: Unavailable}, err
 	}
-	if rentRequest != nil && rentRequest.IsReturned == false {
+	if rental != nil && rental.IsReturned == false {
 		rs.Availability = Unavailable
 	} else {
 		rs.Availability = Available

@@ -11,7 +11,7 @@ type gormRepo struct {
 }
 
 func (repo *gormRepo) UpsertRental(request rental.Rental) error {
-	dbRequest := repo.mapper.rentRequestToDBRental(request)
+	dbRequest := repo.mapper.rentalToDBRental(request)
 	err := repo.db.Save(dbRequest).Error
 	return err
 }

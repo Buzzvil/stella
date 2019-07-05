@@ -15,7 +15,7 @@ func (mapper) dbRentalToRental(dbrr Rental) *rental.Rental {
 	}
 }
 
-func (mapper) rentRequestToDBRental(rr rental.Rental) *Rental {
+func (mapper) rentalToDBRental(rr rental.Rental) *Rental {
 	return &Rental{
 		ID:         rr.ID,
 		EntityID:   rr.EntityID,
