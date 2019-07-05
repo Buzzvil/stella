@@ -10,6 +10,7 @@ func (mapper) dbRentRequestToRentRequest(dbrr RentRequest) *rental.RentRequest {
 	return &rental.RentRequest{
 		ID:         dbrr.ID,
 		EntityID:   dbrr.EntityID,
+		UserID:     dbrr.UserID,
 		IsReturned: dbrr.IsReturned,
 	}
 }
@@ -18,6 +19,7 @@ func (mapper) rentRequestToDBRentRequest(rr rental.RentRequest) *RentRequest {
 	return &RentRequest{
 		ID:         rr.ID,
 		EntityID:   rr.EntityID,
+		UserID:     rr.UserID,
 		IsReturned: rr.IsReturned,
 	}
 }

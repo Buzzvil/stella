@@ -32,7 +32,7 @@ func (repo *gormRepo) GetLastRentRequestByEntityID(entityID int64) (*rental.Rent
 
 func (repo *gormRepo) ListRentRequestByUserID(userID int64) ([]*rental.RentRequest, error) {
 	dbrss := make([]RentRequest, 0)
-	if err := repo.db.Where("holder_id = ?", userID).Find(&dbrss).Error; err != nil {
+	if err := repo.db.Where("user_id = ?", userID).Find(&dbrss).Error; err != nil {
 		return nil, err
 	}
 	rss := make([]*rental.RentRequest, 0)
