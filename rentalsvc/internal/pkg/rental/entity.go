@@ -13,19 +13,26 @@ const (
 // UserStatus model definition
 type UserStatus struct {
 	WatchingEntities []int64
-	HoldingEntities  []int64
+	RentedEntities   []int64
 }
 
 // ResourceStatus model definition
 type ResourceStatus struct {
-	ID           uint
 	EntityID     int64
 	Availability ResourceAvailability
 	HolderID     *int64
 }
 
-// WatchRequest model definition
-type WatchRequest struct {
+// Rental model definition
+type Rental struct {
+	ID         uint
+	UserID     int64
+	EntityID   int64
+	IsReturned bool
+}
+
+// Watch model definition
+type Watch struct {
 	ID       uint
 	UserID   int64
 	EntityID int64

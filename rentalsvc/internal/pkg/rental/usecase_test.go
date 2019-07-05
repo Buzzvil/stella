@@ -10,22 +10,44 @@ import (
 )
 
 func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
-	var rs *rental.ResourceStatus
-	err := faker.FakeData(&rs)
-	ts.repo.On("GetResourceStatus", mock.Anything).Return(rs, nil).Once()
+	var rr *rental.Rental
+	err := faker.FakeData(&rr)
+	ts.repo.On("GetLastRentalByEntityID", mock.Anything).Return(rr, nil).Once()
 
-	result, err := ts.usecase.GetResourceStatus(rs.EntityID)
+	result, err := ts.usecase.GetResourceStatus(rr.EntityID)
 
 	ts.NoError(err)
-	ts.Equal(rs, result)
+	if rr.IsReturned {
+		ts.Equal(result.Availability, rental.Available)
+	} else {
+		ts.Equal(result.Availability, rental.Unavailable)
+	}
+	ts.repo.AssertExpectations(ts.T())
+}
+
+func (ts *UsecaseTestSuite) Test_GetUserStatus() {
+	var rentals []*rental.Rental
+	var watches []*rental.Watch
+	ts.NoError(faker.FakeData(&rentals))
+	ts.NoError(faker.FakeData(&watches))
+	userID := rentals[0].UserID
+
+	ts.repo.On("ListRentalByUserID", userID).Return(rentals, nil).Once()
+	ts.repo.On("ListWatchByUserID", userID).Return(watches, nil).Once()
+
+	result, err := ts.usecase.GetUserStatus(userID)
+
+	ts.NoError(err)
+	ts.Equal(len(rentals), len(result.RentedEntities))
+	ts.Equal(len(watches), len(result.WatchingEntities))
+
 	ts.repo.AssertExpectations(ts.T())
 }
 
 func (ts *UsecaseTestSuite) Test_ListResourceWatchers() {
-	var rrs []*rental.WatchRequest
-	err := faker.FakeData(&rrs)
-	ts.NoError(err)
-	ts.repo.On("ListWatchRequestByEntityID", mock.Anything).Return(rrs, nil).Once()
+	var rrs []*rental.Watch
+	ts.NoError(faker.FakeData(&rrs))
+	ts.repo.On("ListWatchByEntityID", mock.Anything).Return(rrs, nil).Once()
 
 	ids, err := ts.usecase.ListResourceWatchers(1234)
 
@@ -37,42 +59,39 @@ func (ts *UsecaseTestSuite) Test_ListResourceWatchers() {
 }
 
 func (ts *UsecaseTestSuite) Test_RentResource() {
-	var rs *rental.ResourceStatus
-	err := faker.FakeData(&rs)
-	ts.NoError(err)
-	rs.Availability = rental.Available
-	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.repo.On("SetResourceStatus", mock.Anything).Return(nil).Once()
+	var rr *rental.Rental
+	ts.NoError(faker.FakeData(&rr))
+	rr.IsReturned = true
+	ts.repo.On("GetLastRentalByEntityID", rr.EntityID).Return(rr, nil).Once()
+	ts.repo.On("UpsertRental", mock.Anything).Return(nil).Once()
 
-	err = ts.usecase.RentResource(*rs.HolderID, rs.EntityID)
+	err := ts.usecase.RentResource(rr.UserID+1, rr.EntityID)
 
 	ts.NoError(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
 func (ts *UsecaseTestSuite) Test_ReturnResource() {
-	var rs *rental.ResourceStatus
-	err := faker.FakeData(&rs)
-	ts.NoError(err)
-	rs.Availability = rental.Unavailable
-	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.repo.On("SetResourceStatus", mock.Anything).Return(nil).Once()
+	var rr *rental.Rental
+	ts.NoError(faker.FakeData(&rr))
+	rr.IsReturned = false
+	ts.repo.On("GetLastRentalByEntityID", rr.EntityID).Return(rr, nil).Once()
+	ts.repo.On("UpsertRental", mock.Anything).Return(nil).Once()
 
-	err = ts.usecase.ReturnResource(*rs.HolderID, rs.EntityID)
+	err := ts.usecase.ReturnResource(rr.UserID, rr.EntityID)
 
 	ts.NoError(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
 func (ts *UsecaseTestSuite) Test_WatchResource() {
-	var rs *rental.ResourceStatus
-	err := faker.FakeData(&rs)
-	ts.NoError(err)
-	rs.Availability = rental.Unavailable
-	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.repo.On("AddWatchRequest", mock.Anything).Return(nil).Once()
+	var rr *rental.Rental
+	ts.NoError(faker.FakeData(&rr))
+	rr.IsReturned = false
+	ts.repo.On("GetLastRentalByEntityID", rr.EntityID).Return(rr, nil).Once()
+	ts.repo.On("InsertWatch", mock.Anything).Return(nil).Once()
 
-	err = ts.usecase.WatchResource(*rs.HolderID+1, rs.EntityID)
+	err := ts.usecase.WatchResource(rr.UserID+1, rr.EntityID)
 
 	ts.NoError(err)
 	ts.repo.AssertExpectations(ts.T())
@@ -80,20 +99,19 @@ func (ts *UsecaseTestSuite) Test_WatchResource() {
 
 // If the book is already taken by the user, reserveResource request will be failed.
 func (ts *UsecaseTestSuite) Test_WatchResource_AlreadyTaken() {
-	var rs *rental.ResourceStatus
-	err := faker.FakeData(&rs)
-	ts.NoError(err)
-	rs.Availability = rental.Unavailable
-	ts.repo.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
+	var rr *rental.Rental
+	ts.NoError(faker.FakeData(&rr))
+	rr.IsReturned = true
+	ts.repo.On("GetLastRentalByEntityID", rr.EntityID).Return(rr, nil).Once()
 
-	err = ts.usecase.WatchResource(*rs.HolderID, rs.EntityID)
+	err := ts.usecase.WatchResource(rr.UserID, rr.EntityID)
 
 	ts.Error(err)
 	ts.repo.AssertExpectations(ts.T())
 }
 
 func (ts *UsecaseTestSuite) Test_UnwatchResource() {
-	ts.repo.On("RemoveWatchRequest", mock.Anything).Return(nil).Once()
+	ts.repo.On("DeleteWatch", mock.Anything).Return(nil).Once()
 
 	err := ts.usecase.UnwatchResource(1111, 2222)
 
@@ -126,23 +144,37 @@ type mockRepo struct {
 	mock.Mock
 }
 
-func (r *mockRepo) GetResourceStatus(entityID int64) (*rental.ResourceStatus, error) {
-	ret := r.Called(entityID)
-	return ret.Get(0).(*rental.ResourceStatus), ret.Error(1)
-}
-func (r *mockRepo) SetResourceStatus(status rental.ResourceStatus) error {
-	ret := r.Called(status)
-	return ret.Error(0)
-}
-func (r *mockRepo) ListWatchRequestByEntityID(entityID int64) ([]*rental.WatchRequest, error) {
-	ret := r.Called(entityID)
-	return ret.Get(0).([]*rental.WatchRequest), ret.Error(1)
-}
-func (r *mockRepo) AddWatchRequest(request rental.WatchRequest) error {
+func (r *mockRepo) UpsertRental(request rental.Rental) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }
-func (r *mockRepo) RemoveWatchRequest(request rental.WatchRequest) error {
+
+func (r *mockRepo) GetLastRentalByEntityID(entityID int64) (*rental.Rental, error) {
+	ret := r.Called(entityID)
+	return ret.Get(0).(*rental.Rental), ret.Error(1)
+}
+
+func (r *mockRepo) ListRentalByUserID(userID int64) ([]*rental.Rental, error) {
+	ret := r.Called(userID)
+	return ret.Get(0).([]*rental.Rental), ret.Error(1)
+}
+
+func (r *mockRepo) ListWatchByEntityID(entityID int64) ([]*rental.Watch, error) {
+	ret := r.Called(entityID)
+	return ret.Get(0).([]*rental.Watch), ret.Error(1)
+}
+
+func (r *mockRepo) ListWatchByUserID(userID int64) ([]*rental.Watch, error) {
+	ret := r.Called(userID)
+	return ret.Get(0).([]*rental.Watch), ret.Error(1)
+}
+
+func (r *mockRepo) InsertWatch(request rental.Watch) error {
+	ret := r.Called(request)
+	return ret.Error(0)
+}
+
+func (r *mockRepo) DeleteWatch(request rental.Watch) error {
 	ret := r.Called(request)
 	return ret.Error(0)
 }

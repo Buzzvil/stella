@@ -6,34 +6,34 @@ import (
 
 type mapper struct{}
 
-func (mapper) dbResourceStatusToResourceStatus(dbrs ResourceStatus) *rental.ResourceStatus {
-	return &rental.ResourceStatus{
-		ID:           dbrs.ID,
-		EntityID:     dbrs.EntityID,
-		Availability: rental.ResourceAvailability(dbrs.Availability),
-		HolderID:     dbrs.HolderID,
+func (mapper) dbRentalToRental(dbrr Rental) *rental.Rental {
+	return &rental.Rental{
+		ID:         dbrr.ID,
+		EntityID:   dbrr.EntityID,
+		UserID:     dbrr.UserID,
+		IsReturned: dbrr.IsReturned,
 	}
 }
 
-func (mapper) resourceStatusToDBResourceStatus(rs rental.ResourceStatus) *ResourceStatus {
-	return &ResourceStatus{
-		ID:           rs.ID,
-		EntityID:     rs.EntityID,
-		Availability: int(rs.Availability),
-		HolderID:     rs.HolderID,
+func (mapper) rentalToDBRental(rr rental.Rental) *Rental {
+	return &Rental{
+		ID:         rr.ID,
+		EntityID:   rr.EntityID,
+		UserID:     rr.UserID,
+		IsReturned: rr.IsReturned,
 	}
 }
 
-func (mapper) dbWatchRequestToWatchRequest(dbrr WatchRequest) *rental.WatchRequest {
-	return &rental.WatchRequest{
+func (mapper) dbWatchToWatch(dbrr Watch) *rental.Watch {
+	return &rental.Watch{
 		ID:       dbrr.ID,
 		EntityID: dbrr.EntityID,
 		UserID:   dbrr.UserID,
 	}
 }
 
-func (mapper) reserveRequestToDBWatchRequest(rr rental.WatchRequest) *WatchRequest {
-	return &WatchRequest{
+func (mapper) watchToDBWatch(rr rental.Watch) *Watch {
+	return &Watch{
 		ID:       rr.ID,
 		EntityID: rr.EntityID,
 		UserID:   rr.UserID,
