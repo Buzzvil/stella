@@ -19,14 +19,15 @@ function App() {
         <CssBaseline />
         {loadingCurrentUser ?
           <div>Loading...</div> :
+            currentUser ?
             <Router>
               <Switch>
-                <Route path='/' component={() => {
-                  if (!currentUser) return <SignInPage />;
+                <Route path='/' render={() => {
                   return <IndexPage search={useBookLister} statusFetcher={useResourceStatus} currentUser={currentUser} />
                 }}  />
+                <Route render={() => <h1>NotFound</h1>} />
               </Switch>
-            </Router>
+            </Router> : <SignInPage /> 
         }
     </MuiThemeProvider>
   );
