@@ -1,4 +1,5 @@
 import React from "react";
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import { ReactComponent as MainLogo } from "../../img/logo-main.svg";
 import { Button, Link } from "@material-ui/core";
@@ -32,7 +33,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-interface SignInPageProps {}
+interface SignInPageProps extends RouteComponentProps {}
 
 const SignInPage: React.SFC<SignInPageProps> = () => {
   return (
@@ -48,4 +49,4 @@ const SignInPage: React.SFC<SignInPageProps> = () => {
   );
 };
 
-export default SignInPage;
+export default withRouter(SignInPage);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import { Typography, Card, TextField, Grid } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
@@ -40,7 +41,7 @@ const SearchResult: any = styled(Grid)`
   }
 `;
 
-interface IndexPageProps {
+interface IndexPageProps extends RouteComponentProps {
   currentUser?: User
   search?: (query: string) => [boolean, Book[]]
   statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
@@ -58,7 +59,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
   if (!search) return null;
   const [loading, books] = search(query)
   return (
-    <div>
+    <>
       <AppHeader currentUser={currentUser} />
       <SearchContainer>
         <SearchForm
@@ -86,8 +87,8 @@ const IndexPage: React.SFC<IndexPageProps> = ({
           </SearchResult>
         </SearchForm>
       </SearchContainer>
-    </div>
+    </>
   );
 };
 
-export default IndexPage;
+export default withRouter(IndexPage);
