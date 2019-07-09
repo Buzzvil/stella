@@ -1,12 +1,18 @@
 package rental
 
+import (
+	"fmt"
+)
+
+// Usecase interface definition
 type Usecase interface {
 	GetResourceStatus(entityID int64) (*ResourceStatus, error)
-	GetResourceWaitingList(entityID int64) ([]int64, error)
+	GetUserStatus(userID int64) (*UserStatus, error)
+	ListResourceWatchers(entityID int64) ([]int64, error)
 	RentResource(userID int64, entityID int64) error
 	ReturnResource(userID int64, entityID int64) error
-	ReserveResource(userID int64, entityID int64) error
-	CancelResource(userID int64, entityID int64) error
+	WatchResource(userID int64, entityID int64) error
+	UnwatchResource(userID int64, entityID int64) error
 }
 
 type usecase struct {
@@ -16,15 +22,47 @@ type usecase struct {
 var _ Usecase = &usecase{}
 
 func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
-	status, err := u.repo.GetResourceStatus(entityID)
+	rs := ResourceStatus{EntityID: entityID}
+	rental, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return &ResourceStatus{Availability: Unavailable}, err
 	}
-	return status, nil
+	if rental != nil && rental.IsReturned == false {
+		rs.Availability = Unavailable
+	} else {
+		rs.Availability = Available
+	}
+	return &rs, nil
 }
 
-func (u *usecase) GetResourceWaitingList(entityID int64) ([]int64, error) {
-	rrs, err := u.repo.ListReserveRequestByEntityID(entityID)
+func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
+	rentedResources, err := u.repo.ListRentalByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	watchingResources, err := u.repo.ListWatchByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	us := UserStatus{
+		WatchingEntities: make([]int64, 0),
+		RentedEntities:   make([]int64, 0),
+	}
+
+	for _, hs := range rentedResources {
+		us.RentedEntities = append(us.RentedEntities, hs.EntityID)
+	}
+
+	for _, hs := range watchingResources {
+		us.WatchingEntities = append(us.WatchingEntities, hs.EntityID)
+	}
+
+	return &us, nil
+}
+
+func (u *usecase) ListResourceWatchers(entityID int64) ([]int64, error) {
+	rrs, err := u.repo.ListWatchByEntityID(entityID)
 	if err != nil {
 		return nil, err
 	}
@@ -36,56 +74,67 @@ func (u *usecase) GetResourceWaitingList(entityID int64) ([]int64, error) {
 }
 
 func (u *usecase) RentResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability != Available {
+	if lastRentReq != nil && !lastRentReq.IsReturned {
 		return InvalidOperationError{}
 	}
-	status.Availability = Unavailable
-	status.HolderID = &userID
-	if err != nil {
-		return err
+
+	rentReq := Rental{
+		UserID:   userID,
+		EntityID: entityID,
 	}
-	return u.repo.SetResourceStatus(*status)
+
+	return u.repo.UpsertRental(rentReq)
 }
 
 func (u *usecase) ReturnResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability == Available {
+
+	if lastRentReq.IsReturned == true {
 		return nil
 	}
-	status.Availability = Available
-	status.HolderID = nil
-	return u.repo.SetResourceStatus(*status)
+
+	if lastRentReq == nil {
+		return fmt.Errorf("entity %v wasn't rented", entityID)
+	}
+
+	if lastRentReq.UserID != userID {
+		return fmt.Errorf("entity %v wasn't rented by %v", entityID, userID)
+	}
+
+	lastRentReq.IsReturned = true
+	return u.repo.UpsertRental(*lastRentReq)
 }
 
-func (u *usecase) ReserveResource(userID int64, entityID int64) error {
-	status, err := u.repo.GetResourceStatus(entityID)
+func (u *usecase) WatchResource(userID int64, entityID int64) error {
+	lastRentReq, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return err
 	}
-	if status.Availability == Available || *status.HolderID == userID {
+	if lastRentReq != nil && (lastRentReq.IsReturned || lastRentReq.UserID == userID) {
 		return InvalidOperationError{}
 	}
 
-	return u.repo.AddReserveRequest(ReserveRequest{
+	return u.repo.InsertWatch(Watch{
 		EntityID: entityID,
 		UserID:   userID,
 	})
 }
 
-func (u *usecase) CancelResource(userID int64, entityID int64) error {
-	return u.repo.RemoveReserveRequest(ReserveRequest{
+func (u *usecase) UnwatchResource(userID int64, entityID int64) error {
+	return u.repo.DeleteWatch(Watch{
 		EntityID: entityID,
 		UserID:   userID,
 	})
 }
 
+// NewUsecase returns an Usecase
 func NewUsecase(repo Repository) Usecase {
 	return &usecase{repo}
 }

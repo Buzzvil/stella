@@ -20,23 +20,32 @@ func (s *server) GetResourceStatus(c context.Context, req *pb.GetResourceStatusR
 	if err != nil {
 		return nil, err
 	}
-	pbRs := pb.ResourceStatus{EntityId: req.GetEntityId()}
+	pbRS := pb.ResourceStatus{EntityId: req.GetEntityId()}
 	switch rs.Availability {
 	case rental.Available:
-		pbRs.Availability = pb.ResourceStatus_AVAILABLE
+		pbRS.Availability = pb.ResourceStatus_AVAILABLE
 	case rental.Unavailable:
-		pbRs.Availability = pb.ResourceStatus_UNAVAILABLE
+		pbRS.Availability = pb.ResourceStatus_UNAVAILABLE
 	}
 
-	userIDs, err := s.u.GetResourceWaitingList(req.GetEntityId())
+	userIDs, err := s.u.ListResourceWatchers(req.GetEntityId())
 	if err != nil {
 		return nil, err
 	}
 	if rs.HolderID != nil {
-		pbRs.Holder = *rs.HolderID
+		pbRS.Holder = *rs.HolderID
 	}
-	pbRs.ReservedUserIds = userIDs
-	return &pbRs, nil
+	pbRS.WatchingUserIds = userIDs
+	return &pbRS, nil
+}
+
+func (s *server) GetUserStatus(c context.Context, req *pb.GetUserStatusRequest) (*pb.UserStatus, error) {
+	us, err := s.u.GetUserStatus(req.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	pbUS := pb.UserStatus{UserId: req.GetUserId(), RentedEntityIds: us.RentedEntities, WatchingEntityIds: us.WatchingEntities}
+	return &pbUS, nil
 }
 
 func (s *server) RentResource(c context.Context, req *pb.RentResourceRequest) (*empty.Empty, error) {
@@ -52,8 +61,8 @@ func (s *server) ReturnResource(c context.Context, req *pb.ReturnResourceRequest
 	return &empty.Empty{}, s.u.ReturnResource(req.GetUserId(), req.GetEntityId())
 }
 
-func (s *server) ReserveResource(c context.Context, req *pb.ReserveResourceRequest) (*empty.Empty, error) {
-	err := s.u.ReserveResource(req.GetUserId(), req.GetEntityId())
+func (s *server) WatchResource(c context.Context, req *pb.WatchResourceRequest) (*empty.Empty, error) {
+	err := s.u.WatchResource(req.GetUserId(), req.GetEntityId())
 	switch err.(type) {
 	case rental.InvalidOperationError:
 		err = status.Error(codes.Unavailable, "invalid operation")
@@ -61,8 +70,8 @@ func (s *server) ReserveResource(c context.Context, req *pb.ReserveResourceReque
 	return &empty.Empty{}, err
 }
 
-func (s *server) CancelResource(c context.Context, req *pb.CancelResourceRequest) (*empty.Empty, error) {
-	return &empty.Empty{}, s.u.CancelResource(req.GetUserId(), req.GetEntityId())
+func (s *server) UnwatchResource(c context.Context, req *pb.UnwatchResourceRequest) (*empty.Empty, error) {
+	return &empty.Empty{}, s.u.UnwatchResource(req.GetUserId(), req.GetEntityId())
 }
 
 // New initializes app

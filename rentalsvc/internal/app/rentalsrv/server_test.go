@@ -19,7 +19,7 @@ func (ts *ServerTestSuite) Test_GetResourceStatus() {
 	ts.NoError(faker.FakeData(&rs))
 	ts.NoError(faker.FakeData(&wl))
 	ts.usecase.On("GetResourceStatus", rs.EntityID).Return(rs, nil).Once()
-	ts.usecase.On("GetResourceWaitingList", rs.EntityID).Return(wl, nil).Once()
+	ts.usecase.On("ListResourceWatchers", rs.EntityID).Return(wl, nil).Once()
 	pbReq := pb.GetResourceStatusRequest{EntityId: rs.EntityID}
 
 	pbRes, err := ts.server.GetResourceStatus(context.Background(), &pbReq)
@@ -27,7 +27,7 @@ func (ts *ServerTestSuite) Test_GetResourceStatus() {
 	ts.NoError(err)
 	ts.Equal(pbRes.EntityId, rs.EntityID)
 	for i := range wl {
-		ts.Equal(wl[i], pbRes.ReservedUserIds[i])
+		ts.Equal(wl[i], pbRes.WatchingUserIds[i])
 	}
 }
 
@@ -59,29 +59,29 @@ func (ts *ServerTestSuite) Test_ReturnResource() {
 	ts.NotNil(res)
 }
 
-func (ts *ServerTestSuite) Test_ReserveResource() {
+func (ts *ServerTestSuite) Test_WatchResource() {
 	userID, entityID := ts.getRandomEntityAndUserID()
-	ts.usecase.On("ReserveResource", userID, entityID).Return(nil).Once()
-	pbReq := pb.ReserveResourceRequest{
+	ts.usecase.On("WatchResource", userID, entityID).Return(nil).Once()
+	pbReq := pb.WatchResourceRequest{
 		EntityId: entityID,
 		UserId:   userID,
 	}
 
-	res, err := ts.server.ReserveResource(context.Background(), &pbReq)
+	res, err := ts.server.WatchResource(context.Background(), &pbReq)
 
 	ts.NoError(err)
 	ts.NotNil(res)
 }
 
-func (ts *ServerTestSuite) Test_CancelResource() {
+func (ts *ServerTestSuite) Test_UnwatchResource() {
 	userID, entityID := ts.getRandomEntityAndUserID()
-	ts.usecase.On("CancelResource", userID, entityID).Return(nil).Once()
-	pbReq := pb.CancelResourceRequest{
+	ts.usecase.On("UnwatchResource", userID, entityID).Return(nil).Once()
+	pbReq := pb.UnwatchResourceRequest{
 		EntityId: entityID,
 		UserId:   userID,
 	}
 
-	res, err := ts.server.CancelResource(context.Background(), &pbReq)
+	res, err := ts.server.UnwatchResource(context.Background(), &pbReq)
 
 	ts.NoError(err)
 	ts.NotNil(res)
@@ -119,7 +119,11 @@ func (u *mockUsecase) GetResourceStatus(entityID int64) (*rental.ResourceStatus,
 	ret := u.Called(entityID)
 	return ret.Get(0).(*rental.ResourceStatus), ret.Error(1)
 }
-func (u *mockUsecase) GetResourceWaitingList(entityID int64) ([]int64, error) {
+func (u *mockUsecase) GetUserStatus(userID int64) (*rental.UserStatus, error) {
+	ret := u.Called(userID)
+	return ret.Get(0).(*rental.UserStatus), ret.Error(1)
+}
+func (u *mockUsecase) ListResourceWatchers(entityID int64) ([]int64, error) {
 	ret := u.Called(entityID)
 	return ret.Get(0).([]int64), ret.Error(1)
 }
@@ -131,11 +135,11 @@ func (u *mockUsecase) ReturnResource(userID int64, entityID int64) error {
 	ret := u.Called(userID, entityID)
 	return ret.Error(0)
 }
-func (u *mockUsecase) ReserveResource(userID int64, entityID int64) error {
+func (u *mockUsecase) WatchResource(userID int64, entityID int64) error {
 	ret := u.Called(userID, entityID)
 	return ret.Error(0)
 }
-func (u *mockUsecase) CancelResource(userID int64, entityID int64) error {
+func (u *mockUsecase) UnwatchResource(userID int64, entityID int64) error {
 	ret := u.Called(userID, entityID)
 	return ret.Error(0)
 }

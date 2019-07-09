@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import styled from "styled-components";
-import { Typography, Card, TextField, Grid } from "@material-ui/core";
+import { Typography, TextField, Grid, Modal } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
 import { ResourceStatus } from "proto/rentalsvc_pb";
 import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
+import BookDetail from "../BookDetail/BookDetail";
+import ModalWrapper from "../ModalWrapper/ModalWrapper";
 
 const SearchForm = styled.form`
   display: flex;
@@ -54,6 +56,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
   statusFetcher,
   currentUser
 }) => {
+  const [selectedBook, setSelectedBook] = useState<null | number>(null);
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState('');
   if (!search) return null;
@@ -81,12 +84,21 @@ const IndexPage: React.SFC<IndexPageProps> = ({
           <SearchResult container>
             {books.map(b => (
               <Grid item xl={6} xs={6} key={b.getId()}>
-                <BookListCard book={b} currentUser={currentUser} statusFetcher={statusFetcher} />
+                <BookListCard
+                  book={b}
+                  currentUser={currentUser}
+                  statusFetcher={statusFetcher}
+                  onClick={() => setSelectedBook(b.getId())} />
               </Grid>
             ))}
           </SearchResult>
         </SearchForm>
       </SearchContainer>
+      <Modal open={selectedBook !== null} style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+        <ModalWrapper close={() => setSelectedBook(null)}>
+          <BookDetail bookId={selectedBook} />
+        </ModalWrapper>
+      </Modal>
     </>
   );
 };

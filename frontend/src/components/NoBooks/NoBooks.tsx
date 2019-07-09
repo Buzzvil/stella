@@ -1,11 +1,20 @@
 import React, { ReactComponentElement } from "react";
 import RoundButton from "../RoundButton/RoundButton";
 import styled from "styled-components";
-import { ReactComponent as SadIcon} from "../../img/ic_emoticon_sad.svg";
+import { ReactComponent as CatIcon} from "../../img/sad-cat.svg";
+
+const Frame = styled.div`
+    position: absolute;
+    top: -91px;
+    left: 20px;
+    width: 472px;
+    text-align: left;
+`;
 
 const Card = styled.div`
+    position: relative;
     width: 472px;
-    background: #ffffff;
+    background: #233443;
     padding-top: 35px;
     padding-bottom: 24px;
     text-align: center;
@@ -14,31 +23,31 @@ const Card = styled.div`
 `;
 
 const Title = styled.h3`
-    margin-top: 22px;
-    margin-bottom: 0px;
     font-size: 34px;
-    font-weight: 500;
-    line-height: 49px;
+    line-height: 40px;
     text-align: center;
+    letter-spacing: -1px;
+    color: #FFFFFF;
 `;
 
 const Desc = styled.p`
     margin-top: 16px;
     margin-bottom: 24px;
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 16px;
+    line-height: 24px;
     text-align: center;
     letter-spacing: 0.5px;
-    color: #051625;
+    color: #F4F4F4;
+    opacity: 0.72;
 `;
 
 export default () => {
     return (
         <Card>
-            <SadIcon />
             <Title>없어요...</Title>
             <Desc>It’s not there yet, feel free to request it!</Desc>
             <RoundButton>REQUEST A BOOK</RoundButton>
+            <Frame><CatIcon /></Frame>
         </Card>
     );
 }

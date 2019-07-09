@@ -29,6 +29,11 @@ export default createMuiTheme({
       'Roboto',
       'sans-serif'
     ].join(','),
+    h3: {
+      fontSize: '34px',
+      fontWeight: 'bold',
+      letterSpacing: '-1px'
+    },
     h5: {
       fontSize: '21px',
       fontWeight: 'bold'
@@ -63,6 +68,11 @@ export default createMuiTheme({
       root: {
         backgroundColor: '#233443',
         borderRadius: '24px',
+      }
+    },
+    MuiPaper: {
+      rounded: {
+        borderRadius: '8px',
       }
     }
   }
