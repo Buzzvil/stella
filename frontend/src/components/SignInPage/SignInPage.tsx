@@ -33,7 +33,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-interface SignInPageProps extends RouteComponentProps {}
+interface SignInPageProps {}
 
 const SignInPage: React.SFC<SignInPageProps> = () => {
   return (
