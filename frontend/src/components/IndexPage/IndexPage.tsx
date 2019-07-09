@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import { Typography, TextField, Grid, Modal } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
@@ -43,7 +42,7 @@ const SearchResult: any = styled(Grid)`
   }
 `;
 
-interface IndexPageProps extends RouteComponentProps {
+interface IndexPageProps {
   currentUser?: User
   search?: (query: string) => [boolean, Book[]]
   statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
@@ -103,4 +102,4 @@ const IndexPage: React.SFC<IndexPageProps> = ({
   );
 };
 
-export default withRouter(IndexPage);
+export default IndexPage;
