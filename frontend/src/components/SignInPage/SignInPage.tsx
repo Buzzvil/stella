@@ -49,4 +49,4 @@ const SignInPage: React.SFC<SignInPageProps> = () => {
   );
 };
 
-export default withRouter(SignInPage);
+export default SignInPage;
