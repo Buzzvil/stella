@@ -4,16 +4,18 @@ import (
 	"time"
 )
 
-type ResourceStatus struct {
-	ID           uint  `gorm:"primary_key"`
-	EntityID     int64 `gorm:"index;unique"`
-	Availability int
-	HolderID     *int64
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+// Rental model definition
+type Rental struct {
+	ID         uint  `gorm:"primary_key"`
+	UserID     int64 `gorm:"unique_index"`
+	EntityID   int64 `gorm:"unique_index"`
+	IsReturned bool
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
-type ReserveRequest struct {
+// Watch model definition
+type Watch struct {
 	ID        uint  `gorm:"primary_key"`
 	UserID    int64 `gorm:"unique_index:idx_user_entity"`
 	EntityID  int64 `gorm:"unique_index:idx_user_entity"`

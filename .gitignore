@@ -9,3 +9,6 @@ deployments/chart/stella/requirements.lock
 *.db
 
 /values.dev.yaml
+
+# debug file
+__debug_bin
