@@ -12,6 +12,7 @@ const Container: any = styled(Card)`
   margin: 16px;
   padding: 16px;
   border-radius: 24px;
+  cursor: pointer;
   flex-wrap: wrap;
   flex-direction: row;
 `;
@@ -51,39 +52,41 @@ interface BookListCardInterface {
   book: Book
   currentUser?: User
   statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
-  openBookDetail?: () => void
+  onClick?: () => void
 }
 
 const defaultStatusFetcher = (bookId: number) : [boolean, ResourceStatus] => ([false, new ResourceStatus])
 
 export default ({
-  book, currentUser, openBookDetail, statusFetcher = defaultStatusFetcher }: BookListCardInterface) => {
+  book, currentUser, onClick, statusFetcher = defaultStatusFetcher }: BookListCardInterface) => {
   const reads = 12;
   const reviews = 3;
   const myRating = 4;
   const avgRating = 3.5;
   const [loadingStatus, status] = statusFetcher(book.getId())
   return (
-    <Container onClick={() => openBookDetail && openBookDetail()}>
-      <Img src={book.getCoverImage()} />
-      <Content>
-        <Typography variant="h5">{book.getName()}</Typography>
-        <Typography variant="h6">{book.getAuthorsList().join(", ")}</Typography>
-        <Typography variant="body2">{reads} reads - {reviews} reviews</Typography>
-      </Content>
-      <Actions>
-        <Ratings>
-          <Star value={1} /><RatingLabel variant="body1">{myRating}</RatingLabel>
-          <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
-        </Ratings>
-        {status && (
-          status.getAvailability() === ResourceStatus.Availability.AVAILABLE ?
-            <Button variant="contained" color="secondary" disabled={loadingStatus}>Book it</Button> :
-            currentUser && currentUser.getId() === status.getHolder() ?
-              <Button variant="contained" color="default" disabled={loadingStatus}>Return</Button> :
-              <Button variant="contained" color="default" disabled={loadingStatus}>Get Notified</Button>
-        )}
-      </Actions>
-    </Container>
+    <a onClick={() => onClick && onClick()}>
+      <Container>
+        <Img src={book.getCoverImage()} />
+        <Content>
+          <Typography variant="h5">{book.getName()}</Typography>
+          <Typography variant="h6">{book.getAuthorsList().join(", ")}</Typography>
+          <Typography variant="body2">{reads} reads - {reviews} reviews</Typography>
+        </Content>
+        <Actions>
+          <Ratings>
+            <Star value={1} /><RatingLabel variant="body1">{myRating}</RatingLabel>
+            <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
+          </Ratings>
+          {status && (
+            status.getAvailability() === ResourceStatus.Availability.AVAILABLE ?
+              <Button variant="contained" color="secondary" disabled={loadingStatus}>Book it</Button> :
+              currentUser && currentUser.getId() === status.getHolder() ?
+                <Button variant="contained" color="default" disabled={loadingStatus}>Return</Button> :
+                <Button variant="contained" color="default" disabled={loadingStatus}>Get Notified</Button>
+          )}
+        </Actions>
+      </Container>
+    </a>
   );
 };

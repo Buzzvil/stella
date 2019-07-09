@@ -87,7 +87,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
                   book={b}
                   currentUser={currentUser}
                   statusFetcher={statusFetcher}
-                  openBookDetail={() => setSelectedBook(b.getId())} />
+                  onClick={() => setSelectedBook(b.getId())} />
               </Grid>
             ))}
           </SearchResult>
