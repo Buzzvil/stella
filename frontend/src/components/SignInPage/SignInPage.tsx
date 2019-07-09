@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { ReactComponent as MainLogo } from "../../img/logo-main.svg";
-import { Button, Link } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 const Header = styled.div`
   margin-top: 100px;

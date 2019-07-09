@@ -61,7 +61,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
   if (!search) return null;
   const [loading, books] = search(query)
   return (
-    <div>
+    <>
       <AppHeader currentUser={currentUser} />
       <SearchContainer>
         <SearchForm
@@ -98,7 +98,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
           <BookDetail bookId={selectedBook} />
         </ModalWrapper>
       </Modal>
-    </div>
+    </>
   );
 };
 
