@@ -1,11 +1,11 @@
 import React from "react";
 
 import { storiesOf } from "@storybook/react";
-import { MuiThemeProvider, CssBaseline, Modal } from "@material-ui/core";
+import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { Book } from "../../../proto/booksvc_pb";
 
 import StandardTheme from "../../theme/StandardTheme";
-import ModalWrapper from "../ModalWrapper/ModalWrapper";
+import { BookProvider } from "../../hooks/BookContext/BookContext";
 import BookDetail from "./BookDetail";
 
 const TestBook = (() => {
@@ -20,9 +20,15 @@ const TestBook = (() => {
 })();
 
 storiesOf("Organisms|BookDetail", module)
-  .add("default", () => (
-    <MuiThemeProvider theme={StandardTheme}>
-      <CssBaseline />
-      <BookDetail book={TestBook} />
-    </MuiThemeProvider>
-  ));
+  .add("default", () => {
+    return (
+      <BookProvider initial={{
+        [TestBook.getId()]: TestBook,
+      }}>
+        <MuiThemeProvider theme={StandardTheme}>
+          <CssBaseline />
+          <BookDetail bookId={TestBook.getId()} />
+        </MuiThemeProvider>
+      </BookProvider>
+    );
+  });

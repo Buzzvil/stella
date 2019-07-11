@@ -43,8 +43,8 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
-const BookProvider: React.SFC = ({ children }) => {
-  return <Provider value={useReducer(reducer, [])}>{children}</Provider>;
+const BookProvider: React.SFC<{initial?: State}> = ({ children, initial = {} as State}) => {
+  return <Provider value={useReducer(reducer, initial)}>{children}</Provider>;
 };
 
 const BookConsumer = BookContext.Consumer;
