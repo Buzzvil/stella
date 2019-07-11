@@ -12,6 +12,7 @@ const (
 
 // UserStatus model definition
 type UserStatus struct {
+	HeldEntities     []int64
 	WatchingEntities []int64
 	RentedEntities   []int64
 }

@@ -15,8 +15,9 @@ service RentalService {
 
 message UserStatus {
   int64 user_id = 1;
-  repeated int64 rented_entity_ids = 2;
-  repeated int64 watching_entity_ids = 3;
+  repeated int64 held_entity_ids = 2;
+  repeated int64 rented_entity_ids = 3;
+  repeated int64 watching_entity_ids = 4;
 }
 
 message ResourceStatus {

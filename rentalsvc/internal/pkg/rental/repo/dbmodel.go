@@ -6,9 +6,9 @@ import (
 
 // Rental model definition
 type Rental struct {
-	ID         uint  `gorm:"primary_key"`
-	UserID     int64 `gorm:"unique_index"`
-	EntityID   int64 `gorm:"unique_index"`
+	ID         uint `gorm:"primary_key"`
+	UserID     int64
+	EntityID   int64
 	IsReturned bool
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
