@@ -1,14 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { storiesOf } from "@storybook/react";
-import { MuiThemeProvider, CssBaseline, Modal } from "@material-ui/core";
+import { MuiThemeProvider, CssBaseline } from "@material-ui/core";
 import { Book } from "../../../proto/booksvc_pb";
 
 import StandardTheme from "../../theme/StandardTheme";
-import BookContext, {
-  BookProvider,
-  setBook
-} from "../../hooks/BookContext/BookContext";
+import { BookProvider } from "../../hooks/BookContext/BookContext";
 import BookDetail from "./BookDetail";
 
 const TestBook = (() => {
