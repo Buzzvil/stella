@@ -20,6 +20,7 @@ func (ts *UsecaseTestSuite) Test_GetResourceStatus() {
 	if rr.IsReturned {
 		ts.Equal(result.Availability, rental.Available)
 	} else {
+		ts.Equal(*result.HolderID, rr.UserID)
 		ts.Equal(result.Availability, rental.Unavailable)
 	}
 	ts.repo.AssertExpectations(ts.T())
@@ -32,13 +33,24 @@ func (ts *UsecaseTestSuite) Test_GetUserStatus() {
 	ts.NoError(faker.FakeData(&watches))
 	userID := rentals[0].UserID
 
+	renteds, helds := make([]*rental.Rental, 0), make([]*rental.Rental, 0)
+
+	for _, r := range rentals {
+		if r.IsReturned {
+			renteds = append(renteds, r)
+		} else {
+			helds = append(helds, r)
+		}
+	}
+
 	ts.repo.On("ListRentalByUserID", userID).Return(rentals, nil).Once()
 	ts.repo.On("ListWatchByUserID", userID).Return(watches, nil).Once()
 
 	result, err := ts.usecase.GetUserStatus(userID)
 
 	ts.NoError(err)
-	ts.Equal(len(rentals), len(result.RentedEntities))
+	ts.Equal(len(renteds), len(result.RentedEntities))
+	ts.Equal(len(helds), len(result.HeldEntities))
 	ts.Equal(len(watches), len(result.WatchingEntities))
 
 	ts.repo.AssertExpectations(ts.T())

@@ -196,7 +196,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.stella.rental.v1.UserStatus.repeatedFields_ = [2,3];
+proto.stella.rental.v1.UserStatus.repeatedFields_ = [2,3,4];
 
 
 
@@ -228,8 +228,9 @@ proto.stella.rental.v1.UserStatus.prototype.toObject = function(opt_includeInsta
 proto.stella.rental.v1.UserStatus.toObject = function(includeInstance, msg) {
   var f, obj = {
     userId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    rentedEntityIdsList: jspb.Message.getRepeatedField(msg, 2),
-    watchingEntityIdsList: jspb.Message.getRepeatedField(msg, 3)
+    heldEntityIdsList: jspb.Message.getRepeatedField(msg, 2),
+    rentedEntityIdsList: jspb.Message.getRepeatedField(msg, 3),
+    watchingEntityIdsList: jspb.Message.getRepeatedField(msg, 4)
   };
 
   if (includeInstance) {
@@ -272,9 +273,13 @@ proto.stella.rental.v1.UserStatus.deserializeBinaryFromReader = function(msg, re
       break;
     case 2:
       var value = /** @type {!Array<number>} */ (reader.readPackedInt64());
-      msg.setRentedEntityIdsList(value);
+      msg.setHeldEntityIdsList(value);
       break;
     case 3:
+      var value = /** @type {!Array<number>} */ (reader.readPackedInt64());
+      msg.setRentedEntityIdsList(value);
+      break;
+    case 4:
       var value = /** @type {!Array<number>} */ (reader.readPackedInt64());
       msg.setWatchingEntityIdsList(value);
       break;
@@ -314,17 +319,24 @@ proto.stella.rental.v1.UserStatus.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getRentedEntityIdsList();
+  f = message.getHeldEntityIdsList();
   if (f.length > 0) {
     writer.writePackedInt64(
       2,
       f
     );
   }
-  f = message.getWatchingEntityIdsList();
+  f = message.getRentedEntityIdsList();
   if (f.length > 0) {
     writer.writePackedInt64(
       3,
+      f
+    );
+  }
+  f = message.getWatchingEntityIdsList();
+  if (f.length > 0) {
+    writer.writePackedInt64(
+      4,
       f
     );
   }
@@ -347,16 +359,16 @@ proto.stella.rental.v1.UserStatus.prototype.setUserId = function(value) {
 
 
 /**
- * repeated int64 rented_entity_ids = 2;
+ * repeated int64 held_entity_ids = 2;
  * @return {!Array<number>}
  */
-proto.stella.rental.v1.UserStatus.prototype.getRentedEntityIdsList = function() {
+proto.stella.rental.v1.UserStatus.prototype.getHeldEntityIdsList = function() {
   return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /** @param {!Array<number>} value */
-proto.stella.rental.v1.UserStatus.prototype.setRentedEntityIdsList = function(value) {
+proto.stella.rental.v1.UserStatus.prototype.setHeldEntityIdsList = function(value) {
   jspb.Message.setField(this, 2, value || []);
 };
 
@@ -365,8 +377,40 @@ proto.stella.rental.v1.UserStatus.prototype.setRentedEntityIdsList = function(va
  * @param {number} value
  * @param {number=} opt_index
  */
-proto.stella.rental.v1.UserStatus.prototype.addRentedEntityIds = function(value, opt_index) {
+proto.stella.rental.v1.UserStatus.prototype.addHeldEntityIds = function(value, opt_index) {
   jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ */
+proto.stella.rental.v1.UserStatus.prototype.clearHeldEntityIdsList = function() {
+  this.setHeldEntityIdsList([]);
+};
+
+
+/**
+ * repeated int64 rented_entity_ids = 3;
+ * @return {!Array<number>}
+ */
+proto.stella.rental.v1.UserStatus.prototype.getRentedEntityIdsList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 3));
+};
+
+
+/** @param {!Array<number>} value */
+proto.stella.rental.v1.UserStatus.prototype.setRentedEntityIdsList = function(value) {
+  jspb.Message.setField(this, 3, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ */
+proto.stella.rental.v1.UserStatus.prototype.addRentedEntityIds = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
 
@@ -379,17 +423,17 @@ proto.stella.rental.v1.UserStatus.prototype.clearRentedEntityIdsList = function(
 
 
 /**
- * repeated int64 watching_entity_ids = 3;
+ * repeated int64 watching_entity_ids = 4;
  * @return {!Array<number>}
  */
 proto.stella.rental.v1.UserStatus.prototype.getWatchingEntityIdsList = function() {
-  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 3));
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 4));
 };
 
 
 /** @param {!Array<number>} value */
 proto.stella.rental.v1.UserStatus.prototype.setWatchingEntityIdsList = function(value) {
-  jspb.Message.setField(this, 3, value || []);
+  jspb.Message.setField(this, 4, value || []);
 };
 
 
@@ -398,7 +442,7 @@ proto.stella.rental.v1.UserStatus.prototype.setWatchingEntityIdsList = function(
  * @param {number=} opt_index
  */
 proto.stella.rental.v1.UserStatus.prototype.addWatchingEntityIds = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+  jspb.Message.addToRepeatedField(this, 4, value, opt_index);
 };
 
 

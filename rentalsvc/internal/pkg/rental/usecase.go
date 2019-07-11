@@ -23,12 +23,13 @@ var _ Usecase = &usecase{}
 
 func (u *usecase) GetResourceStatus(entityID int64) (*ResourceStatus, error) {
 	rs := ResourceStatus{EntityID: entityID}
-	rental, err := u.repo.GetLastRentalByEntityID(entityID)
+	r, err := u.repo.GetLastRentalByEntityID(entityID)
 	if err != nil {
 		return &ResourceStatus{Availability: Unavailable}, err
 	}
-	if rental != nil && rental.IsReturned == false {
+	if r != nil && r.IsReturned == false {
 		rs.Availability = Unavailable
+		rs.HolderID = &r.UserID
 	} else {
 		rs.Availability = Available
 	}
@@ -51,7 +52,11 @@ func (u *usecase) GetUserStatus(userID int64) (*UserStatus, error) {
 	}
 
 	for _, hs := range rentedResources {
-		us.RentedEntities = append(us.RentedEntities, hs.EntityID)
+		if hs.IsReturned {
+			us.RentedEntities = append(us.RentedEntities, hs.EntityID)
+		} else {
+			us.HeldEntities = append(us.HeldEntities, hs.EntityID)
+		}
 	}
 
 	for _, hs := range watchingResources {

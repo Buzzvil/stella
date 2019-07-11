@@ -127,6 +127,8 @@ export class UserStatus {
   constructor ();
   getUserId(): number;
   setUserId(a: number): void;
+  getHeldEntityIdsList(): number[];
+  setHeldEntityIdsList(a: number[]): void;
   getRentedEntityIdsList(): number[];
   setRentedEntityIdsList(a: number[]): void;
   getWatchingEntityIdsList(): number[];
@@ -139,6 +141,7 @@ export class UserStatus {
 export namespace UserStatus {
   export type AsObject = {
     UserId: number;
+    HeldEntityIdsList: number[];
     RentedEntityIdsList: number[];
     WatchingEntityIdsList: number[];
   }
