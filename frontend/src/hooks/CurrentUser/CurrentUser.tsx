@@ -9,7 +9,7 @@ const userService = new UserServiceClient(process.env.PUBLIC_URL, null, null);
 export default (): [boolean, User | undefined] => {
   const [loading, load] = Loader();
   const [currentUser, setCurrentUser] = useState<User>();
-  const [state, dispatch] = useAuthContext();
+  const [_, dispatch] = useAuthContext();
   const getCurrentUser = () => () => {
     const req = new GetCurrentUserRequest();
     const currentUserPromise: Promise<User> = new Promise((resolve, reject) => {

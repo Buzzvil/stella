@@ -6,7 +6,6 @@ import "./App.css";
 import StandardTheme from "./theme/StandardTheme";
 import IndexPage from "./components/IndexPage/IndexPage";
 import useBookLister from "./hooks/BookLister/BookLister";
-import useResourceStatus from "./hooks/RentalStatus/RentalStatus";
 import useCurrentUser from "./hooks/CurrentUser/CurrentUser";
 import SignInPage from "./components/SignInPage/SignInPage";
 

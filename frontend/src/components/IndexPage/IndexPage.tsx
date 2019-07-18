@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Typography, TextField, Grid, Modal } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
-import { User } from "proto/usersvc_pb";
 import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
 import BookDetail from "../BookDetail/BookDetail";
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
-import { ResourceStatusIfc } from "../../hooks/RentalStatus/RentalStatus";
 
 const SearchForm = styled.form`
   display: flex;
