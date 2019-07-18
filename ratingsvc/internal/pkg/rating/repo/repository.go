@@ -63,21 +63,57 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 
 // TODO: When Upsert rating, AggregatedRating also should be updated.
 func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error) {
-	dbRating := Rating{
-		EntityID: rating.EntityID,
-		Score:    rating.Score,
-		UserID:   rating.UserID,
-		Comment:  rating.Comment,
-	}
-	if err := repo.db.Where(&dbRating).First(&dbRating).Error; err != nil {
+
+	dbRating := Rating{EntityID: rating.EntityID, UserID: rating.UserID}
+	newDBRating := repo.mapper.RatingToDBRating(rating)
+
+	dbAggregaterating := AggregatedRating{EntityID: rating.EntityID}
+	newDBaggregaterating := AggregatedRating{EntityID: rating.EntityID, Score: rating.Score, Count: 1}
+
+	err := repo.db.Where(&dbRating).First(&dbRating).Error
+	if err != nil {
 		if err != gorm.ErrRecordNotFound {
 			return nil, err
 		}
-		err := repo.db.Create(&dbRating).Error
-		return repo.mapper.dbRatingToRating(dbRating), err
+
+		err := repo.db.Create(&newDBRating).Error
+
+		if err := repo.db.Where(&dbAggregaterating).First(&dbAggregaterating).Error; err != nil {
+			if err != gorm.ErrRecordNotFound {
+				return nil, err
+			}
+			err := repo.db.Create(&newDBaggregaterating).Error
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			currentAverage := dbAggregaterating.Score
+			currentCount := dbAggregaterating.Count
+			repo.db.First(&dbAggregaterating).Updates(AggregatedRating{
+				Score: (currentAverage*float32(currentCount) - rating.Score) / float32(currentCount+1),
+				Count: currentCount + 1,
+			})
+		}
+
+		return &rating, err
 	}
-	err := repo.db.Save(dbRating).Error
-	return repo.mapper.dbRatingToRating(dbRating), err
+	err = repo.db.Where(&dbAggregaterating).First(&dbAggregaterating).Error
+	if err != nil {
+		return nil, err
+	}
+	currentAverage := dbAggregaterating.Score
+	currentCount := dbAggregaterating.Count
+	currentScore := dbRating.Score
+	newRating := *newDBRating
+	newScore := newRating.Score
+
+	repo.db.First(&dbAggregaterating).Updates(AggregatedRating{
+		Score: (currentAverage*float32(currentCount) - currentScore + newScore) / float32(currentCount),
+	})
+
+	err = repo.db.First(&dbRating).Updates(&newDBRating).Error
+
+	return &rating, err
 }
 
 func (repo *gormRepo) DeleteRating(entityID int32, userID int32) error {
