@@ -70,7 +70,7 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
     const req = new ReturnResourceRequest();
     req.setEntityId(entityId);
     req.setUserId(currentUser.getId());
-    rentalService.rentResource(req, {}, (err, res) => {
+    rentalService.returnResource(req, {}, (err, res) => {
       if (err) {
         throw err;
       }
