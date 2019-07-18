@@ -8,6 +8,7 @@ import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
 import BookDetail from "../BookDetail/BookDetail";
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
+import {ResourceStatusIfc} from "../../hooks/RentalStatus/RentalStatus";
 
 const SearchForm = styled.form`
   display: flex;
@@ -45,7 +46,7 @@ const SearchResult: any = styled(Grid)`
 interface IndexPageProps {
   currentUser?: User
   search?: (query: string) => [boolean, Book[]]
-  statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
+  statusFetcher?: ResourceStatusIfc
 }
 
 const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
@@ -95,7 +96,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
       </SearchContainer>
       <Modal open={selectedBook !== null} style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
         <ModalWrapper close={() => setSelectedBook(null)}>
-          <BookDetail bookId={selectedBook} />
+          <BookDetail bookId={selectedBook} statusFetcher={statusFetcher} currentUser={currentUser} />
         </ModalWrapper>
       </Modal>
     </>
