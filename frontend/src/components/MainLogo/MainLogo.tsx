@@ -1,24 +1,24 @@
 import React from "react";
 import Lottie from "react-lottie";
 
-interface CatProps {
+interface MainLogoProps {
   isStopped?: boolean;
   isPaused?: boolean;
   width?: string | number | undefined;
   height?: string | number | undefined;
 }
 
-const Cat: React.SFC<CatProps> = ({
+const MainLogo: React.SFC<MainLogoProps> = ({
   isStopped = false,
   isPaused = false,
-  width = 300,
-  height = 300,
+  width = "100%",
+  height = "100%",
   ...props
 }) => {
   const defaultOptions = {
     autoplay: true,
     loop: true,
-    animationData: require("../../data/cat_data.json"),
+    animationData: require("../../data/cat_logo_data.json"),
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice"
     }
@@ -35,4 +35,4 @@ const Cat: React.SFC<CatProps> = ({
   );
 };
 
-export default Cat;
+export default MainLogo;
