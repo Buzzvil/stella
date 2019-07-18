@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
-	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/bookrepo"
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler/crawlerrepo"
 )
@@ -21,7 +21,7 @@ type Runner struct {
 func NewRunner(key string, db *sql.DB) Runner {
 	r := crawlerrepo.New(key)
 	u := crawler.NewUsecase(r)
-	br := bookrepo.New(db)
+	br := repo.New(db)
 	bu := book.NewUsecase(br)
 	return Runner{u: u, bu: bu}
 }
