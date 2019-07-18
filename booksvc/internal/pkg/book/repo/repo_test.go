@@ -90,9 +90,12 @@ func (s *repoTestSuite) TestGetByFilter() {
 	s.NoError(faker.FakeData(&books))
 	testQuery := "TestName"
 	books[0].Name = testQuery + books[0].Name
-	books[1].Authors[0] = books[1].Authors[0] + testQuery
+	books[1].Authors = append([]string{testQuery}, books[1].Authors...)
 
 	for _, book := range books {
+		if len(book.Authors) == 0 {
+			continue
+		}
 		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
 		s.NoError(err)
 	}
