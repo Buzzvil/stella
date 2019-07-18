@@ -7,8 +7,8 @@ import {
   ReturnResourceRequest
 } from "proto/rentalsvc_pb";
 import { useBookContext, setBookStatus } from "../BookContext/BookContext";
+import { useAuthContext } from "../AuthContext/AuthContext";
 import Loader from "../Loader/Loader";
-// import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 
 const rentalService = new RentalServiceClient(
   process.env.PUBLIC_URL,
@@ -28,6 +28,7 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
   const [loading, load] = Loader();
   const [status, setStatus] = useState<ResourceStatus>();
   const [_, dispatch] = useBookContext();
+  const [{ currentUser }] = useAuthContext();
   const getResourceStatus = (entityId: number) => {
     const req = new GetResourceStatusRequest();
     req.setEntityId(entityId);
@@ -52,8 +53,10 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
   };
 
   const rentEntity = () => {
+    if (!currentUser) throw new Error("Not signed in!");
     const req = new RentResourceRequest();
     req.setEntityId(entityId);
+    req.setUserId(currentUser.getId());
     rentalService.rentResource(req, {}, (err, res) => {
       if (err) {
         throw err;
@@ -63,9 +66,10 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
   };
 
   const returnEntity = () => {
+    if (!currentUser) throw new Error("Not signed in!");
     const req = new ReturnResourceRequest();
     req.setEntityId(entityId);
-    req.setUserId(1);
+    req.setUserId(currentUser.getId());
     rentalService.rentResource(req, {}, (err, res) => {
       if (err) {
         throw err;

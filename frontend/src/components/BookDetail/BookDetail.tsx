@@ -12,7 +12,6 @@ import { User } from "proto/usersvc_pb";
 
 interface BookDetailProps {
   bookId: null | number;
-  currentUser?: User;
   statusFetcher?: ResourceStatusIfc;
   close?: () => void;
 }
@@ -52,7 +51,6 @@ const CoverImage = styled.img`
 
 const BookDetail: React.SFC<BookDetailProps> = ({
   bookId,
-  currentUser,
   statusFetcher = defaultStatusFetcher
 }) => {
   if (!bookId) return null;
@@ -65,11 +63,7 @@ const BookDetail: React.SFC<BookDetailProps> = ({
     <Wrapper>
       <Header>
         <Typography variant="h3">{book.getName()}</Typography>
-        <RentalActions
-          currentUser={currentUser}
-          statusFetcher={statusFetcher}
-          entityId={bookId}
-        />
+        <RentalActions statusFetcher={statusFetcher} entityId={bookId} />
       </Header>
       <Author>
         <Typography variant="subtitle1">

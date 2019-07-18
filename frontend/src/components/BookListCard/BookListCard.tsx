@@ -54,7 +54,6 @@ const RatingLabel: any = styled(Typography)`
 
 interface BookListCardInterface {
   book: Book;
-  currentUser?: User;
   statusFetcher?: ResourceStatusIfc;
   onClick?: () => void;
   rent?: (bookId: number) => [boolean, boolean];
@@ -62,7 +61,6 @@ interface BookListCardInterface {
 
 export default ({
   book,
-  currentUser,
   onClick,
   statusFetcher = defaultStatusFetcher
 }: BookListCardInterface) => {
@@ -94,7 +92,6 @@ export default ({
             <RatingLabel>{avgRating}</RatingLabel>
           </Ratings>
           <RentalActions
-            currentUser={currentUser}
             statusFetcher={statusFetcher}
             entityId={book.getId()}
           />
