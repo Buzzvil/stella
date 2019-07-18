@@ -25,12 +25,7 @@ function App() {
             <Route
               path="/"
               render={() => {
-                return (
-                  <IndexPage
-                    search={useBookLister}
-                    statusFetcher={useResourceStatus}
-                  />
-                );
+                return <IndexPage search={useBookLister} />;
               }}
             />
             <Route render={() => <h1>NotFound</h1>} />

@@ -1,14 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import Star, { Color } from "../Star/Star";
-import { Card, Typography, Button } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import RentalActions from "../RentalActions/RentalActions";
-import { User } from "proto/usersvc_pb";
-import {
-  ResourceStatusIfc,
-  defaultStatusFetcher
-} from "../../hooks/RentalStatus/RentalStatus";
 
 const Container: any = styled(Card)`
   display: flex;
@@ -54,23 +49,15 @@ const RatingLabel: any = styled(Typography)`
 
 interface BookListCardInterface {
   book: Book;
-  statusFetcher?: ResourceStatusIfc;
   onClick?: () => void;
   rent?: (bookId: number) => [boolean, boolean];
 }
 
-export default ({
-  book,
-  onClick,
-  statusFetcher = defaultStatusFetcher
-}: BookListCardInterface) => {
+export default ({ book, onClick }: BookListCardInterface) => {
   const reads = 12;
   const reviews = 3;
   const myRating = 4;
   const avgRating = 3.5;
-  const [loadingStatus, status, { rentEntity, returnEntity }] = statusFetcher(
-    book.getId()
-  );
   return (
     <a onClick={() => onClick && onClick()}>
       <Container>
@@ -91,10 +78,7 @@ export default ({
             <Star color={Color.PRIMARY} value={1} />
             <RatingLabel>{avgRating}</RatingLabel>
           </Ratings>
-          <RentalActions
-            statusFetcher={statusFetcher}
-            entityId={book.getId()}
-          />
+          <RentalActions entityId={book.getId()} />
         </Actions>
       </Container>
     </a>

@@ -4,15 +4,9 @@ import Star, { Color } from "../Star/Star";
 import styled from "styled-components";
 import { useBookContext } from "../../hooks/BookContext/BookContext";
 import RentalActions from "../RentalActions/RentalActions";
-import {
-  ResourceStatusIfc,
-  defaultStatusFetcher
-} from "../../hooks/RentalStatus/RentalStatus";
-import { User } from "proto/usersvc_pb";
 
 interface BookDetailProps {
   bookId: null | number;
-  statusFetcher?: ResourceStatusIfc;
   close?: () => void;
 }
 
@@ -49,10 +43,7 @@ const CoverImage = styled.img`
   height: 170px;
 `;
 
-const BookDetail: React.SFC<BookDetailProps> = ({
-  bookId,
-  statusFetcher = defaultStatusFetcher
-}) => {
+const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
   if (!bookId) return null;
   const [state] = useBookContext();
   const book = state[bookId];
@@ -63,7 +54,7 @@ const BookDetail: React.SFC<BookDetailProps> = ({
     <Wrapper>
       <Header>
         <Typography variant="h3">{book.getName()}</Typography>
-        <RentalActions statusFetcher={statusFetcher} entityId={bookId} />
+        <RentalActions entityId={bookId} />
       </Header>
       <Author>
         <Typography variant="subtitle1">

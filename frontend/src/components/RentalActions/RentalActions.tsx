@@ -1,22 +1,16 @@
 import * as React from "react";
 import { Button } from "@material-ui/core";
 import { ResourceStatus } from "proto/rentalsvc_pb";
-import {
-  ResourceStatusIfc,
-  defaultStatusFetcher
-} from "../../hooks/RentalStatus/RentalStatus";
+import { ResourceStatusIfc } from "../../hooks/RentalStatus/RentalStatus";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
+import useResourceStatus from "../../hooks/RentalStatus/RentalStatus";
 
 interface RentalActionsProps {
   entityId: number;
-  statusFetcher?: ResourceStatusIfc;
 }
 
-const RentalActions: React.SFC<RentalActionsProps> = ({
-  entityId,
-  statusFetcher = defaultStatusFetcher
-}) => {
-  const [loading, status, { rentEntity, returnEntity }] = statusFetcher(
+const RentalActions: React.SFC<RentalActionsProps> = ({ entityId }) => {
+  const [loading, status, { rentEntity, returnEntity }] = useResourceStatus(
     entityId
   );
   const [{ currentUser }] = useAuthContext();

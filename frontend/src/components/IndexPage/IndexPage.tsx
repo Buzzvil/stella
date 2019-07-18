@@ -44,15 +44,11 @@ const SearchResult: any = styled(Grid)`
 
 interface IndexPageProps {
   search?: (query: string) => [boolean, Book[]];
-  statusFetcher?: ResourceStatusIfc;
 }
 
 const defaultSearch = (q: string): [boolean, Book[]] => [false, []];
 
-const IndexPage: React.SFC<IndexPageProps> = ({
-  search = defaultSearch,
-  statusFetcher
-}) => {
+const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
   const [selectedBook, setSelectedBook] = useState<null | number>(null);
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState("");
@@ -89,7 +85,6 @@ const IndexPage: React.SFC<IndexPageProps> = ({
               <Grid item xl={6} xs={6} key={b.getId()}>
                 <BookListCard
                   book={b}
-                  statusFetcher={statusFetcher}
                   onClick={() => setSelectedBook(b.getId())}
                 />
               </Grid>
@@ -106,7 +101,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({
         }}
       >
         <ModalWrapper close={() => setSelectedBook(null)}>
-          <BookDetail bookId={selectedBook} statusFetcher={statusFetcher} />
+          <BookDetail bookId={selectedBook} />
         </ModalWrapper>
       </Modal>
     </>
