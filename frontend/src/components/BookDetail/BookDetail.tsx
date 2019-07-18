@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { Book } from 'proto/booksvc_pb';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, Modal } from '@material-ui/core';
 import Star, { Color } from "../Star/Star";
 import styled from 'styled-components';
 import { useBookContext } from '../../hooks/BookContext/BookContext';
+import ModalWrapper from '../ModalWrapper/ModalWrapper';
 
-interface BookDetailProps {
-  bookId: null | number;
-  close?: () => void;
+interface BookDetailProps extends RouteComponentProps {
+  // bookId: null | number;
+  // close?: () => void;
 }
 
 const Wrapper = styled.div`
@@ -60,24 +62,28 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
     })
   }
   return (
-    <Wrapper>
-      <Header>
-        <Typography variant="h3">{book.getName()}</Typography>
-        <Button variant="contained" color="secondary" onClick={updateRentalState}>Book it</Button>
-      </Header>
-      <Author>
-        <Typography variant="subtitle1">by {book.getAuthorsList().join(", ")}</Typography>
-        <Typography variant="subtitle2">{book.getPublisher()}</Typography>
-      </Author>
-      <Content>
-        <CoverImage src={book.getCoverImage()} />
-        <Ratings>
-          <Star value={1} /><RatingLabel variant="body1">{myRating}</RatingLabel>
-          <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
-        </Ratings>
-        <Typography variant="body1">{book.getContent()}</Typography>
-      </Content>
-    </Wrapper>
+    <Modal open={true} style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+      <ModalWrapper close={() => {}}>
+        <Wrapper>
+          <Header>
+            <Typography variant="h3">{book.getName()}</Typography>
+            <Button variant="contained" color="secondary" onClick={updateRentalState}>Book it</Button>
+          </Header>
+          <Author>
+            <Typography variant="subtitle1">by {book.getAuthorsList().join(", ")}</Typography>
+            <Typography variant="subtitle2">{book.getPublisher()}</Typography>
+          </Author>
+          <Content>
+            <CoverImage src={book.getCoverImage()} />
+            <Ratings>
+              <Star value={1} /><RatingLabel variant="body1">{myRating}</RatingLabel>
+              <Star color={Color.PRIMARY} value={1} /><RatingLabel>{avgRating}</RatingLabel>
+            </Ratings>
+            <Typography variant="body1">{book.getContent()}</Typography>
+          </Content>
+        </Wrapper>
+      </ModalWrapper>
+    </Modal>
   );
 };
 

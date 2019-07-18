@@ -4,6 +4,10 @@ import { Typography, TextField, Grid, Modal } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
 import { ResourceStatus } from "proto/rentalsvc_pb";
+
+import useResourceStatus from "../../hooks/RentalStatus/RentalStatus";
+import useBookLister from "../../hooks/BookLister/BookLister";
+
 import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
 import BookDetail from "../BookDetail/BookDetail";
@@ -44,22 +48,14 @@ const SearchResult: any = styled(Grid)`
 
 interface IndexPageProps {
   currentUser?: User
-  search?: (query: string) => [boolean, Book[]]
-  statusFetcher?: (bookId: number) => [boolean, ResourceStatus | undefined]
 }
 
-const defaultSearch = (q: string) : [boolean, Book[]] => ([false, []])
-
 const IndexPage: React.SFC<IndexPageProps> = ({
-  search = defaultSearch,
-  statusFetcher,
   currentUser
 }) => {
-  const [selectedBook, setSelectedBook] = useState<null | number>(null);
   const [haveSearched, setSearched] = useState(false);
   const [query, setQuery] = useState('');
-  if (!search) return null;
-  const [loading, books] = search(query)
+  const [loading, books] = useBookLister(query)
   return (
     <>
       <AppHeader currentUser={currentUser} />
@@ -86,18 +82,17 @@ const IndexPage: React.SFC<IndexPageProps> = ({
                 <BookListCard
                   book={b}
                   currentUser={currentUser}
-                  statusFetcher={statusFetcher}
-                  onClick={() => setSelectedBook(b.getId())} />
+                  statusFetcher={useResourceStatus} />
               </Grid>
             ))}
           </SearchResult>
         </SearchForm>
       </SearchContainer>
-      <Modal open={selectedBook !== null} style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+      {/* <Modal open={selectedBook !== null} style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
         <ModalWrapper close={() => setSelectedBook(null)}>
           <BookDetail bookId={selectedBook} />
         </ModalWrapper>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Star, { Color } from "../Star/Star";
 import { Card, Typography, Button } from "@material-ui/core";
@@ -65,7 +66,7 @@ export default ({
   const avgRating = 3.5;
   const [loadingStatus, status] = statusFetcher(book.getId())
   return (
-    <a onClick={() => onClick && onClick()}>
+    <Link to={`/books/${book.getId()}`}>
       <Container>
         <Img src={book.getCoverImage()} />
         <Content>
@@ -87,6 +88,6 @@ export default ({
           )}
         </Actions>
       </Container>
-    </a>
+    </Link>
   );
 };

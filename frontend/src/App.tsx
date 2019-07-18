@@ -1,14 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import './App.css';
 import StandardTheme from './theme/StandardTheme';
 import IndexPage from './components/IndexPage/IndexPage';
-import useBookLister from "./hooks/BookLister/BookLister";
-import useResourceStatus from "./hooks/RentalStatus/RentalStatus";
 import useCurrentUser from "./hooks/CurrentUser/CurrentUser";
 import SignInPage from './components/SignInPage/SignInPage';
+import BookDetail from './components/BookDetail/BookDetail';
 
 const theme = createMuiTheme(StandardTheme);
 
@@ -23,8 +22,9 @@ function App() {
             <Router>
               <Switch>
                 <Route path='/' render={() => {
-                  return <IndexPage search={useBookLister} statusFetcher={useResourceStatus} currentUser={currentUser} />
-                }}  />
+                  return <IndexPage currentUser={currentUser} />
+                }} />
+                <Route path='/books/:id' component={withRouter(BookDetail)} />
                 <Route render={() => <h1>NotFound</h1>} />
               </Switch>
             </Router> : <SignInPage /> 
