@@ -16,4 +16,6 @@ proto:
 	done;
 
 tunnel:
-	export AWS_PROFILE=eks-buzzvil && unset AWS_ACCESS_KEY_ID && unset AWS_SECRET_ACCESS_KEY && kubectl config use-context eks-buzzscreen && kubectl port-forward --namespace stella svc/stella-db-postgresql 5432:5432
+	export AWS_PROFILE=eks-buzzvil && unset AWS_ACCESS_KEY_ID && unset AWS_SECRET_ACCESS_KEY && \
+	kubectl config use-context eks-buzzscreen && \
+	kubectl port-forward --namespace stella svc/stella-db-postgresql 5432:5432
