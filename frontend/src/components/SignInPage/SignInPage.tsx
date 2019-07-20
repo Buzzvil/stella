@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as MainLogo } from "../../img/logo-main.svg";
+import MainLogo from "../MainLogo/MainLogo";
 import { Button } from "@material-ui/core";
 
 const Header = styled.div`
@@ -41,8 +41,14 @@ const SignInPage: React.SFC<SignInPageProps> = () => {
         <MainLogo />
       </Header>
       <ButtonWrapper>
-        <a href="/auth/slack/login"><Button variant="contained" color="primary" fullWidth={true}>Login</Button></a>
-        <Button variant="outlined" color="primary" fullWidth={true}>Request a Book</Button>
+        <a href="/auth/slack/login">
+          <Button variant="contained" color="primary" fullWidth={true}>
+            Login
+          </Button>
+        </a>
+        <Button variant="outlined" color="primary" fullWidth={true}>
+          Request a Book
+        </Button>
       </ButtonWrapper>
     </div>
   );
