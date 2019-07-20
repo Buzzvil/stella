@@ -1,5 +1,6 @@
 import React from "react";
 import Lottie from "react-lottie";
+import animationData from "../../data/cat_logo_data.json";
 
 interface MainLogoProps {
   isStopped?: boolean;
@@ -12,13 +13,12 @@ const MainLogo: React.SFC<MainLogoProps> = ({
   isStopped = false,
   isPaused = false,
   width = "100%",
-  height = "100%",
-  ...props
+  height = "100%"
 }) => {
   const defaultOptions = {
     autoplay: true,
     loop: true,
-    animationData: require("../../data/cat_logo_data.json"),
+    animationData: animationData,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice"
     }

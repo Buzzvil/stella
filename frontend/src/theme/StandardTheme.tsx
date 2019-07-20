@@ -25,54 +25,52 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontFamily: [
-      'Roboto',
-      'sans-serif'
-    ].join(','),
+    useNextVariants: true,
+    fontFamily: ["Roboto", "sans-serif"].join(","),
     h3: {
-      fontSize: '34px',
-      fontWeight: 'bold',
-      letterSpacing: '-1px'
+      fontSize: "34px",
+      fontWeight: "bold",
+      letterSpacing: "-1px"
     },
     h5: {
-      fontSize: '21px',
-      fontWeight: 'bold'
+      fontSize: "21px",
+      fontWeight: "bold"
     },
     h6: {
-      fontSize: '16px',
+      fontSize: "16px"
     },
     body2: {
-      fontSize: '12px'
+      fontSize: "12px"
     }
   },
   overrides: {
     MuiButton: {
       root: {
-        fontFamily: 'Montserrat',
-        fontWeight: 'bold',
-        textTransform: 'none',
+        fontFamily: "Montserrat",
+        fontWeight: "bold",
+        textTransform: "none"
       },
       contained: {
-        borderRadius: '10px',
+        borderRadius: "10px"
       },
       containedPrimary: {
-        borderRadius: '200px',
+        borderRadius: "200px"
       },
       outlinedPrimary: {
-        color: '#FFFFFF',
-        borderWidth: '2px',
-        borderRadius: '200px',
+        color: "#FFFFFF",
+        borderWidth: "2px",
+        borderRadius: "200px"
       }
     },
     MuiCard: {
       root: {
-        backgroundColor: '#233443',
-        borderRadius: '24px',
+        backgroundColor: "#233443",
+        borderRadius: "24px"
       }
     },
     MuiPaper: {
       rounded: {
-        borderRadius: '8px',
+        borderRadius: "8px"
       }
     }
   }
