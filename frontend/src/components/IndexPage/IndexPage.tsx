@@ -64,7 +64,7 @@ const SearchInput: any = styled(TextField)`
     ::after {
       display: block;
       position: absolute;
-      z-index: 10;
+      z-index: 100;
       left: -100px;
       right: 0px;
       bottom: 0px;
