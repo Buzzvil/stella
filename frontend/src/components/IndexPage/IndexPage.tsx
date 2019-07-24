@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Typography, TextField, Grid, Modal } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import AppHeader from "./AppHeader";
@@ -21,6 +21,24 @@ const SearchContainer = styled.div`
   justify-content: space-around;
 `;
 
+const loading = keyframes`
+  from { 
+    left: 0px;
+    width: 0%;
+  }
+  50% {
+    left:0px;
+    width: 100%;
+  }
+  100% {
+    left: 0px;
+  }
+  to {
+    left: 100%;
+    width:100%;
+  }
+`;
+
 const SearchInput: any = styled(TextField)`
   width: 738px;
   input {
@@ -28,6 +46,33 @@ const SearchInput: any = styled(TextField)`
     font-weight: 300;
     letter-spacing: -3px;
     text-align: center;
+  }
+
+  &.loading {
+    overflow: hidden;
+
+    ::before {
+      display: block;
+      position: absolute;
+      z-index: 10;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border-top: 2px solid #FFFFFF;
+      content: "";
+    }
+    ::after {
+      display: block;
+      position: absolute;
+      z-index: 100;
+      left: -100px;
+      right: 0px;
+      bottom: 0px;
+      width: 100px;
+      border-top: 2px solid #12B8A5;
+      animation: ${loading} 1.2s ease-in-out infinite;
+      content: "";
+    }
   }
 `;
 
@@ -71,13 +116,13 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
             type="search"
             name="search"
             placeholder="Search for a book"
+            className={loading && "loading"}
           />
           {!haveSearched && (
             <Typography variant="title" color="textSecondary">
               Try: #All, #English or #popular to filter
             </Typography>
           )}
-          {loading && <Typography>Loading</Typography>}
           <SearchResult container>
             {books.map(b => (
               <Grid item xl={6} xs={6} key={b.getId()}>
