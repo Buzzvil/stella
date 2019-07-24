@@ -7,7 +7,7 @@ import (
 	"database/sql"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
-	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/bookrepo"
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
 	"google.golang.org/grpc/metadata"
 )
@@ -19,7 +19,7 @@ type server struct {
 
 // NewServer initializes server
 func NewServer(db *sql.DB) pb.BookServiceServer {
-	repo := bookrepo.New(db)
+	repo := repo.New(db)
 	u := book.NewUsecase(repo)
 	return &server{u: u}
 }

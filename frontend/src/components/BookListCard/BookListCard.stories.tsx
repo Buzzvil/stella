@@ -6,14 +6,6 @@ import { MuiThemeProvider } from "@material-ui/core";
 import StandardTheme from "../../theme/StandardTheme";
 import BookListCard from "./BookListCard";
 import { Book } from "proto/booksvc_pb";
-import { User } from "proto/usersvc_pb";
-
-const currentUser = (() => {
-  const user = new User();
-  user.setId(1);
-  user.setName("John Doe")
-  return user;
-})();
 
 const TestBook = (() => {
   const book = new Book();
@@ -24,9 +16,8 @@ const TestBook = (() => {
   return book;
 })();
 
-storiesOf("Components|BookListCard", module)
-  .add("default", () => (
-    <MuiThemeProvider theme={StandardTheme}>
-      <BookListCard book={TestBook} currentUser={currentUser} />
-    </MuiThemeProvider>
-  ))
+storiesOf("Components|BookListCard", module).add("default", () => (
+  <MuiThemeProvider theme={StandardTheme}>
+    <BookListCard book={TestBook} />
+  </MuiThemeProvider>
+));

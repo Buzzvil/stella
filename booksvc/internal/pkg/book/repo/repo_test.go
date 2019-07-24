@@ -1,4 +1,4 @@
-package bookrepo
+package repo_test
 
 import (
 	"database/sql"
@@ -6,15 +6,19 @@ import (
 	"testing"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/bxcodec/faker"
 )
 
 type repoTestSuite struct {
 	suite.Suite
-	db *sql.DB
+	db   *sql.DB
+	repo book.Repo
 }
 
 func TestRepoTestSuite(t *testing.T) {
@@ -25,6 +29,7 @@ func (s *repoTestSuite) SetupSuite() {
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	require.Nil(s.T(), err)
 	s.db = db
+	s.repo = repo.New(s.db)
 }
 
 func (s *repoTestSuite) SetupTest() {
@@ -49,8 +54,7 @@ func (s *repoTestSuite) TestGetByID() {
 	_, err := s.db.Exec("INSERT INTO books (id, isbn, name, publisher, content) VALUES ($1, $2, $3, $4, $5)", id, isbn, name, publisher, content)
 	require.Nil(err)
 
-	r := New(s.db)
-	book, err := r.GetByID(id)
+	book, err := s.repo.GetByID(id)
 	require.Nil(err)
 	require.NotNil(book)
 	assert.Equal(name, book.Name)
@@ -72,8 +76,7 @@ func (s *repoTestSuite) TestGetByISBN() {
 	_, err := s.db.Exec("INSERT INTO books (id, isbn, name, publisher, content) VALUES ($1, $2, $3, $4, $5)", id, isbn, name, publisher, content)
 	require.Nil(err)
 
-	r := New(s.db)
-	book, err := r.GetByISBN(isbn)
+	book, err := s.repo.GetByISBN(isbn)
 	require.Nil(err)
 	require.NotNil(book)
 	assert.Equal(id, book.ID)
@@ -82,12 +85,31 @@ func (s *repoTestSuite) TestGetByISBN() {
 	assert.Equal(content, book.Content)
 }
 
+func (s *repoTestSuite) TestGetByFilter() {
+	var books []*book.Book
+	s.NoError(faker.FakeData(&books))
+	testQuery := "TestName"
+	books[0].Name = testQuery + books[0].Name
+	books[1].Authors = append([]string{testQuery}, books[1].Authors...)
+
+	for _, book := range books {
+		if len(book.Authors) == 0 {
+			continue
+		}
+		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
+		s.NoError(err)
+	}
+
+	res, err := s.repo.GetByFilter(testQuery)
+	s.NoError(err)
+	s.Equal(2, len(res))
+}
+
 func (s *repoTestSuite) TestCreate() {
 	require := require.New(s.T())
 	assert := assert.New(s.T())
 
-	r := New(s.db)
-	b, err := r.Create(book.Book{
+	b, err := s.repo.Create(book.Book{
 		Name:      "name",
 		Isbn:      "isbn",
 		Authors:   nil,

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
-import { User } from 'proto/usersvc_pb';
-import { Button, Avatar } from '@material-ui/core';
+import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
+import { Button, Avatar } from "@material-ui/core";
 
 const Header = styled.div`
   display: flex;
@@ -16,21 +16,22 @@ const Actions = styled.div`
   margin-left: auto;
 `;
 
-interface AppHeaderProps {
-  currentUser?: User
-}
+interface AppHeaderProps {}
 
-const AppHeader: React.SFC<AppHeaderProps> = ({ currentUser }) => {
+const AppHeader: React.SFC<AppHeaderProps> = () => {
+  const [{ currentUser }] = useAuthContext();
   return (
     <Header>
-      <Button variant="contained" color="primary">Request a Book</Button>
+      <Button variant="contained" color="primary">
+        Request a Book
+      </Button>
       <Actions>
-        {currentUser &&
+        {currentUser && (
           <Avatar alt={currentUser.getName()} src={currentUser.getImage()} />
-        }
+        )}
       </Actions>
     </Header>
-  )
-}
+  );
+};
 
 export default AppHeader;

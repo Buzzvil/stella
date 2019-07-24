@@ -4,8 +4,8 @@ import Lottie from "react-lottie";
 interface CatProps {
   isStopped?: boolean;
   isPaused?: boolean;
-  width?: string|number|undefined;
-  height?: string|number|undefined;
+  width?: string | number | undefined;
+  height?: string | number | undefined;
 }
 
 const Cat: React.SFC<CatProps> = ({
@@ -18,18 +18,20 @@ const Cat: React.SFC<CatProps> = ({
   const defaultOptions = {
     autoplay: true,
     loop: true,
-    animationData: require('../../data/cat_data.json'),
+    animationData: require("../../data/cat_data.json"),
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
+      preserveAspectRatio: "xMidYMid slice"
+    }
   };
 
   return (
-    <Lottie options={defaultOptions}
-            height={width}
-            width={height}
-            isStopped={isStopped}
-            isPaused={isPaused} />
+    <Lottie
+      options={defaultOptions}
+      width={width}
+      height={height}
+      isStopped={isStopped}
+      isPaused={isPaused}
+    />
   );
 };
 

@@ -1,4 +1,4 @@
-package bookrepo
+package repo
 
 import (
 	"database/sql"
@@ -78,7 +78,7 @@ func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
 
 func (r *repo) GetByFilter(filter string) ([]*book.Book, error) {
 	books := []*book.Book{}
-	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE name ILIKE '%' || $1 || '%'", filter)
+	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE (name) ILIKE '%' || $1 || '%' or (authors) ILIKE '%' || $1 || '%'", filter)
 	if err != nil {
 		return nil, err
 	}
