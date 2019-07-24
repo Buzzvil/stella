@@ -61,7 +61,6 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 	return ratingList, nil
 }
 
-// TODO: When Upsert rating, AggregatedRating also should be updated.
 func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error) {
 
 	dbRating := Rating{EntityID: rating.EntityID, UserID: rating.UserID}
