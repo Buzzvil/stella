@@ -7,6 +7,7 @@ import StandardTheme from "../../theme/StandardTheme";
 import ProfilePage from "./ProfilePage";
 import { User } from "proto/usersvc_pb";
 import { Book } from "proto/booksvc_pb";
+import { MemoryRouter, withRouter } from "react-router-dom";
 
 const currentUser = (() => {
     const user = new User();
@@ -27,8 +28,10 @@ const TestBook = (() => {
 
 storiesOf("Pages|ProfilePage", module)
     .add("default", () => (
-        <MuiThemeProvider theme={StandardTheme}>
-            <CssBaseline />
-            <ProfilePage currentUser={currentUser} readingBooks={[TestBook, TestBook, TestBook]} />
-        </MuiThemeProvider>
+            <MuiThemeProvider theme={StandardTheme}>
+                <CssBaseline />
+                <MemoryRouter>
+                    <ProfilePage />
+                </MemoryRouter>
+            </MuiThemeProvider>
     ));

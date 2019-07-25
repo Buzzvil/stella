@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import { Button, Avatar } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const Header = styled.div`
   display: flex;
@@ -26,9 +27,11 @@ const AppHeader: React.SFC<AppHeaderProps> = () => {
         Request a Book
       </Button>
       <Actions>
+        <Link to="/profile">
         {currentUser && (
           <Avatar alt={currentUser.getName()} src={currentUser.getImage()} />
         )}
+        </Link>
       </Actions>
     </Header>
   );

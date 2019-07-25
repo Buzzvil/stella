@@ -5,7 +5,9 @@ import { AvatarProps } from '@material-ui/core/Avatar';
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
 import { ResourceStatus } from "proto/rentalsvc_pb";
+import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import { makeStyles, createStyles } from '@material-ui/styles';
+import { RouteComponentProps, BrowserRouter as withRouter } from "react-router-dom";
 
 const profileStyle = makeStyles(
     createStyles({
@@ -44,17 +46,17 @@ const ProfileHeader = styled.div`
 `;
 
 interface ProfilePageProps {
-    currentUser?: User
-    readingBooks: Book[]
+    userId?: number
 }
 
-const ProfilePage: React.SFC<ProfilePageProps & AvatarProps> = ({
-    currentUser,
-    readingBooks
+const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
+    userId,
 }) => {
     // const [haveSearched, setSearched] = useState(false);
     // const [query, setQuery] = useState('');
     const classes = profileStyle();
+    const readingBooks: any[] =[];
+    const [{ currentUser }] = useAuthContext();
 
     return (
         <ProfileContainer>
