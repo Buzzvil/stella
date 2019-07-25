@@ -2,14 +2,15 @@ package booksrv
 
 import (
 	"context"
-	"log"
-
 	"database/sql"
+	"log"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 // Server is interface for grpc server
@@ -27,11 +28,25 @@ func NewServer(db *sql.DB) pb.BookServiceServer {
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
 	md, _ := metadata.FromIncomingContext(c)
 	log.Printf("gRPC Metadata: +%v\n", md)
-	books, err := s.u.ListBooks(r.Filter)
-	if err != nil {
-		return nil, err
+	if r.Filter != "" {
+		books, err := s.u.SearchBooks(r.Filter)
+		if err != nil {
+			return nil, err
+		}
+		return &pb.ListBooksResponse{Books: s.booksToPBooks(books)}, nil
 	}
-	bookList := []*pb.Book{}
+	if len(r.Ids) > 0 {
+		books, err := s.u.ListBooks(r.Ids)
+		if err != nil {
+			return nil, err
+		}
+		return &pb.ListBooksResponse{Books: s.booksToPBooks(books)}, nil
+	}
+	return nil, status.Error(codes.Unavailable, "invalid request")
+}
+
+func (s *server) booksToPBooks(books []*book.Book) []*pb.Book {
+	bookList := make([]*pb.Book, 0)
 	for _, book := range books {
 		bookList = append(bookList, &pb.Book{
 			Id:         book.ID,
@@ -42,7 +57,7 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 			CoverImage: book.CoverImage,
 		})
 	}
-	return &pb.ListBooksResponse{Books: bookList}, nil
+	return bookList
 }
 
 func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {

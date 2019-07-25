@@ -105,6 +105,22 @@ func (s *repoTestSuite) TestGetByFilter() {
 	s.Equal(2, len(res))
 }
 
+func (s *repoTestSuite) TestGetByIDs() {
+	var books []*book.Book
+	s.NoError(faker.FakeData(&books))
+	bookIDs := make([]int64, 0)
+
+	for _, book := range books {
+		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
+		s.NoError(err)
+		bookIDs = append(bookIDs, book.ID)
+	}
+
+	res, err := s.repo.GetByIDs(bookIDs)
+	s.NoError(err)
+	s.Equal(len(books), len(res))
+}
+
 func (s *repoTestSuite) TestCreate() {
 	require := require.New(s.T())
 	assert := assert.New(s.T())

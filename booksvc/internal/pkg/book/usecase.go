@@ -3,7 +3,8 @@ package book
 type Usecase interface {
 	GetBook(id int64) (*Book, error)
 	CreateBook(book Book) (*Book, error)
-	ListBooks(filter string) ([]*Book, error)
+	ListBooks(ids []int64) ([]*Book, error)
+	SearchBooks(filter string) ([]*Book, error)
 }
 
 type usecase struct {
@@ -31,8 +32,16 @@ func (u *usecase) CreateBook(book Book) (*Book, error) {
 	return b, nil
 }
 
+func (u *usecase) ListBooks(ids []int64) ([]*Book, error) {
+	books, err := u.repo.GetByIDs(ids)
+	if err == nil {
+		return books, nil
+	}
+	return nil, err
+}
+
 // TODO: define what is filter
-func (u *usecase) ListBooks(filter string) ([]*Book, error) {
+func (u *usecase) SearchBooks(filter string) ([]*Book, error) {
 	books, err := u.repo.GetByFilter(filter)
 	if err == nil {
 		return books, nil

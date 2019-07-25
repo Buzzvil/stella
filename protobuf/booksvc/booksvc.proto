@@ -20,6 +20,7 @@ message Book {
 
 message ListBooksRequest {
   string filter = 1;
+  repeated int64 ids = 2;
 }
 
 message ListBooksResponse {
