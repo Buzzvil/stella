@@ -4,7 +4,9 @@ import {
   GetResourceStatusRequest,
   ResourceStatus,
   RentResourceRequest,
-  ReturnResourceRequest
+  ReturnResourceRequest,
+  GetUserStatusRequest,
+  UserStatus
 } from "proto/rentalsvc_pb";
 import { useBookContext, setBookStatus } from "../BookContext/BookContext";
 import { useAuthContext } from "../AuthContext/AuthContext";
@@ -87,5 +89,39 @@ export const defaultStatusFetcher: ResourceStatusIfc = () => [
   new ResourceStatus(),
   {}
 ];
+
+export interface UserStatusIfc {
+  (userId: number): [boolean, UserStatus | undefined, Actions];
+}
+
+export const getUserResourceStatus: UserStatusIfc = userId => {
+  const [loading, load] = Loader();
+  const [status, setStatus] = useState<UserStatus>();
+  const getUserResourceStatus = (userId: number) => {
+    const req = new GetUserStatusRequest();
+    req.setUserId(userId);
+    const statusPromise: Promise<UserStatus> = new Promise(
+      (resolve, reject) => {
+        rentalService.getUserStatus(
+          req,
+          {},
+          (err: any, s: UserStatus) => (err ? reject(err) : resolve(s))
+        );
+      }
+    );
+
+    const [cancelled, cancel] = load(
+      statusPromise.then(s => {
+        if (cancelled()) return;
+        const heldBookIds = s.getHeldEntityIdsList();
+        setStatus(s)
+      })
+    );
+    return cancel;
+  }
+  useEffect(() => getUserResourceStatus(userId), [userId]);
+
+  return [loading, status, {}];
+}
 
 export default getResourceStatus;

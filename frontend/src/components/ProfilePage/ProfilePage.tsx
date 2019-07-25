@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Typography, Avatar, TextField, Grid } from "@material-ui/core";
-import { AvatarProps } from '@material-ui/core/Avatar';
 import { Book } from "proto/booksvc_pb";
 import { User } from "proto/usersvc_pb";
 import { ResourceStatus } from "proto/rentalsvc_pb";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { RouteComponentProps, BrowserRouter as withRouter } from "react-router-dom";
+import { getUserResourceStatus } from "../../hooks/RentalStatus/RentalStatus";
 
 const profileStyle = makeStyles(
     createStyles({
@@ -52,26 +52,27 @@ interface ProfilePageProps {
 const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     userId,
 }) => {
-    // const [haveSearched, setSearched] = useState(false);
-    // const [query, setQuery] = useState('');
     const classes = profileStyle();
-    const readingBooks: any[] =[];
     const [{ currentUser }] = useAuthContext();
-
+    const user = currentUser;
+    const [loading, status, { }] = getUserResourceStatus(
+        user ? user.getId() : 1
+    );
+    const readingBooks: number[] = status ? status.getHeldEntityIdsList() : [];
     return (
         <ProfileContainer>
             <ProfileHeader>
-                {currentUser &&
-                    <Avatar alt={currentUser.getName()} src={currentUser.getImage()} className={classes.avatar} />
+                {user &&
+                    <Avatar alt={user.getName()} src={user.getImage()} className={classes.avatar} />
                 }
             </ProfileHeader>
             <ProfileContent>
-                {currentUser &&
+                {user &&
                     <NowReading>
-                        {currentUser.getName()} is reading&nbsp;
+                        {user.getName()} is reading&nbsp;
                         {readingBooks.map((book, key) =>
                             <span>
-                                <span>{book.getName()}</span>
+                                <span>{book}</span>
                                 <span>{key == readingBooks.length - 1 ? "." : (key == readingBooks.length - 2 ? " and " : ", ")}</span>
                             </span>
                         )}
