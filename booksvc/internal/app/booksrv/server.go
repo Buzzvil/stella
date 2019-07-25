@@ -33,19 +33,19 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 		if err != nil {
 			return nil, err
 		}
-		return &pb.ListBooksResponse{Books: s.booksToPBooks(books)}, nil
+		return &pb.ListBooksResponse{Books: s.booksToPBBooks(books)}, nil
 	}
 	if len(r.Ids) > 0 {
 		books, err := s.u.ListBooks(r.Ids)
 		if err != nil {
 			return nil, err
 		}
-		return &pb.ListBooksResponse{Books: s.booksToPBooks(books)}, nil
+		return &pb.ListBooksResponse{Books: s.booksToPBBooks(books)}, nil
 	}
 	return nil, status.Error(codes.Unavailable, "invalid request")
 }
 
-func (s *server) booksToPBooks(books []*book.Book) []*pb.Book {
+func (s *server) booksToPBBooks(books []*book.Book) []*pb.Book {
 	bookList := make([]*pb.Book, 0)
 	for _, book := range books {
 		bookList = append(bookList, &pb.Book{
