@@ -1,49 +1,58 @@
 authsvc:
   resources:
     requests:
-      cpu: 50m
+      cpu: 150m
       memory: 64Mi
     limits:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 200m
+      memory: 128Mi
 
   env: {}
 
 booksvc:
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 64Mi
     limits:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 200m
+      memory: 128Mi
 
 frontend:
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 64Mi
     limits:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 100m
+      memory: 128Mi
 
 ratingsvc:
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 64Mi
     limits:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 200m
+      memory: 128Mi
 
 rentalsvc:
   resources:
     requests:
-      cpu: 50m
+      cpu: 150m
       memory: 64Mi
     limits:
-      cpu: 50m
+      cpu: 300m
+      memory: 128Mi
+
+usersvc:
+  resources:
+    requests:
+      cpu: 100m
       memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
 
 global:
   webHost: billy.buzzvil.com
