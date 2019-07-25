@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Avatar } from "@material-ui/core";
 import Star, { Color } from "../Star/Star";
 import styled from "styled-components";
 import { useBookContext } from "../../hooks/BookContext/BookContext";
 import RentalActions from "../RentalActions/RentalActions";
+import { listUsers } from "../../hooks/UserLister/UserLister";
 
 interface BookDetailProps {
   bookId: null | number;
@@ -23,9 +24,15 @@ const Header = styled.div`
   }
 `;
 
-const Author = styled.div``;
+const Author = styled.div`
+  margin-top: 16px;
+`;
 
-const Content = styled.div``;
+const Content = styled.div`
+  padding-top: 37px;
+  display: flex;
+  flex-direction: row;
+`;
 
 const Ratings = styled.div`
   display: flex;
@@ -47,6 +54,12 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
   if (!bookId) return null;
   const [state] = useBookContext();
   const book = state[bookId];
+  const [, [holder = undefined]] = (book.rentalStatus &&
+    book.rentalStatus.getHolder() &&
+    listUsers([book.rentalStatus.getHolder()])) || [false, []];
+  const [, watchers] = (book.rentalStatus &&
+    book.rentalStatus.getWatchingUserIdsList().length > 0 &&
+    listUsers(book.rentalStatus.getWatchingUserIdsList())) || [false, []];
   const myRating = 4;
   const avgRating = 3.5;
 
@@ -63,14 +76,38 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
         <Typography variant="subtitle2">{book.getPublisher()}</Typography>
       </Author>
       <Content>
-        <CoverImage src={book.getCoverImage()} />
-        <Ratings>
-          <Star value={1} />
-          <RatingLabel variant="body1">{myRating}</RatingLabel>
-          <Star color={Color.PRIMARY} value={1} />
-          <RatingLabel>{avgRating}</RatingLabel>
-        </Ratings>
-        <Typography variant="body1">{book.getContent()}</Typography>
+        <div style={{ marginRight: "40px" }}>
+          <CoverImage src={book.getCoverImage()} />
+          <Ratings>
+            <Star value={1} />
+            <RatingLabel variant="body1">{myRating}</RatingLabel>
+            <Star color={Color.PRIMARY} value={1} />
+            <RatingLabel>{avgRating}</RatingLabel>
+          </Ratings>
+        </div>
+        <div>
+          {holder &&
+            (watchers.length > 0 ? (
+              <div>
+                <Typography variant="body1">
+                  {holder.getName()} is reading it and {watchers.length} more
+                  are interested.
+                </Typography>
+                <Avatar src={holder.getImage()} />
+                {watchers.map(w => (
+                  <Avatar src={w.getImage()} />
+                ))}
+              </div>
+            ) : (
+              <div>
+                <Typography variant="body1">
+                  {holder.getName()} is reading it
+                </Typography>
+                <Avatar src={holder.getImage()} />
+              </div>
+            ))}
+          <Typography variant="body1">{book.getContent()}</Typography>
+        </div>
       </Content>
     </Wrapper>
   );

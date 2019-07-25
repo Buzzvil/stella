@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "@material-ui/core";
+import { Done } from "@material-ui/icons";
 import { ResourceStatus } from "proto/rentalsvc_pb";
-import { ResourceStatusIfc } from "../../hooks/RentalStatus/RentalStatus";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import useResourceStatus from "../../hooks/RentalStatus/RentalStatus";
 
@@ -26,6 +26,7 @@ const RentalActions: React.SFC<RentalActionsProps> = ({ entityId }) => {
           rentEntity && rentEntity();
         }}
       >
+        <Done />
         Book it
       </Button>
     ) : currentUser && currentUser.getId() === status.getHolder() ? (

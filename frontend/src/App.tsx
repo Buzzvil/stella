@@ -7,13 +7,13 @@ import StandardTheme from "./theme/StandardTheme";
 import IndexPage from "./components/IndexPage/IndexPage";
 import ProfilePage from "./components/ProfilePage/ProfilePage";
 import useBookLister from "./hooks/BookLister/BookLister";
-import useCurrentUser from "./hooks/CurrentUser/CurrentUser";
+import { getCurrentUser } from "./hooks/UserLister/UserLister";
 import SignInPage from "./components/SignInPage/SignInPage";
 
 const theme = createMuiTheme(StandardTheme);
 
 function App() {
-  const [loadingCurrentUser, currentUser] = useCurrentUser();
+  const [loadingCurrentUser, currentUser] = getCurrentUser();
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
