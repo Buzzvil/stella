@@ -26,4 +26,4 @@ const Status: React.SFC<StatusProps> = ({ free, theme, style: propsStyle = {}, .
     </Fab>)
 };
 
-export default withTheme()(Status);
+export default withTheme(Status);

@@ -1,5 +1,4 @@
 import * as grpcWeb from 'grpc-web';
-
 import {
   Book,
   CreateBookRequest,
@@ -14,21 +13,21 @@ export class BookServiceClient {
 
   listBooks(
     request: ListBooksRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: ListBooksResponse) => void
   ): grpcWeb.ClientReadableStream<ListBooksResponse>;
 
   getBook(
     request: GetBookRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: Book) => void
   ): grpcWeb.ClientReadableStream<Book>;
 
   createBook(
     request: CreateBookRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: Book) => void
   ): grpcWeb.ClientReadableStream<Book>;
@@ -42,17 +41,17 @@ export class BookServicePromiseClient {
 
   listBooks(
     request: ListBooksRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<ListBooksResponse>;
 
   getBook(
     request: GetBookRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<Book>;
 
   createBook(
     request: CreateBookRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<Book>;
 
 }

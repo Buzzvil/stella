@@ -25,7 +25,6 @@ export default createMuiTheme({
     }
   },
   typography: {
-    useNextVariants: true,
     fontFamily: ["Roboto", "sans-serif"].join(","),
     h3: {
       fontSize: "34px",

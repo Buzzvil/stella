@@ -66,25 +66,11 @@ proto.stella.book.v1.BookServicePromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   * @private @const {!proto.stella.book.v1.BookServiceClient} The delegate callback based client
    */
-  this.client_ = new grpc.web.GrpcWebClientBase(options);
+  this.delegateClient_ = new proto.stella.book.v1.BookServiceClient(
+      hostname, credentials, options);
 
-  /**
-   * @private @const {string} The hostname
-   */
-  this.hostname_ = hostname;
-
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -107,7 +93,7 @@ const methodInfo_BookService_ListBooks = new grpc.web.AbstractClientBase.MethodI
 /**
  * @param {!proto.stella.book.v1.ListBooksRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.book.v1.ListBooksResponse)}
  *     callback The callback function(error, response)
@@ -119,7 +105,7 @@ proto.stella.book.v1.BookServiceClient.prototype.listBooks =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.book.v1.BookService/ListBooks',
       request,
-      metadata || {},
+      metadata,
       methodInfo_BookService_ListBooks,
       callback);
 };
@@ -128,18 +114,19 @@ proto.stella.book.v1.BookServiceClient.prototype.listBooks =
 /**
  * @param {!proto.stella.book.v1.ListBooksRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.book.v1.ListBooksResponse>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.book.v1.BookServicePromiseClient.prototype.listBooks =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.book.v1.BookService/ListBooks',
-      request,
-      metadata || {},
-      methodInfo_BookService_ListBooks);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.listBooks(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 
@@ -162,7 +149,7 @@ const methodInfo_BookService_GetBook = new grpc.web.AbstractClientBase.MethodInf
 /**
  * @param {!proto.stella.book.v1.GetBookRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.book.v1.Book)}
  *     callback The callback function(error, response)
@@ -174,7 +161,7 @@ proto.stella.book.v1.BookServiceClient.prototype.getBook =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.book.v1.BookService/GetBook',
       request,
-      metadata || {},
+      metadata,
       methodInfo_BookService_GetBook,
       callback);
 };
@@ -183,18 +170,19 @@ proto.stella.book.v1.BookServiceClient.prototype.getBook =
 /**
  * @param {!proto.stella.book.v1.GetBookRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.book.v1.Book>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.book.v1.BookServicePromiseClient.prototype.getBook =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.book.v1.BookService/GetBook',
-      request,
-      metadata || {},
-      methodInfo_BookService_GetBook);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.getBook(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 
@@ -217,7 +205,7 @@ const methodInfo_BookService_CreateBook = new grpc.web.AbstractClientBase.Method
 /**
  * @param {!proto.stella.book.v1.CreateBookRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.book.v1.Book)}
  *     callback The callback function(error, response)
@@ -229,7 +217,7 @@ proto.stella.book.v1.BookServiceClient.prototype.createBook =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.book.v1.BookService/CreateBook',
       request,
-      metadata || {},
+      metadata,
       methodInfo_BookService_CreateBook,
       callback);
 };
@@ -238,18 +226,19 @@ proto.stella.book.v1.BookServiceClient.prototype.createBook =
 /**
  * @param {!proto.stella.book.v1.CreateBookRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.book.v1.Book>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.book.v1.BookServicePromiseClient.prototype.createBook =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.book.v1.BookService/CreateBook',
-      request,
-      metadata || {},
-      methodInfo_BookService_CreateBook);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.createBook(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 

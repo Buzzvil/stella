@@ -4,6 +4,7 @@ package book
 type Repo interface {
 	GetByID(id int64) (*Book, error)
 	GetByISBN(isbn string) (*Book, error)
+	GetByIDs(ids []int64) ([]*Book, error)
 	GetByFilter(filter string) ([]*Book, error)
 	Create(book Book) (*Book, error)
 }
