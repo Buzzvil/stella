@@ -84,7 +84,7 @@ func (r *repo) GetByIDs(ids []int64) ([]*book.Book, error) {
 		idStr = idStr + strconv.FormatInt(id, 10) + ","
 	}
 	idStr = idStr[:len(idStr)-1]
-	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE id in ($1)", idStr)
+	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE id = ANY(ARRAY[" + idStr + "])")
 	if err != nil {
 		return nil, err
 	}

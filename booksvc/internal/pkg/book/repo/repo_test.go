@@ -109,11 +109,12 @@ func (s *repoTestSuite) TestGetByIDs() {
 	var books []*book.Book
 	s.NoError(faker.FakeData(&books))
 	bookIDs := make([]int64, 0)
-
+	bookID := int64(1)
 	for _, book := range books {
-		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
+		_, err := s.db.Exec("INSERT INTO books (id, isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6, $7)", bookID, book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
 		s.NoError(err)
-		bookIDs = append(bookIDs, book.ID)
+		bookIDs = append(bookIDs, bookID)
+		bookID++
 	}
 
 	res, err := s.repo.GetByIDs(bookIDs)
