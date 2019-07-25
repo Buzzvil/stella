@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Typography, Avatar, TextField, Grid } from "@material-ui/core";
+import { Avatar } from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
-import { User } from "proto/usersvc_pb";
-import { ResourceStatus } from "proto/rentalsvc_pb";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { RouteComponentProps, BrowserRouter as withRouter } from "react-router-dom";
@@ -45,6 +43,8 @@ const ProfileHeader = styled.div`
   max-width: 720px;
 `;
 
+const TitleColors = ['#FFE76A', '#12B8A5', '#E7841B', '#FFC17A']
+
 interface ProfilePageProps {
     userId?: number
 }
@@ -58,7 +58,7 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     const [loading, status, { }] = getUserResourceStatus(
         user ? user.getId() : 1
     );
-    const readingBooks: number[] = status ? status.getHeldEntityIdsList() : [];
+    const readingBooks = status ? status.heldBooks : [];
     return (
         <ProfileContainer>
             <ProfileHeader>
@@ -70,10 +70,10 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
                 {user &&
                     <NowReading>
                         {user.getName()} is reading&nbsp;
-                        {readingBooks.map((book, key) =>
-                            <span>
-                                <span>{book}</span>
-                                <span>{key == readingBooks.length - 1 ? "." : (key == readingBooks.length - 2 ? " and " : ", ")}</span>
+                        {readingBooks.map((book, index) =>
+                            <span key={index}>
+                                <span style={{ color: (TitleColors[index % TitleColors.length]) }}> {book.getName()}</span>
+                                <span>{index == readingBooks.length - 1 ? "." : (index == readingBooks.length - 2 ? " and " : ", ")}</span>
                             </span>
                         )}
                     </NowReading>
