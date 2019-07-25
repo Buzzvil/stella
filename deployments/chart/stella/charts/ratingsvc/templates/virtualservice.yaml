@@ -41,8 +41,10 @@ spec:
         - x-user-agent
         - x-grpc-web
         - authorization
+        - custom-header-1
       maxAge: 86400s
       exposeHeaders:
+        - custom-header-1
         - grpc-status
         - grpc-message
       allowCredentials: true
