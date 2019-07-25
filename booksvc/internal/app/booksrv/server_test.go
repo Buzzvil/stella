@@ -25,8 +25,13 @@ func (s *mockUsecase) CreateBook(b book.Book) (*book.Book, error) {
 	return args.Get(0).(*book.Book), nil
 }
 
-func (s *mockUsecase) ListBooks(filter string) ([]*book.Book, error) {
+func (s *mockUsecase) SearchBooks(filter string) ([]*book.Book, error) {
 	args := s.Called(filter)
+	return args.Get(0).([]*book.Book), nil
+}
+
+func (s *mockUsecase) ListBooks(ids []int64) ([]*book.Book, error) {
+	args := s.Called(ids)
 	return args.Get(0).([]*book.Book), nil
 }
 
@@ -69,7 +74,7 @@ func TestListBooks(t *testing.T) {
 	filter := ""
 	in := pb.ListBooksRequest{Filter: filter}
 
-	u.On("ListBooks", mock.Anything).Return(books).Once()
+	u.On("SearchBooks", mock.Anything).Return(books).Once()
 
 	res, err := s.ListBooks(context.Background(), &in)
 	require.Nil(t, err)

@@ -48,7 +48,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.stella.book.v1.ListBooksRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.stella.book.v1.ListBooksRequest.repeatedFields_, null);
 };
 goog.inherits(proto.stella.book.v1.ListBooksRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -433,6 +433,13 @@ proto.stella.book.v1.Book.prototype.setCoverImage = function(value) {
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.stella.book.v1.ListBooksRequest.repeatedFields_ = [2];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -462,7 +469,8 @@ proto.stella.book.v1.ListBooksRequest.prototype.toObject = function(opt_includeI
  */
 proto.stella.book.v1.ListBooksRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    filter: jspb.Message.getFieldWithDefault(msg, 1, "")
+    filter: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    idsList: jspb.Message.getRepeatedField(msg, 2)
   };
 
   if (includeInstance) {
@@ -503,6 +511,10 @@ proto.stella.book.v1.ListBooksRequest.deserializeBinaryFromReader = function(msg
       var value = /** @type {string} */ (reader.readString());
       msg.setFilter(value);
       break;
+    case 2:
+      var value = /** @type {!Array<number>} */ (reader.readPackedInt64());
+      msg.setIdsList(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -539,6 +551,13 @@ proto.stella.book.v1.ListBooksRequest.serializeBinaryToWriter = function(message
       f
     );
   }
+  f = message.getIdsList();
+  if (f.length > 0) {
+    writer.writePackedInt64(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -554,6 +573,38 @@ proto.stella.book.v1.ListBooksRequest.prototype.getFilter = function() {
 /** @param {string} value */
 proto.stella.book.v1.ListBooksRequest.prototype.setFilter = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * repeated int64 ids = 2;
+ * @return {!Array<number>}
+ */
+proto.stella.book.v1.ListBooksRequest.prototype.getIdsList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 2));
+};
+
+
+/** @param {!Array<number>} value */
+proto.stella.book.v1.ListBooksRequest.prototype.setIdsList = function(value) {
+  jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ */
+proto.stella.book.v1.ListBooksRequest.prototype.addIds = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ */
+proto.stella.book.v1.ListBooksRequest.prototype.clearIdsList = function() {
+  this.setIdsList([]);
 };
 
 
