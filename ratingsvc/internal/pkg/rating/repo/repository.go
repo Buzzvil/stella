@@ -81,7 +81,7 @@ func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error)
 			if err != gorm.ErrRecordNotFound {
 				return nil, err
 			}
-			err := repo.db.Create(&newDBaggregaterating).Error
+			err := repo.db.Create(&newDBAggregatedRating).Error
 			if err != nil {
 				return nil, err
 			}
