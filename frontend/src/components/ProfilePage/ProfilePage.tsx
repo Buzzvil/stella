@@ -14,9 +14,6 @@ const profileStyle = makeStyles(
             height: 100,
             marginTop: 50,
             marginBottom: 20
-        },
-        lastItem: {
-            display: 'none'
         }
     })
 )
@@ -34,7 +31,7 @@ const ProfileContent = styled.div`
 `;
 
 const NowReading = styled.div`
-  font-wiehgt: bold;
+  font-weight: bold;
   font-size: 36px;
   line-height: 50px;
   color: white;
