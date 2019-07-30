@@ -67,7 +67,7 @@ func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error)
 	newDBRating := repo.mapper.RatingToDBRating(rating)
 
 	dbAggregaterating := AggregatedRating{EntityID: rating.EntityID}
-	newDBaggregaterating := AggregatedRating{EntityID: rating.EntityID, Score: rating.Score, Count: 1}
+	newDBAggregatedRating := AggregatedRating{EntityID: rating.EntityID, Score: rating.Score, Count: 1}
 
 	err := repo.db.Where(&dbRating).First(&dbRating).Error
 	if err != nil {
