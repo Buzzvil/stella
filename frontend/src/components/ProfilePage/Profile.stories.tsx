@@ -8,6 +8,8 @@ import ProfilePage from "./ProfilePage";
 import { User } from "proto/usersvc_pb";
 import { Book } from "proto/booksvc_pb";
 import { MemoryRouter, withRouter } from "react-router-dom";
+import { createMemoryHistory, createLocation } from 'history';
+import { match } from 'react-router';
 
 const currentUser = (() => {
     const user = new User();
@@ -26,12 +28,28 @@ const TestBook = (() => {
     return book;
 })();
 
+const history = createMemoryHistory();
+const path = `/route/:id`;
+
+const match: match<{ id: string }> = {
+    isExact: false,
+    path,
+    url: path.replace(':id', '1'),
+    params: { id: "1" }
+};
+
+const location = createLocation(match.url);
+
 storiesOf("Pages|ProfilePage", module)
     .add("default", () => (
-            <MuiThemeProvider theme={StandardTheme}>
-                <CssBaseline />
-                <MemoryRouter>
-                    <ProfilePage />
-                </MemoryRouter>
-            </MuiThemeProvider>
+        <MuiThemeProvider theme={StandardTheme}>
+            <CssBaseline />
+            <MemoryRouter>
+                <ProfilePage
+                    userId={currentUser.getId()}
+                    history={history}
+                    location={location}
+                    match={match} />
+            </MemoryRouter>
+        </MuiThemeProvider>
     ));

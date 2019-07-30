@@ -12,6 +12,8 @@ const profileStyle = makeStyles(
         avatar: {
             width: 100,
             height: 100,
+            marginTop: 50,
+            marginBottom: 20
         },
         lastItem: {
             display: 'none'
