@@ -60,7 +60,7 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     const [loading, status, { }] = getUserResourceStatus(
         user ? user.getId() : 1
     );
-    const readingBooks = status ? status.heldBooks : [];
+    const readingBooks = status ? status.heldBooks : null;
     return (
         <ProfileContainer>
             <ProfileHeader>
@@ -69,7 +69,7 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
                 }
             </ProfileHeader>
             <ProfileContent>
-                {user &&
+                {user && readingBooks && readingBooks.length > 0 &&
                     <NowReading>
                         {user.getName()} is reading&nbsp;
                         {readingBooks.map((book, index) =>
@@ -78,6 +78,11 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
                                 <span>{index == readingBooks.length - 1 ? "." : (index == readingBooks.length - 2 ? " and " : ", ")}</span>
                             </span>
                         )}
+                    </NowReading>
+                }
+                {user && readingBooks && readingBooks.length == 0 &&
+                    <NowReading>
+                        Oh dear, It seems that {user.getName()} didn’t read any book yet..
                     </NowReading>
                 }
             </ProfileContent>
