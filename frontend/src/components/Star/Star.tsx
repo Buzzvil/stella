@@ -63,4 +63,4 @@ const Star: React.SFC<StarProps> = ({ value, color, theme, ...props }) => {
   );
 };
 
-export default withTheme(Star);
+export default withTheme()(Star);
