@@ -1,4 +1,4 @@
-import React, { useReducer, createContext } from "react";
+import React, { useReducer, createContext, useContext } from "react";
 
 type Notification = {
   icon?: string;
@@ -47,6 +47,14 @@ const NewMsg = (dispatch: ActionCreator, data: Notification) => {
 
 const NextMsg = (dispatch: ActionCreator) => dispatch({ type: "DEQUEUE" });
 
+const useNotificationContext = () => useContext(NotificationContext);
+
 export default NotificationContext;
 
-export { NotificationProvider, NotificationConsumer, NewMsg, NextMsg };
+export {
+  NotificationProvider,
+  NotificationConsumer,
+  useNotificationContext,
+  NewMsg,
+  NextMsg
+};
