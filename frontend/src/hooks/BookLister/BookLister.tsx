@@ -15,7 +15,7 @@ export default (query: string): [boolean, Book[]] => {
   const listBooks = (q: string) => () => {
     if (q === "") {
       setBooks([]);
-      return () => {};
+      return () => { };
     }
     const req = new ListBooksRequest();
     req.setFilter(q);
@@ -38,3 +38,43 @@ export default (query: string): [boolean, Book[]] => {
   useEffect(listBooks(query), [query]);
   return [loading, books];
 };
+
+interface BookListStatus {
+  books: Book[];
+}
+
+export interface BookListIfc {
+  (ids: number[]): [boolean, BookListStatus | undefined];
+}
+
+export const getBooksList: BookListIfc = ids => {
+  const [loading, load] = Loader();
+  const [books, setStatus] = useState<BookListStatus>();
+  const getBookListStatus = (ids: number[]) => {
+    // Fetch Books with ids
+    const req = new ListBooksRequest();
+    req.setIdsList(ids);
+    const listBooksPromise: Promise<Book[]> = new Promise(
+      (resolve, reject) => {
+        bookService.listBooks(
+          req,
+          {},
+          (err: any, l: ListBooksResponse) => (err ? reject(err) : resolve(l.getBooksList()))
+        )
+      }
+    )
+
+    const [cancelled, cancel] = load(
+      listBooksPromise.then(b => {
+        if (cancelled()) return [];
+        setStatus({ books: b })
+      }).catch(err => {
+        console.log(err);
+      })
+    );
+    return cancel;
+  };
+  useEffect(() => getBookListStatus(ids), [ids]);
+
+  return [loading, books];
+}
