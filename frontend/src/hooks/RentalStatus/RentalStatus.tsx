@@ -13,6 +13,10 @@ import {
 import { useBookContext, setBookStatus } from "../BookContext/BookContext";
 import { useAuthContext } from "../AuthContext/AuthContext";
 import Loader from "../Loader/Loader";
+import {
+  useNotificationContext,
+  NewMsg
+} from "../NotificationContext/NotificationContext";
 
 const rentalService = new RentalServiceClient(
   process.env.PUBLIC_URL,
@@ -38,6 +42,7 @@ export interface ResourceStatusIfc {
 const getResourceStatus: ResourceStatusIfc = entityId => {
   const [loading, load] = Loader();
   const [status, setStatus] = useState<ResourceStatus>();
+  const [, dispatchNoti] = useNotificationContext();
   const [_, dispatch] = useBookContext();
   const [{ currentUser }] = useAuthContext();
   const getResourceStatus = (entityId: number) => {
@@ -72,6 +77,7 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
       if (err) {
         throw err;
       }
+      NewMsg(dispatchNoti, { msg: `Successfully rented!` });
       getResourceStatus(entityId);
     });
   };
@@ -85,6 +91,7 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
       if (err) {
         throw err;
       }
+      NewMsg(dispatchNoti, { msg: `Successfully returned!` });
       getResourceStatus(entityId);
     });
   };
@@ -111,10 +118,8 @@ export const getUserResourceStatus: UserStatusIfc = userId => {
     req.setUserId(userId);
     const statusPromise: Promise<UserStatus> = new Promise(
       (resolve, reject) => {
-        rentalService.getUserStatus(
-          req,
-          {},
-          (err: any, s: UserStatus) => (err ? reject(err) : resolve(s))
+        rentalService.getUserStatus(req, {}, (err: any, s: UserStatus) =>
+          err ? reject(err) : resolve(s)
         );
       }
     );
@@ -123,8 +128,8 @@ export const getUserResourceStatus: UserStatusIfc = userId => {
       const req = new ListBooksRequest();
       const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {
         if (ids.length == 0) {
-          resolve([])
-          return
+          resolve([]);
+          return;
         }
         req.setIdsList(ids);
         bookService.listBooks(req, {}, (err: any, resp: ListBooksResponse) =>
@@ -135,25 +140,28 @@ export const getUserResourceStatus: UserStatusIfc = userId => {
       return bookPromise;
     };
     const [cancelled, cancel] = load(
-      statusPromise.then(s => {
-        if (cancelled()) return [];
-        const heldBookIds = s.getHeldEntityIdsList();
-        return listBooks(heldBookIds)
-      }).then(books => {
-        setStatus({
-          heldBooks: books,
-          rentedBooks: [],
-          waitedBooks: []
+      statusPromise
+        .then(s => {
+          if (cancelled()) return [];
+          const heldBookIds = s.getHeldEntityIdsList();
+          return listBooks(heldBookIds);
         })
-      }).catch(err => {
-        console.log(err);
-      })
+        .then(books => {
+          setStatus({
+            heldBooks: books,
+            rentedBooks: [],
+            waitedBooks: []
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        })
     );
     return cancel;
-  }
+  };
   useEffect(() => getUserResourceStatus(userId), [userId]);
 
   return [loading, status, {}];
-}
+};
 
 export default getResourceStatus;

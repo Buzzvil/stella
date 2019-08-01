@@ -13,6 +13,7 @@ import BookListCard from "../BookListCard/BookListCard";
 import BookDetail from "../BookDetail/BookDetail";
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
 import NoBooks from "../NoBooks/NoBooks";
+import Notice from "../Notice/Notice";
 
 const SearchForm = styled.form`
   display: flex;
@@ -159,6 +160,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
           <BookDetail bookId={selectedBook} />
         </ModalWrapper>
       </Modal>
+      <Notice />
     </Container>
   );
 };
