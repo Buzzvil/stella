@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { Typography, TextField, Grid, Modal } from "@material-ui/core";
+import {
+  Typography,
+  TextField,
+  Grid,
+  Modal,
+  Container
+} from "@material-ui/core";
 import { Book } from "proto/booksvc_pb";
 import AppHeader from "./AppHeader";
 import BookListCard from "../BookListCard/BookListCard";
 import BookDetail from "../BookDetail/BookDetail";
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
+import NoBooks from "../NoBooks/NoBooks";
 
 const SearchForm = styled.form`
   display: flex;
@@ -22,7 +29,7 @@ const SearchContainer = styled.div`
 `;
 
 const loading = keyframes`
-  from { 
+  from {
     left: 0px;
     width: 0%;
   }
@@ -58,7 +65,7 @@ const SearchInput: any = styled(TextField)`
       left: 0px;
       right: 0px;
       bottom: 0px;
-      border-top: 2px solid #FFFFFF;
+      border-top: 2px solid #ffffff;
       content: "";
     }
     ::after {
@@ -69,7 +76,7 @@ const SearchInput: any = styled(TextField)`
       right: 0px;
       bottom: 0px;
       width: 100px;
-      border-top: 2px solid #12B8A5;
+      border-top: 2px solid #12b8a5;
       animation: ${loading} 1.2s ease-in-out infinite;
       content: "";
     }
@@ -98,7 +105,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
   if (!search) return null;
   const [loading, books] = search(query);
   return (
-    <>
+    <Container>
       <AppHeader />
       <SearchContainer>
         <SearchForm
@@ -120,10 +127,15 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
           />
           {!haveSearched && (
             <Typography variant="h6" color="textSecondary">
-              Try: #All, #English or #popular to filter
+              Try typing '한국' or '피터 드러커' for example
             </Typography>
           )}
-          <SearchResult container>
+          {haveSearched && !books.length && (
+            <div style={{ marginTop: "121px" }}>
+              <NoBooks />
+            </div>
+          )}
+          <SearchResult container justify="center">
             {books.map(b => (
               <Grid item xl={6} xs={6} key={b.getId()}>
                 <BookListCard
@@ -147,7 +159,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
           <BookDetail bookId={selectedBook} />
         </ModalWrapper>
       </Modal>
-    </>
+    </Container>
   );
 };
 
