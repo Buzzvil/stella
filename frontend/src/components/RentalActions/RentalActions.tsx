@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button } from "@material-ui/core";
 import { ResourceStatus } from "proto/rentalsvc_pb";
-import { ResourceStatusIfc } from "../../hooks/RentalStatus/RentalStatus";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import useResourceStatus from "../../hooks/RentalStatus/RentalStatus";
 
