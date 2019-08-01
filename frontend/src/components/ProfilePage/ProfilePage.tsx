@@ -68,10 +68,10 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     const [loading, status, { }] = getUserResourceStatus(
         user ? user.getId() : 1
     );
-    const [{ }, heldBooksStatus, { }] = getBooksList(
+    const [{ }, heldBooksStatus] = getBooksList(
         status ? status.heldBookIds : []
     )
-    const [{ }, rentedBooksStatus, { }] = getBooksList(
+    const [{ }, rentedBooksStatus] = getBooksList(
         status ? status.rentedBookIds : []
     )
     const readingBooks = heldBooksStatus ? heldBooksStatus.books : null;

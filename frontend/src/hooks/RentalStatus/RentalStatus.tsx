@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { RentalServiceClient } from "proto/rentalsvc_grpc_web_pb";
-import { BookServiceClient } from "proto/booksvc_grpc_web_pb";
-import { ListBooksRequest, ListBooksResponse, Book } from "proto/booksvc_pb";
 import {
   GetResourceStatusRequest,
   ResourceStatus,
@@ -20,13 +18,12 @@ const rentalService = new RentalServiceClient(
   null
 );
 
-const bookService = new BookServiceClient(process.env.PUBLIC_URL, null, null);
-
 interface UserResourceStatus {
-  heldBooks: Book[];
-  rentedBooks: Book[];
-  waitedBooks: Book[];
+  heldBookIds: number[];
+  rentedBookIds: number[];
+  waitedBookIds: number[];
 }
+
 interface Actions {
   [key: string]: () => void;
 }
@@ -118,32 +115,13 @@ export const getUserResourceStatus: UserStatusIfc = userId => {
         );
       }
     );
-    // Fetch Books with ids
-    const listBooks = (ids: number[]): Promise<Book[]> => {
-      const req = new ListBooksRequest();
-      const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {
-        if (ids.length == 0) {
-          resolve([])
-          return
-        }
-        req.setIdsList(ids);
-        bookService.listBooks(req, {}, (err: any, resp: ListBooksResponse) =>
-          err ? reject(err) : resolve(resp.getBooksList())
-        );
-      });
-
-      return bookPromise;
-    };
     const [cancelled, cancel] = load(
       statusPromise.then(s => {
         if (cancelled()) return [];
-        const heldBookIds = s.getHeldEntityIdsList();
-        return listBooks(heldBookIds)
-      }).then(books => {
         setStatus({
-          heldBooks: books,
-          rentedBooks: [],
-          waitedBooks: []
+          heldBookIds: s.getHeldEntityIdsList(),
+          rentedBookIds: s.getRentedEntityIdsList(),
+          waitedBookIds: s.getWatchingEntityIdsList()
         })
       }).catch(err => {
         console.log(err);
