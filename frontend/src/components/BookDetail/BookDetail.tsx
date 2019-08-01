@@ -4,7 +4,7 @@ import Star, { Color } from "../Star/Star";
 import styled from "styled-components";
 import { useBookContext } from "../../hooks/BookContext/BookContext";
 import RentalActions from "../RentalActions/RentalActions";
-import { listUsers } from "../../hooks/UserLister/UserLister";
+import { listUsers as useListUsers } from "../../hooks/UserLister/UserLister";
 
 interface BookDetailProps {
   bookId: null | number;
@@ -55,11 +55,11 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
   const [state] = useBookContext();
   const book = state[bookId];
   const holderIds = book.rentalStatus ? [book.rentalStatus.getHolder()] : [];
-  const [, [holder = undefined]] = listUsers(holderIds);
+  const [, [holder = undefined]] = useListUsers(holderIds);
   const watchingUserIds = book.rentalStatus
     ? book.rentalStatus.getWatchingUserIdsList()
     : [];
-  const [, watchers] = listUsers(watchingUserIds);
+  const [, watchers] = useListUsers(watchingUserIds);
   const myRating = 4;
   const avgRating = 3.5;
 
