@@ -130,7 +130,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
               Try typing '한국' or '피터 드러커' for example
             </Typography>
           )}
-          {haveSearched && !books.length && (
+          {haveSearched && !loading && !books.length && (
             <div style={{ marginTop: "121px" }}>
               <NoBooks />
             </div>
