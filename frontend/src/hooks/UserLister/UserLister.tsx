@@ -49,6 +49,8 @@ const listUsers = (ids: number[]): [boolean, User[]] => {
     const req = new ListUsersRequest();
     req.setIdsList(ids);
     const listUsersPromise: Promise<User[]> = new Promise((resolve, reject) => {
+      if (!ids.length)
+        return resolve([]);
       userService.listUsers(req, {}, (err: any, res: ListUsersResponse) =>
         err ? reject(err) : resolve(res.getUsersList())
       );
@@ -64,7 +66,7 @@ const listUsers = (ids: number[]): [boolean, User[]] => {
     return cancel;
   };
 
-  useEffect(listUsers(), []);
+  useEffect(listUsers(), ids.sort());
   return [loading, users];
 };
 

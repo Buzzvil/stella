@@ -54,12 +54,12 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
   if (!bookId) return null;
   const [state] = useBookContext();
   const book = state[bookId];
-  const [, [holder = undefined]] = (book.rentalStatus &&
-    book.rentalStatus.getHolder() &&
-    listUsers([book.rentalStatus.getHolder()])) || [false, []];
-  const [, watchers] = (book.rentalStatus &&
-    book.rentalStatus.getWatchingUserIdsList().length > 0 &&
-    listUsers(book.rentalStatus.getWatchingUserIdsList())) || [false, []];
+  const holderIds = book.rentalStatus ? [book.rentalStatus.getHolder()] : [];
+  const [, [holder = undefined]] = listUsers(holderIds);
+  const watchingUserIds = book.rentalStatus
+    ? book.rentalStatus.getWatchingUserIdsList()
+    : [];
+  const [, watchers] = listUsers(watchingUserIds);
   const myRating = 4;
   const avgRating = 3.5;
 
