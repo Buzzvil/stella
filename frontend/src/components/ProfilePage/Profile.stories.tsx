@@ -21,14 +21,14 @@ const currentUser = (() => {
 const history = createMemoryHistory();
 const path = `/route/:id`;
 
-const match: match<{ id: string }> = {
+const profilematch: match<{ id: string }> = {
     isExact: false,
     path,
     url: path.replace(':id', '1'),
     params: { id: "1" }
 };
 
-const location = createLocation(match.url);
+const location = createLocation(profilematch.url);
 
 storiesOf("Pages|ProfilePage", module)
     .add("default", () => (
@@ -39,7 +39,7 @@ storiesOf("Pages|ProfilePage", module)
                     userId={currentUser.getId()}
                     history={history}
                     location={location}
-                    match={match} />
+                    match={profilematch} />
             </MemoryRouter>
         </MuiThemeProvider>
     ));

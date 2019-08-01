@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Avatar } from "@material-ui/core";
-import { Book } from "proto/booksvc_pb";
+import { Avatar, Typography } from "@material-ui/core";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
 import { makeStyles, createStyles } from '@material-ui/styles';
 import { RouteComponentProps, BrowserRouter as withRouter } from "react-router-dom";
 import { getUserResourceStatus } from "../../hooks/RentalStatus/RentalStatus";
+import RentalActivity from "../RentalActivity/RentalActivity"
+import { getBooksList } from "../../hooks/BookLister/BookLister";
 
 const profileStyle = makeStyles(
     createStyles({
@@ -42,6 +43,16 @@ const ProfileHeader = styled.div`
   max-width: 720px;
 `;
 
+const Activities = styled.div`
+  width: 100%;
+  background-color: #233443;
+  margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+`;
+
 const TitleColors = ['#FFE76A', '#12B8A5', '#E7841B', '#FFC17A']
 
 interface ProfilePageProps {
@@ -57,7 +68,14 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     const [loading, status, { }] = getUserResourceStatus(
         user ? user.getId() : 1
     );
-    const readingBooks = status ? status.heldBooks : null;
+    const [, heldBooksStatus] = getBooksList(
+        status ? status.heldBookIds : []
+    )
+    const [, rentedBooksStatus] = getBooksList(
+        status ? status.rentedBookIds : []
+    )
+    const readingBooks = heldBooksStatus ? heldBooksStatus.books : null;
+    const rentedBooks = rentedBooksStatus ? rentedBooksStatus.books : [];
     return (
         <ProfileContainer>
             <ProfileHeader>
@@ -83,6 +101,16 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
                     </NowReading>
                 }
             </ProfileContent>
+            <Activities>
+                <ProfileContent>
+                    <Typography variant="h6">
+                        {user && user.getName()}'s activity
+                    </Typography>
+                    {rentedBooks.map((book) =>
+                        <RentalActivity book={book}></RentalActivity>
+                    )}
+                </ProfileContent>
+            </Activities>
         </ProfileContainer>
     );
 };
