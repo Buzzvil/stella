@@ -3,6 +3,7 @@ package repo
 import (
 	"database/sql"
 	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
@@ -74,6 +75,29 @@ func (r *repo) GetByISBN(isbn string) (*book.Book, error) {
 	}
 
 	return nil, nil
+}
+
+func (r *repo) GetByIDs(ids []int64) ([]*book.Book, error) {
+	books := []*book.Book{}
+	idStr := ""
+	for _, id := range ids {
+		idStr = idStr + strconv.FormatInt(id, 10) + ","
+	}
+	idStr = idStr[:len(idStr)-1]
+	rows, err := r.db.Query("SELECT id, name, isbn, authors, publisher, content, cover_image_url FROM books WHERE id = ANY(ARRAY[" + idStr + "])")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		d := dbBook{}
+		if err := rows.Scan(&d.id, &d.name, &d.isbn, &d.authors, &d.publisher, &d.content, &d.coverImageURL); err != nil {
+			return nil, err
+		}
+		books = append(books, dbBookToBook(&d))
+	}
+
+	return books, nil
 }
 
 func (r *repo) GetByFilter(filter string) ([]*book.Book, error) {

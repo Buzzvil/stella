@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { RentalServiceClient } from "proto/rentalsvc_grpc_web_pb";
+import { BookServiceClient } from "proto/booksvc_grpc_web_pb";
+import { ListBooksRequest, ListBooksResponse, Book } from "proto/booksvc_pb";
 import {
   GetResourceStatusRequest,
   ResourceStatus,
   RentResourceRequest,
-  ReturnResourceRequest
+  ReturnResourceRequest,
+  GetUserStatusRequest,
+  UserStatus
 } from "proto/rentalsvc_pb";
 import { useBookContext, setBookStatus } from "../BookContext/BookContext";
 import { useAuthContext } from "../AuthContext/AuthContext";
@@ -16,6 +20,13 @@ const rentalService = new RentalServiceClient(
   null
 );
 
+const bookService = new BookServiceClient(process.env.PUBLIC_URL, null, null);
+
+interface UserResourceStatus {
+  heldBooks: Book[];
+  rentedBooks: Book[];
+  waitedBooks: Book[];
+}
 interface Actions {
   [key: string]: () => void;
 }
@@ -87,5 +98,62 @@ export const defaultStatusFetcher: ResourceStatusIfc = () => [
   new ResourceStatus(),
   {}
 ];
+
+export interface UserStatusIfc {
+  (userId: number): [boolean, UserResourceStatus | undefined, Actions];
+}
+
+export const getUserResourceStatus: UserStatusIfc = userId => {
+  const [loading, load] = Loader();
+  const [status, setStatus] = useState<UserResourceStatus>();
+  const getUserResourceStatus = (userId: number) => {
+    const req = new GetUserStatusRequest();
+    req.setUserId(userId);
+    const statusPromise: Promise<UserStatus> = new Promise(
+      (resolve, reject) => {
+        rentalService.getUserStatus(
+          req,
+          {},
+          (err: any, s: UserStatus) => (err ? reject(err) : resolve(s))
+        );
+      }
+    );
+    // Fetch Books with ids
+    const listBooks = (ids: number[]): Promise<Book[]> => {
+      const req = new ListBooksRequest();
+      const bookPromise: Promise<Book[]> = new Promise((resolve, reject) => {
+        if (ids.length == 0) {
+          resolve([])
+          return
+        }
+        req.setIdsList(ids);
+        bookService.listBooks(req, {}, (err: any, resp: ListBooksResponse) =>
+          err ? reject(err) : resolve(resp.getBooksList())
+        );
+      });
+
+      return bookPromise;
+    };
+    const [cancelled, cancel] = load(
+      statusPromise.then(s => {
+        if (cancelled()) return [];
+        const heldBookIds = s.getHeldEntityIdsList();
+        return listBooks(heldBookIds)
+      }).then(books => {
+        setStatus({
+          heldBooks: books,
+          rentedBooks: [],
+          waitedBooks: []
+        })
+      }).catch(err => {
+        console.log(err);
+      })
+    );
+    return cancel;
+  }
+  useEffect(() => getUserResourceStatus(userId), [userId]);
+
+  return [loading, status, {}];
+}
 
 export default getResourceStatus;

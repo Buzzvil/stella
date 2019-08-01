@@ -119,7 +119,7 @@ const IndexPage: React.SFC<IndexPageProps> = ({ search = defaultSearch }) => {
             className={loading && "loading"}
           />
           {!haveSearched && (
-            <Typography variant="title" color="textSecondary">
+            <Typography variant="h6" color="textSecondary">
               Try: #All, #English or #popular to filter
             </Typography>
           )}
