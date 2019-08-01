@@ -63,6 +63,11 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 
 func (repo *gormRepo) UpsertRating(r rating.Rating) (*rating.Rating, error) {
 	dbr := repo.mapper.RatingToDBRating(r)
+
+	if err := repo.db.Where(&dbr).First(&dbr).Error; err != nil && !gorm.IsRecordNotFoundError(err) {
+		return nil, err
+	}
+
 	if err := repo.db.Save(&dbr).Error; err != nil {
 		return nil, err
 	}
@@ -92,6 +97,9 @@ func (repo *gormRepo) recalculateAggrRating(entityID int32) error {
 	}
 
 	aggr := AggregatedRating{EntityID: entityID}
+	if err := repo.db.Where(&aggr).First(&aggr).Error; err != nil && !gorm.IsRecordNotFoundError(err) {
+		return err
+	}
 	var total float32
 	cnt := int32(len(dbrs))
 
