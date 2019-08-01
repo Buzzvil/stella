@@ -61,28 +61,54 @@ func (repo *gormRepo) ListByUserID(userID int32) ([]*rating.Rating, error) {
 	return ratingList, nil
 }
 
-// TODO: When Upsert rating, AggregatedRating also should be updated.
-func (repo *gormRepo) UpsertRating(rating rating.Rating) (*rating.Rating, error) {
-	dbRating := Rating{
-		EntityID: rating.EntityID,
-		Score:    rating.Score,
-		UserID:   rating.UserID,
-		Comment:  rating.Comment,
+func (repo *gormRepo) UpsertRating(r rating.Rating) (*rating.Rating, error) {
+	dbr := repo.mapper.RatingToDBRating(r)
+	if err := repo.db.Save(&dbr).Error; err != nil {
+		return nil, err
 	}
-	if err := repo.db.Where(&dbRating).First(&dbRating).Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			return nil, err
-		}
-		err := repo.db.Create(&dbRating).Error
-		return repo.mapper.dbRatingToRating(dbRating), err
+
+	err := repo.recalculateAggrRating(r.EntityID)
+	if err != nil {
+		return nil, err
 	}
-	err := repo.db.Save(dbRating).Error
-	return repo.mapper.dbRatingToRating(dbRating), err
+
+	return repo.mapper.dbRatingToRating(*dbr), nil
 }
 
 func (repo *gormRepo) DeleteRating(entityID int32, userID int32) error {
-	dbRating := Rating{EntityID: entityID, UserID: userID}
-	return repo.db.Where(&dbRating).Delete(&dbRating).Error
+	dbr := Rating{EntityID: entityID, UserID: userID}
+
+	if err := repo.db.Where(&dbr).Delete(&dbr).Error; err != nil {
+		return err
+	}
+
+	return repo.recalculateAggrRating(entityID)
+}
+
+func (repo *gormRepo) recalculateAggrRating(entityID int32) error {
+	dbrs, err := repo.ListByID(entityID)
+	if err != nil {
+		return err
+	}
+
+	aggr := AggregatedRating{EntityID: entityID}
+	var total float32
+	cnt := int32(len(dbrs))
+
+	if cnt == 0 {
+		if err := repo.db.Delete(&aggr).Error; err != nil {
+			return err
+		}
+		return nil
+	}
+
+	for _, dbr := range dbrs {
+		total += dbr.Score
+	}
+	aggr.Score = total / float32(cnt)
+	aggr.Count = cnt
+
+	return repo.db.Save(&aggr).Error
 }
 
 func New(db *gorm.DB) rating.Repository {

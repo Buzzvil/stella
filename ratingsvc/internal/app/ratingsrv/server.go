@@ -102,7 +102,7 @@ func (s *server) UpsertRating(c context.Context, req *pb.UpsertRatingRequest) (*
 }
 
 func (s *server) DeleteRating(c context.Context, req *pb.DeleteRequest) (*empty.Empty, error) {
-	err := s.u.DeleteRating(req.GetUserId(), req.GetEntityId())
+	err := s.u.DeleteRating(req.GetEntityId(), req.GetUserId())
 	switch err.(type) {
 	case rating.InvalidOperationError:
 		err = status.Error(codes.Unavailable, "invalid operation")
