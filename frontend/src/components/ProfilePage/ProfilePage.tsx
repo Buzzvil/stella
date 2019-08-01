@@ -68,10 +68,10 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
     const [loading, status, { }] = getUserResourceStatus(
         user ? user.getId() : 1
     );
-    const [{ }, heldBooksStatus] = getBooksList(
+    const [, heldBooksStatus] = getBooksList(
         status ? status.heldBookIds : []
     )
-    const [{ }, rentedBooksStatus] = getBooksList(
+    const [, rentedBooksStatus] = getBooksList(
         status ? status.rentedBookIds : []
     )
     const readingBooks = heldBooksStatus ? heldBooksStatus.books : null;
@@ -106,7 +106,7 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
                     <Typography variant="h6">
                         {user && user.getName()}'s activity
                     </Typography>
-                    {rentedBooks.map((book, index) =>
+                    {rentedBooks.map((book) =>
                         <RentalActivity book={book}></RentalActivity>
                     )}
                 </ProfileContent>
