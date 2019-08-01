@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, colors } from "@material-ui/core";
 
 export default createMuiTheme({
   palette: {
@@ -40,6 +40,12 @@ export default createMuiTheme({
     },
     body2: {
       fontSize: "12px"
+    },
+    subtitle1: {
+      fontSize: "20px"
+    },
+    subtitle2: {
+      fontSize: "16px"
     }
   },
   overrides: {
