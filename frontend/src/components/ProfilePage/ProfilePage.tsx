@@ -111,8 +111,8 @@ const ProfilePage: React.SFC<RouteComponentProps<MatchParams>> = ({
                     <Typography variant="h6">
                         {!loading && user && user.getName()}'s activity
                     </Typography>
-                    {rentedBooks && rentedBooks.map((book) =>
-                        <RentalActivity book={book}></RentalActivity>
+                    {rentedBooks && rentedBooks.map((book, i) =>
+                        <RentalActivity key={i} book={book}></RentalActivity>
                     )}
                 </ProfileContent>
             </Activities>
