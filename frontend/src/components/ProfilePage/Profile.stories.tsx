@@ -10,16 +10,8 @@ import { MemoryRouter } from "react-router-dom";
 import { createMemoryHistory, createLocation } from 'history';
 import { match } from 'react-router';
 
-const currentUser = (() => {
-    const user = new User();
-    user.setId(1);
-    user.setName("John Doe")
-    user.setImage("https://placekitten.com/g/200/300")
-    return user;
-})();
-
 const history = createMemoryHistory();
-const path = `/route/:id`;
+const path = `/profile/:id`;
 
 const profilematch: match<{ id: string }> = {
     isExact: false,
@@ -36,7 +28,6 @@ storiesOf("Pages|ProfilePage", module)
             <CssBaseline />
             <MemoryRouter>
                 <ProfilePage
-                    userId={currentUser.getId()}
                     history={history}
                     location={location}
                     match={profilematch} />
