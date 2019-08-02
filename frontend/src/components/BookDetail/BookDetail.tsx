@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useBookContext } from "../../hooks/BookContext/BookContext";
 import RentalActions from "../RentalActions/RentalActions";
 import { listUsers as useListUsers } from "../../hooks/UserLister/UserLister";
+import { Link } from "react-router-dom";
 
 interface BookDetailProps {
   bookId: null | number;
@@ -93,19 +94,23 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
                   {holder.getName()} is reading it and {watchers.length} more
                   are interested.
                 </Typography>
-                <Avatar src={holder.getImage()} />
+                <Link to="/profile">
+                  <Avatar src={holder.getImage()} />
+                </Link>
                 {watchers.map(w => (
                   <Avatar src={w.getImage()} />
                 ))}
               </div>
             ) : (
-              <div>
-                <Typography variant="body1">
-                  {holder.getName()} is reading it
-                </Typography>
-                <Avatar src={holder.getImage()} />
-              </div>
-            ))}
+                <div>
+                  <Typography variant="body1">
+                    {holder.getName()} is reading it
+                  </Typography>
+                  <Link to={`/profile/${holder.getId()}`} >
+                    <Avatar src={holder.getImage()} />
+                  </Link>
+                </div>
+              ))}
           <Typography variant="body1">{book.getContent()}</Typography>
         </div>
       </Content>

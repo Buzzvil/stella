@@ -34,6 +34,7 @@ function App() {
                 return <IndexPage search={useBookLister} />;
               }}
             />
+            <Route path="/profile/:id" component={withRouter(ProfilePage)} />
             <Route path="/profile" component={withRouter(ProfilePage)} />
             <Route render={() => <h1>NotFound</h1>} />
           </Switch>

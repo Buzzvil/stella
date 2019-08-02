@@ -49,6 +49,7 @@ export interface BookListIfc {
 
 export const getBooksList: BookListIfc = ids => {
   const [loading, load] = Loader();
+  const [IDSet, setIDset] = useState<Set<number>>(new Set());
   const [books, setStatus] = useState<BookListStatus>();
   const getBookListStatus = (ids: number[]) => {
     // Fetch Books with ids
@@ -56,6 +57,7 @@ export const getBooksList: BookListIfc = ids => {
     req.setIdsList(ids);
     const listBooksPromise: Promise<Book[]> = new Promise(
       (resolve, reject) => {
+        if (ids.length === 0) return resolve([])
         bookService.listBooks(
           req,
           {},
@@ -74,7 +76,9 @@ export const getBooksList: BookListIfc = ids => {
     );
     return cancel;
   };
-  useEffect(() => getBookListStatus(ids), [ids]);
+  const diff = ids.length !== IDSet.size && !ids.every(id => IDSet.has(id));
+  if (diff) setIDset(new Set(ids));
+  useEffect(() => getBookListStatus(ids), [IDSet]);
 
   return [loading, books];
 }

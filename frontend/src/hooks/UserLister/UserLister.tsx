@@ -5,7 +5,8 @@ import {
   User,
   ListUsersRequest,
   ListUsersResponse,
-  GetCurrentUserRequest
+  GetCurrentUserRequest,
+  GetUserRequest
 } from "proto/usersvc_pb";
 import {
   useUserContext,
@@ -70,4 +71,32 @@ const listUsers = (ids: number[]): [boolean, User[]] => {
   return [loading, users];
 };
 
-export { getCurrentUser, listUsers };
+const getUser = (id: number): [boolean, User | undefined] => {
+  const [loading, load] = Loader();
+  const [user, setUser] = useState<User>();
+  const getUser = (id: number) => {
+    const req = new GetUserRequest();
+    req.setId(id);
+    const getUserPromise: Promise<User> = new Promise((resolve, reject) => {
+      if (id == null)
+        return resolve(undefined);
+      userService.getUser(req, {}, (err: any, res: User) =>
+        err ? reject(err) : resolve(res)
+      );
+    });
+
+    const [cancelled, cancel] = load(
+      getUserPromise.then(user => {
+        if (cancelled()) return;
+        setUser(user);
+      }).catch(err => {
+        console.log(err);
+      })
+    );
+    return cancel;
+  };
+
+  useEffect(() => getUser(id), [id]);
+  return [loading, user];
+};
+export { getCurrentUser, listUsers, getUser };

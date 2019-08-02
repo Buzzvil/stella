@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Avatar, Typography } from "@material-ui/core";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
@@ -7,6 +7,8 @@ import { RouteComponentProps, BrowserRouter as withRouter } from "react-router-d
 import { getUserResourceStatus } from "../../hooks/RentalStatus/RentalStatus";
 import RentalActivity from "../RentalActivity/RentalActivity"
 import { getBooksList } from "../../hooks/BookLister/BookLister";
+import { getUser } from "../../hooks/UserLister/UserLister";
+import { User } from "proto/usersvc_pb"
 
 const profileStyle = makeStyles(
     createStyles({
@@ -55,18 +57,21 @@ const Activities = styled.div`
 
 const TitleColors = ['#FFE76A', '#12B8A5', '#E7841B', '#FFC17A']
 
-interface ProfilePageProps {
-    userId?: number
+interface MatchParams {
+    id: string;
 }
 
-const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
-    userId,
+const ProfilePage: React.SFC<RouteComponentProps<MatchParams>> = ({
+    match
 }) => {
     const classes = profileStyle();
     const [{ currentUser }] = useAuthContext();
-    const user = currentUser;
-    const [loading, status, { }] = getUserResourceStatus(
-        user ? user.getId() : 1
+    const id = parseInt(match.params.id)
+    let [loading, user] = getUser(id)
+    user = user || currentUser
+    if (!user) return <></>;
+    const [, status, { }] = getUserResourceStatus(
+        user.getId()
     );
     const [, heldBooksStatus] = getBooksList(
         status ? status.heldBookIds : []
@@ -75,16 +80,16 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
         status ? status.rentedBookIds : []
     )
     const readingBooks = heldBooksStatus ? heldBooksStatus.books : null;
-    const rentedBooks = rentedBooksStatus ? rentedBooksStatus.books : [];
+    const rentedBooks = rentedBooksStatus ? rentedBooksStatus.books : null;
     return (
         <ProfileContainer>
             <ProfileHeader>
-                {user &&
+                {!loading && user &&
                     <Avatar alt={user.getName()} src={user.getImage()} className={classes.avatar} />
                 }
             </ProfileHeader>
             <ProfileContent>
-                {user && readingBooks && readingBooks.length > 0 &&
+                {!loading && user && readingBooks && readingBooks.length > 0 &&
                     <NowReading>
                         {user.getName()} is reading&nbsp;
                         {readingBooks.map((book, index) =>
@@ -104,10 +109,10 @@ const ProfilePage: React.SFC<ProfilePageProps & RouteComponentProps> = ({
             <Activities>
                 <ProfileContent>
                     <Typography variant="h6">
-                        {user && user.getName()}'s activity
+                        {!loading && user && user.getName()}'s activity
                     </Typography>
-                    {rentedBooks.map((book) =>
-                        <RentalActivity book={book}></RentalActivity>
+                    {rentedBooks && rentedBooks.map((book, i) =>
+                        <RentalActivity key={i} book={book}></RentalActivity>
                     )}
                 </ProfileContent>
             </Activities>
