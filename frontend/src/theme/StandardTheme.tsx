@@ -31,6 +31,9 @@ export default createMuiTheme({
       fontWeight: "bold",
       letterSpacing: "-1px"
     },
+    h4: {
+      fontSize: "28px"
+    },
     h5: {
       fontSize: "21px",
       fontWeight: "bold"
@@ -71,6 +74,13 @@ export default createMuiTheme({
       root: {
         backgroundColor: "#233443",
         borderRadius: "24px"
+      }
+    },
+    MuiSnackbarContent: {
+      root: {
+        backgroundColor: "#12B8A5",
+        color: "white",
+        borderRadius: "16px"
       }
     },
     MuiPaper: {
