@@ -67,7 +67,7 @@ const ProfilePage: React.SFC<RouteComponentProps<MatchParams>> = ({
     const classes = profileStyle();
     const [{ currentUser }] = useAuthContext();
     const id = parseInt(match.params.id)
-    let [, user] = getUser(id)
+    let [loading, user] = getUser(id)
     user = user || currentUser
     if (!user) return <></>;
     const [, status, { }] = getUserResourceStatus(
@@ -84,12 +84,12 @@ const ProfilePage: React.SFC<RouteComponentProps<MatchParams>> = ({
     return (
         <ProfileContainer>
             <ProfileHeader>
-                {user &&
+                {!loading && user &&
                     <Avatar alt={user.getName()} src={user.getImage()} className={classes.avatar} />
                 }
             </ProfileHeader>
             <ProfileContent>
-                {user && readingBooks && readingBooks.length > 0 &&
+                {!loading && user && readingBooks && readingBooks.length > 0 &&
                     <NowReading>
                         {user.getName()} is reading&nbsp;
                         {readingBooks.map((book, index) =>
@@ -109,7 +109,7 @@ const ProfilePage: React.SFC<RouteComponentProps<MatchParams>> = ({
             <Activities>
                 <ProfileContent>
                     <Typography variant="h6">
-                        {user && user.getName()}'s activity
+                        {!loading && user && user.getName()}'s activity
                     </Typography>
                     {rentedBooks && rentedBooks.map((book) =>
                         <RentalActivity book={book}></RentalActivity>
