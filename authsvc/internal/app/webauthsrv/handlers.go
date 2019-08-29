@@ -15,7 +15,9 @@ import (
 )
 
 const oauthstateCookie = "oauthstate"
-const authTokenCookie = "auth-token"
+
+// AuthTokenCookie is token used for passing token between client/server
+const AuthTokenCookie = "auth-token"
 
 func generateStateOauthCookie(w http.ResponseWriter) string {
 	var expiration = time.Now().Add(365 * 24 * time.Hour)
@@ -80,7 +82,7 @@ func (s *server) OauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 	log.Println("successful")
 
 	c := http.Cookie{
-		Name:     authTokenCookie,
+		Name:     AuthTokenCookie,
 		Value:    ss,
 		Expires:  time.Now().Add(jwt.TokenLifetime),
 		HttpOnly: true,
@@ -93,11 +95,11 @@ func (s *server) OauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) Logout(w http.ResponseWriter, r *http.Request) {
 	c := http.Cookie{
-		Name:     authTokenCookie,
+		Name:     AuthTokenCookie,
 		Value:    "",
 		HttpOnly: true,
 		Path:     "/",
-		MaxAge:   0,
+		MaxAge:   -1,
 	}
 	http.SetCookie(w, &c)
 	http.Redirect(w, r, "/", http.StatusFound)

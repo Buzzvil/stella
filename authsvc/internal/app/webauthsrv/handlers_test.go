@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/Buzzvil/stella/authsvc/internal/pkg/auth"
 
@@ -60,24 +61,38 @@ func (s *handlerTestSuite) TestOauthSlackLogin() {
 	assert.NotZero(req.Cookie("oauthstate"))
 }
 
-func (s *handlerTestSuite) TestOauthSlackCallback() {
-	t := s.T()
-	require := require.New(t)
-	assert := assert.New(t)
+func (s *handlerTestSuite) TestLogout() {
+	require := require.New(s.T())
+	assert := assert.New(s.T())
 
 	c := webauthsrv.Config{WebHost: s.webHost, JWTSigningKey: s.signingKey, Usecase: s.usecase, SlackOauthConfig: s.slackOauthConfig}
 	srv := webauthsrv.New(c)
 
-	t.Run("NoOauthState", func(t *testing.T) {
-		req, err := http.NewRequest("GET", "/slack/callback", nil)
-		require.Nil(err)
+	req, err := http.NewRequest("GET", "/logout", nil)
+	require.Nil(err)
 
-		rr := httptest.NewRecorder()
-		srv.ServeHTTP(rr, req)
-
-		assert.Equal(http.StatusTemporaryRedirect, rr.Code)
-		assert.Zero(req.Cookie("auth-token"))
+	testToken := "TestToken"
+	req.AddCookie(&http.Cookie{
+		Name:     webauthsrv.AuthTokenCookie,
+		Value:    testToken,
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  time.Now().Add(time.Minute),
 	})
+
+	rr := httptest.NewRecorder()
+	srv.ServeHTTP(rr, req)
+
+	assert.Equal(http.StatusFound, rr.Code)
+	assert.Contains(rr.Header().Get("Location"), "/")
+
+	req = &http.Request{Header: http.Header{"Cookie": rr.HeaderMap["Set-Cookie"]}}
+	cookie, err := req.Cookie(webauthsrv.AuthTokenCookie)
+	assert.Nil(err)
+	if err != nil {
+		return
+	}
+	assert.True(cookie.Expires.Before(time.Now()))
 }
 
 func TestHandlerTestSuite(t *testing.T) {
