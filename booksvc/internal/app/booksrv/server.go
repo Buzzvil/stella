@@ -51,6 +51,7 @@ func (s *server) booksToPBBooks(books []*book.Book) []*pb.Book {
 			Publisher:  book.Publisher,
 			Isbn:       book.Isbn,
 			Authors:    book.Authors,
+			Content:    book.Content,
 			CoverImage: book.CoverImage,
 		})
 	}
