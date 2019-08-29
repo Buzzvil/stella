@@ -34,5 +34,6 @@ func New(c Config) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/slack/login", s.OauthSlackLogin)
 	mux.HandleFunc("/slack/callback", s.OauthSlackCallback)
+	mux.HandleFunc("/logout", s.Logout)
 	return mux
 }
