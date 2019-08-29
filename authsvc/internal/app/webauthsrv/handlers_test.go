@@ -91,10 +91,9 @@ func (s *handlerTestSuite) TestLogout() {
 	req, err := http.NewRequest("GET", "/logout", nil)
 	require.Nil(err)
 
-	testToken := "TestToken"
 	req.AddCookie(&http.Cookie{
 		Name:     webauthsrv.AuthTokenCookie,
-		Value:    testToken,
+		Value:    "TestToken",
 		HttpOnly: true,
 		Path:     "/",
 		Expires:  time.Now().Add(time.Minute),
