@@ -91,6 +91,18 @@ func (s *server) OauthSlackCallback(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func (s *server) Logout(w http.ResponseWriter, r *http.Request) {
+	c := http.Cookie{
+		Name:     authTokenCookie,
+		Value:    "",
+		HttpOnly: true,
+		Path:     "/",
+		MaxAge:   0,
+	}
+	http.SetCookie(w, &c)
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 /*
 func (s *server) userProfile(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.Header.Get("X-Forwarded-User"))
