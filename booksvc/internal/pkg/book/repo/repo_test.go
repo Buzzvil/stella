@@ -87,15 +87,14 @@ func (s *repoTestSuite) TestGetByISBN() {
 
 func (s *repoTestSuite) TestGetByFilter() {
 	var books []*book.Book
-	s.NoError(faker.FakeData(&books))
+	for len(books) < 2 {
+		s.NoError(faker.FakeData(&books))
+	}
 	testQuery := "TestName"
 	books[0].Name = testQuery + books[0].Name
 	books[1].Authors = append([]string{testQuery}, books[1].Authors...)
 
 	for _, book := range books {
-		if len(book.Authors) == 0 {
-			continue
-		}
 		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
 		s.NoError(err)
 	}
