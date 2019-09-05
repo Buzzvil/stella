@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"os"
 
@@ -16,7 +17,11 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", ":9000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000"
+	}
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 
 	if err != nil {
 		grpclog.Fatalf("failed to listen: %v", err)
