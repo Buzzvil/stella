@@ -9,8 +9,8 @@ import (
 	"os"
 
 	"github.com/Buzzvil/buzzlib-go/core"
-	book "github.com/Buzzvil/stella/booksvc/pkg/proto"
-	user "github.com/Buzzvil/stella/usersvc/pkg/proto"
+	book "github.com/Buzzvil/stella/rentalsvc/pkg/ext/book"
+	user "github.com/Buzzvil/stella/rentalsvc/pkg/ext/user"
 	"google.golang.org/grpc"
 )
 
@@ -35,11 +35,12 @@ func (n *notifier) sendNotification(userID int64, entityID int64) error {
 	if err != nil {
 		return err
 	}
-	resp, err := http.PostForm("https://slack.com/api/chat.postMessage", url.Values{
-		"token":   {"xoxb-2921750999-736611507426-BmlUHHvUqzS4PCboM9b8gFUR"},
+	params := url.Values{
+		"token":   {"xoxp-2921750999-68396489654-748916767604-eb3742f60b579f4f1ba2605eeaba1d27"},
 		"channel": {u.GetSlackUserId()},
-		"text":    {fmt.Sprintf("%s is available!", b.GetName())},
-	})
+		"text":    {fmt.Sprintf("%s is available.", b.GetName())},
+	}
+	resp, err := http.PostForm("https://slack.com/api/chat.postMessage", params)
 	if err != nil {
 		return err
 	}
