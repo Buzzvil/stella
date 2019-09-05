@@ -36,7 +36,7 @@ func (n *notifier) sendNotification(userID int64, entityID int64) error {
 		return err
 	}
 	params := url.Values{
-		"token":   {"xoxp-2921750999-68396489654-748916767604-eb3742f60b579f4f1ba2605eeaba1d27"},
+		"token":   {os.Getenv("SLACK_TOKEN")},
 		"channel": {u.GetSlackUserId()},
 		"text":    {fmt.Sprintf("%s is available.", b.GetName())},
 	}
