@@ -15,11 +15,16 @@ import (
 )
 
 type notifier struct {
+	enabled    bool
+	slackToken string
 	userClient user.UserServiceClient
 	bookClient book.BookServiceClient
 }
 
 func (n *notifier) sendNotification(userID int64, entityID int64) error {
+	if !n.enabled {
+		return nil
+	}
 	ctx := context.Background()
 	u, err := n.userClient.GetUser(ctx, &user.GetUserRequest{
 		Identifier: &user.GetUserRequest_Id{
@@ -36,7 +41,7 @@ func (n *notifier) sendNotification(userID int64, entityID int64) error {
 		return err
 	}
 	params := url.Values{
-		"token":   {os.Getenv("SLACK_TOKEN")},
+		"token":   {n.slackToken},
 		"channel": {u.GetSlackUserId()},
 		"text":    {fmt.Sprintf("%s is available.", b.GetName())},
 	}
@@ -56,14 +61,28 @@ func (n *notifier) sendNotification(userID int64, entityID int64) error {
 }
 
 func newNotifier() notifier {
+	n := notifier{}
+	n.slackToken = os.Getenv("SLACK_TOKEN")
+	if n.slackToken == "" {
+		n.enabled = false
+		return n
+	}
+
 	uConn, err := grpc.Dial(os.Getenv("USERSVC_URL"), grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Printf("did not connect: %v", err)
+		n.enabled = false
+		return n
 	}
+	n.userClient = user.NewUserServiceClient(uConn)
 
 	bConn, err := grpc.Dial(os.Getenv("BOOKSVC_URL"), grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Printf("did not connect: %v", err)
+		n.enabled = false
+		return n
 	}
-	return notifier{userClient: user.NewUserServiceClient(uConn), bookClient: book.NewBookServiceClient(bConn)}
+	n.enabled = true
+	n.bookClient = book.NewBookServiceClient(bConn)
+	return n
 }
