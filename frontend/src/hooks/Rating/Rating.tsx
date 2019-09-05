@@ -7,10 +7,6 @@ import { useBookContext, setBookRatingScore } from "../BookContext/BookContext";
 
 const ratingService = new RatingServiceClient(process.env.PUBLIC_URL, null, null);
 
-interface Actions {
-  [key: string]: () => void;
-}
-
 export interface ratingScoreIfc {
   (bookId: number): [boolean, number | undefined];
 }

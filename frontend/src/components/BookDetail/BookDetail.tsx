@@ -62,7 +62,7 @@ const BookDetail: React.SFC<BookDetailProps> = ({ bookId }) => {
     : [];
   const [, watchers] = useListUsers(watchingUserIds);
   const myRating = 4;
-  const avgRating = book.ratingScore;
+  const avgRating = typeof book.ratingScore === "number" ? book.ratingScore : "-";
 
   return (
     <Wrapper>
