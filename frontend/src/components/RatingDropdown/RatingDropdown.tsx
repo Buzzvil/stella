@@ -1,8 +1,10 @@
 import React from "react";
 
-import StarRating from "../StarRating/StarRating";
+// import Star from "../Star/Star";
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import Rating from '@material-ui/lab/Rating';
 import styled from "styled-components";
+import { ReactComponent as StarSVG } from "../../img/Star.svg";
 
 const Container = styled.div`
   display: flex;
@@ -54,6 +56,7 @@ const RatingDropdown: React.SFC<RatingDropdownProps> = ({
   return (
     <Container>
       <RatingBox>
+        {/* <Rating value={value} precision={0.5} icon={<StarSVG />} /> */}
         <Rating value={value} precision={0.5} />
       </RatingBox>
       <ValueBox>{starValue}</ValueBox>

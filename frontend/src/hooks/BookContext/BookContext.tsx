@@ -4,6 +4,8 @@ import { ResourceStatus } from "../../../proto/rentalsvc_pb";
 
 type BookDetails = Book & {
   rentalStatus?: ResourceStatus;
+  ratingScore?: number;
+  userRatingScore?: number;
 };
 
 type Action = {
@@ -11,6 +13,7 @@ type Action = {
   data?: BookDetails;
   list?: BookDetails[];
   status?: ResourceStatus;
+  rating?: Rating;
 };
 
 interface State {
@@ -21,11 +24,17 @@ interface Dispatch {
   (...args: any): void;
 }
 
+interface Rating {
+  bookId: number;
+  score: number;
+}
+
 const BookContext = createContext<[State, Dispatch]>([[], () => {}]);
 
 const Provider = BookContext.Provider;
 
 const reducer = (state: State, action: Action): State => {
+  let book;
   switch (action.type) {
     case "SET":
       if (!action.data) return state;
@@ -35,11 +44,29 @@ const reducer = (state: State, action: Action): State => {
       };
     case "SET_BOOK_STATUS":
       if (!action.status || !state[action.status.getEntityId()]) return state;
-      const book = state[action.status.getEntityId()];
+      book = state[action.status.getEntityId()];
       return {
         ...state,
         [book.getId()]: Object.assign(book, {
           rentalStatus: action.status
+        }) as BookDetails
+      };
+    case "SET_BOOK_SCORE":
+      if (!action.rating || !state[action.rating.bookId]) return state;
+      book = state[action.rating.bookId];
+      return {
+        ...state,
+        [action.rating.bookId]: Object.assign(book, {
+          ratingScore: action.rating.score
+        }) as BookDetails
+      };
+    case "SET_BOOK_USER_SCORE":
+      if (!action.rating || !state[action.rating.bookId]) return state;
+      book = state[action.rating.bookId];
+      return {
+        ...state,
+        [action.rating.bookId]: Object.assign(book, {
+          userRatingScore: action.rating.score
         }) as BookDetails
       };
     case "SET_MANY":
@@ -73,6 +100,10 @@ const setBooks = (dispatch: Dispatch, list: Book[]) =>
   dispatch({ type: "SET_MANY", list });
 const setBookStatus = (dispatch: Dispatch, status: ResourceStatus) =>
   dispatch({ type: "SET_BOOK_STATUS", status });
+const setBookRatingScore = (dispatch: Dispatch, rating: Rating) =>
+  dispatch({ type: "SET_BOOK_SCORE", rating });
+const setBookUserRatingScore = (dispatch: Dispatch, rating: Rating) =>
+  dispatch({ type: "SET_BOOK_USER_SCORE", rating });
 
 const useBookContext = () => useContext(BookContext);
 
@@ -84,5 +115,7 @@ export {
   setBook,
   setBooks,
   setBookStatus,
+  setBookRatingScore,
+  setBookUserRatingScore,
   useBookContext
 };
