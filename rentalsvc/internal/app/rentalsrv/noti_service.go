@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 
-	"github.com/Buzzvil/buzzlib-go/core"
 	book "github.com/Buzzvil/stella/rentalsvc/pkg/ext/book"
 	user "github.com/Buzzvil/stella/rentalsvc/pkg/ext/user"
 	"google.golang.org/grpc"
@@ -58,12 +58,12 @@ func (n *notifier) sendNotification(userID int64, entityID int64) error {
 func newNotifier() notifier {
 	uConn, err := grpc.Dial(os.Getenv("USERSVC_URL"), grpc.WithInsecure())
 	if err != nil {
-		core.Logger.Fatalf("did not connect: %v", err)
+		log.Fatalf("did not connect: %v", err)
 	}
 
 	bConn, err := grpc.Dial(os.Getenv("BOOKSVC_URL"), grpc.WithInsecure())
 	if err != nil {
-		core.Logger.Fatalf("did not connect: %v", err)
+		log.Fatalf("did not connect: %v", err)
 	}
 	return notifier{userClient: user.NewUserServiceClient(uConn), bookClient: book.NewBookServiceClient(bConn)}
 }
