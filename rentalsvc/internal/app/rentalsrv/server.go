@@ -65,11 +65,15 @@ func (s *server) ReturnResource(c context.Context, req *pb.ReturnResourceRequest
 	if err != nil {
 		return &empty.Empty{}, err
 	}
-
-	userIDs, err := s.u.ListResourceWatchers(entityID)
-	for _, userID := range userIDs {
-		if err := s.n.sendNotification(userID, entityID); err != nil {
-			log.Printf("%s", err)
+	if s.n.enabled {
+		userIDs, err := s.u.ListResourceWatchers(entityID)
+		if err != nil {
+			log.Printf("ReturnResource() - %s", err)
+		}
+		for _, userID := range userIDs {
+			if err := s.n.sendNotification(userID, entityID); err != nil {
+				log.Printf("ReturnResource() - %s", err)
+			}
 		}
 	}
 

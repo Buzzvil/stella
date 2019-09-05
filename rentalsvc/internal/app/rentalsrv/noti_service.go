@@ -22,9 +22,6 @@ type notifier struct {
 }
 
 func (n *notifier) sendNotification(userID int64, entityID int64) error {
-	if !n.enabled {
-		return nil
-	}
 	ctx := context.Background()
 	u, err := n.userClient.GetUser(ctx, &user.GetUserRequest{
 		Identifier: &user.GetUserRequest_Id{
