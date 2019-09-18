@@ -680,7 +680,8 @@ proto.stella.rating.v1.GetUserRatingRequest.prototype.toObject = function(opt_in
  */
 proto.stella.rating.v1.GetUserRatingRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    userId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    entityId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    userId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -719,6 +720,10 @@ proto.stella.rating.v1.GetUserRatingRequest.deserializeBinaryFromReader = functi
     switch (field) {
     case 1:
       var value = /** @type {number} */ (reader.readInt32());
+      msg.setEntityId(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
       msg.setUserId(value);
       break;
     default:
@@ -750,10 +755,17 @@ proto.stella.rating.v1.GetUserRatingRequest.prototype.serializeBinary = function
  */
 proto.stella.rating.v1.GetUserRatingRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getUserId();
+  f = message.getEntityId();
   if (f !== 0) {
     writer.writeInt32(
       1,
+      f
+    );
+  }
+  f = message.getUserId();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
       f
     );
   }
@@ -761,17 +773,32 @@ proto.stella.rating.v1.GetUserRatingRequest.serializeBinaryToWriter = function(m
 
 
 /**
- * optional int32 user_id = 1;
+ * optional int32 entity_id = 1;
  * @return {number}
  */
-proto.stella.rating.v1.GetUserRatingRequest.prototype.getUserId = function() {
+proto.stella.rating.v1.GetUserRatingRequest.prototype.getEntityId = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /** @param {number} value */
-proto.stella.rating.v1.GetUserRatingRequest.prototype.setUserId = function(value) {
+proto.stella.rating.v1.GetUserRatingRequest.prototype.setEntityId = function(value) {
   jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional int32 user_id = 2;
+ * @return {number}
+ */
+proto.stella.rating.v1.GetUserRatingRequest.prototype.getUserId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.stella.rating.v1.GetUserRatingRequest.prototype.setUserId = function(value) {
+  jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -961,7 +988,7 @@ proto.stella.rating.v1.UpsertRatingRequest.toObject = function(includeInstance, 
   var f, obj = {
     entityId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     userId: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    score: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    score: +jspb.Message.getFieldWithDefault(msg, 3, 0.0),
     comment: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -1008,7 +1035,7 @@ proto.stella.rating.v1.UpsertRatingRequest.deserializeBinaryFromReader = functio
       msg.setUserId(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readFloat());
       msg.setScore(value);
       break;
     case 4:
@@ -1059,8 +1086,8 @@ proto.stella.rating.v1.UpsertRatingRequest.serializeBinaryToWriter = function(me
     );
   }
   f = message.getScore();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f !== 0.0) {
+    writer.writeFloat(
       3,
       f
     );
@@ -1106,17 +1133,17 @@ proto.stella.rating.v1.UpsertRatingRequest.prototype.setUserId = function(value)
 
 
 /**
- * optional int32 score = 3;
+ * optional float score = 3;
  * @return {number}
  */
 proto.stella.rating.v1.UpsertRatingRequest.prototype.getScore = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {number} */ (+jspb.Message.getFieldWithDefault(this, 3, 0.0));
 };
 
 
 /** @param {number} value */
 proto.stella.rating.v1.UpsertRatingRequest.prototype.setScore = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setProto3FloatField(this, 3, value);
 };
 
 
