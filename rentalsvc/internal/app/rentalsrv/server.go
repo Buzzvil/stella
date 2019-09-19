@@ -2,6 +2,7 @@ package rentalsrv
 
 import (
 	"context"
+	"log"
 
 	"github.com/Buzzvil/stella/rentalsvc/internal/pkg/rental"
 	pb "github.com/Buzzvil/stella/rentalsvc/pkg/proto"
@@ -13,6 +14,7 @@ import (
 // Server is interface for grpc server
 type server struct {
 	u rental.Usecase
+	n notifier
 }
 
 func (s *server) GetResourceStatus(c context.Context, req *pb.GetResourceStatusRequest) (*pb.ResourceStatus, error) {
@@ -58,7 +60,26 @@ func (s *server) RentResource(c context.Context, req *pb.RentResourceRequest) (*
 }
 
 func (s *server) ReturnResource(c context.Context, req *pb.ReturnResourceRequest) (*empty.Empty, error) {
-	return &empty.Empty{}, s.u.ReturnResource(req.GetUserId(), req.GetEntityId())
+	entityID := req.GetEntityId()
+	err := s.u.ReturnResource(req.GetUserId(), entityID)
+	if err != nil {
+		return &empty.Empty{}, err
+	}
+	if s.n.enabled {
+		userIDs, err := s.u.ListResourceWatchers(entityID)
+		if err != nil {
+			log.Printf("ReturnResource() - %s", err)
+		}
+		for _, userID := range userIDs {
+			if err := s.n.sendNotification(userID, entityID); err != nil {
+				log.Printf("ReturnResource() - %s", err)
+			}
+		}
+	} else {
+		log.Printf("ReturnResource() - notifier is disabled")
+	}
+
+	return &empty.Empty{}, nil
 }
 
 func (s *server) WatchResource(c context.Context, req *pb.WatchResourceRequest) (*empty.Empty, error) {
@@ -76,5 +97,5 @@ func (s *server) UnwatchResource(c context.Context, req *pb.UnwatchResourceReque
 
 // New initializes app
 func New(rentalUsecase rental.Usecase) pb.RentalServiceServer {
-	return &server{rentalUsecase}
+	return &server{rentalUsecase, newNotifier()}
 }

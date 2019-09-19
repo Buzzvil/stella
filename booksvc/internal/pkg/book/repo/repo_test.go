@@ -86,22 +86,58 @@ func (s *repoTestSuite) TestGetByISBN() {
 }
 
 func (s *repoTestSuite) TestGetByFilter() {
-	var books []*book.Book
-	for len(books) < 2 {
-		s.NoError(faker.FakeData(&books))
+	tests := []struct {
+		name  string
+		books []*book.Book
+		query string
+		want  int
+	}{
+		{
+			name: "Title and Author matches",
+			books: []*book.Book{
+				&book.Book{
+					Name:    "Harry Potter",
+					Authors: []string{"J.K. Rowling"},
+					Isbn:    "a",
+				},
+				&book.Book{
+					Authors: []string{"Harry Styles"},
+					Isbn:    "b",
+				},
+			},
+			query: "Harry",
+			want:  2,
+		},
+		{
+			name: "Title matches",
+			books: []*book.Book{
+				&book.Book{
+					Name:    "Harry Potter",
+					Authors: []string{"J.K. Rowling"},
+					Isbn:    "a",
+				},
+				&book.Book{
+					Authors: []string{"Tolkien"},
+					Isbn:    "b",
+				},
+			},
+			query: "Harry",
+			want:  1,
+		},
 	}
-	testQuery := "TestName"
-	books[0].Name = testQuery + books[0].Name
-	books[1].Authors = append([]string{testQuery}, books[1].Authors...)
 
-	for _, book := range books {
-		_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
-		s.NoError(err)
+	for _, tt := range tests {
+		s.T().Run(tt.name, func(t *testing.T) {
+			s.SetupTest()
+			for _, book := range tt.books {
+				_, err := s.db.Exec("INSERT INTO books (isbn, name, authors, publisher, content, cover_image_url) VALUES ($1, $2, $3, $4, $5, $6)", book.Isbn, book.Name, book.Authors[0], book.Publisher, book.Content, book.CoverImage)
+				s.NoError(err)
+			}
+			res, err := s.repo.GetByFilter(tt.query)
+			s.NoError(err)
+			s.Equal(tt.want, len(res))
+		})
 	}
-
-	res, err := s.repo.GetByFilter(testQuery)
-	s.NoError(err)
-	s.Equal(2, len(res))
 }
 
 func (s *repoTestSuite) TestGetByIDs() {
