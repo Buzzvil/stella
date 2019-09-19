@@ -1,7 +1,4 @@
 import * as grpcWeb from 'grpc-web';
-
-import * as google_protobuf_empty_pb from 'google-protobuf/google/protobuf/empty_pb';
-
 import {
   CreateUserRequest,
   GetCurrentUserRequest,
@@ -17,28 +14,28 @@ export class UserServiceClient {
 
   getCurrentUser(
     request: GetCurrentUserRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: User) => void
   ): grpcWeb.ClientReadableStream<User>;
 
   getUser(
     request: GetUserRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: User) => void
   ): grpcWeb.ClientReadableStream<User>;
 
   listUsers(
     request: ListUsersRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: ListUsersResponse) => void
   ): grpcWeb.ClientReadableStream<ListUsersResponse>;
 
   createUser(
     request: CreateUserRequest,
-    metadata: grpcWeb.Metadata | undefined,
+    metadata: grpcWeb.Metadata,
     callback: (err: grpcWeb.Error,
                response: User) => void
   ): grpcWeb.ClientReadableStream<User>;
@@ -52,22 +49,22 @@ export class UserServicePromiseClient {
 
   getCurrentUser(
     request: GetCurrentUserRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<User>;
 
   getUser(
     request: GetUserRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<User>;
 
   listUsers(
     request: ListUsersRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<ListUsersResponse>;
 
   createUser(
     request: CreateUserRequest,
-    metadata?: grpcWeb.Metadata
+    metadata: grpcWeb.Metadata
   ): Promise<User>;
 
 }

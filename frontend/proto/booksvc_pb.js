@@ -792,7 +792,8 @@ proto.stella.book.v1.GetBookRequest.prototype.toObject = function(opt_includeIns
  */
 proto.stella.book.v1.GetBookRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    isbn: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -833,6 +834,10 @@ proto.stella.book.v1.GetBookRequest.deserializeBinaryFromReader = function(msg, 
       var value = /** @type {number} */ (reader.readInt64());
       msg.setId(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIsbn(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -869,6 +874,13 @@ proto.stella.book.v1.GetBookRequest.serializeBinaryToWriter = function(message, 
       f
     );
   }
+  f = message.getIsbn();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -884,6 +896,21 @@ proto.stella.book.v1.GetBookRequest.prototype.getId = function() {
 /** @param {number} value */
 proto.stella.book.v1.GetBookRequest.prototype.setId = function(value) {
   jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional string isbn = 2;
+ * @return {string}
+ */
+proto.stella.book.v1.GetBookRequest.prototype.getIsbn = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.stella.book.v1.GetBookRequest.prototype.setIsbn = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

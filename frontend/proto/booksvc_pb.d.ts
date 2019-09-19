@@ -65,6 +65,8 @@ export class GetBookRequest {
   constructor ();
   getId(): number;
   setId(a: number): void;
+  getIsbn(): string;
+  setIsbn(a: string): void;
   toObject(): GetBookRequest.AsObject;
   serializeBinary(): Uint8Array;
   static deserializeBinary: (bytes: {}) => GetBookRequest;
@@ -73,6 +75,7 @@ export class GetBookRequest {
 export namespace GetBookRequest {
   export type AsObject = {
     Id: number;
+    Isbn: string;
   }
 }
 
