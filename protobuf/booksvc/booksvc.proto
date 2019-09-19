@@ -29,6 +29,7 @@ message ListBooksResponse {
 
 message GetBookRequest {
   int64 id = 1;
+  string isbn = 2;
 }
 
 message CreateBookRequest {
