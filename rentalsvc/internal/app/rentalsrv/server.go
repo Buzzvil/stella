@@ -75,6 +75,8 @@ func (s *server) ReturnResource(c context.Context, req *pb.ReturnResourceRequest
 				log.Printf("ReturnResource() - %s", err)
 			}
 		}
+	} else {
+		log.Printf("ReturnResource() - notifier is disabled")
 	}
 
 	return &empty.Empty{}, nil
