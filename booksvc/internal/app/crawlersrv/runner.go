@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
@@ -27,7 +28,7 @@ func NewRunner(key string, db *sql.DB) Runner {
 }
 
 // Start search book with query
-func (r *Runner) Start(query string) error {
+func (r *Runner) Start(query string, id string) error {
 	b, err := r.u.Find(query)
 	if err != nil {
 		fmt.Println(err)
@@ -37,7 +38,9 @@ func (r *Runner) Start(query string) error {
 		return errors.New("Not found")
 	}
 
+	i, _ := strconv.ParseInt(id, 10, 64)
 	book := book.Book{
+		ID:         i,
 		Name:       b.Name,
 		Isbn:       b.Isbn,
 		Authors:    b.Authors,

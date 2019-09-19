@@ -24,13 +24,14 @@ func main() {
 	rows, _ := rdr.ReadAll()
 	r := crawlersrv.NewRunner(os.Getenv("KAKAO_API_KEY"), db)
 	for _, row := range rows {
-		pubs := strings.Fields(row[1])
+		pubs := strings.Fields(row[2])
 		p := ""
 		if len(pubs) > 0 {
 			p = pubs[0]
 		}
-		query := strings.Join([]string{row[0], p, row[2]}, " ")
-		err := r.Start(query)
+		// row[0]: id row[1]: title row[2]: author row[3]: publisher
+		query := strings.Join([]string{row[1], p, row[3]}, " ")
+		err := r.Start(query, row[0])
 		if err != nil {
 			fmt.Printf("%s: %s \n", err, query)
 		}
