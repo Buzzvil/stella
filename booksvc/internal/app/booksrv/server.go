@@ -59,7 +59,14 @@ func (s *server) booksToPBBooks(books []*book.Book) []*pb.Book {
 }
 
 func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {
-	book, err := s.u.GetBook(r.Id)
+	var book *book.Book
+	var err error
+	if len(r.GetIsbn()) > 0 {
+		book, err = s.u.GetBookByISBN(r.Isbn)
+	} else {
+		book, err = s.u.GetBook(r.Id)
+	}
+
 	if err != nil {
 		return nil, err
 	}

@@ -2,6 +2,7 @@ package book
 
 type Usecase interface {
 	GetBook(id int64) (*Book, error)
+	GetBookByISBN(isbn string) (*Book, error)
 	CreateBook(book Book) (*Book, error)
 	ListBooks(ids []int64) ([]*Book, error)
 	SearchBooks(filter string) ([]*Book, error)
@@ -21,6 +22,10 @@ func NewUsecase(repo Repo) Usecase {
 // GetBook returns book with book id.
 func (u *usecase) GetBook(id int64) (*Book, error) {
 	return u.repo.GetByID(id)
+}
+
+func (u *usecase) GetBookByISBN(isbn string) (*Book, error) {
+	return u.repo.GetByISBN(isbn)
 }
 
 // CreateBook creates book into repository.
