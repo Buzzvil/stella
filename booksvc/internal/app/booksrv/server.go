@@ -5,9 +5,6 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler"
-	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler/crawlerrepo"
-
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
@@ -16,17 +13,14 @@ import (
 
 // Server is interface for grpc server
 type server struct {
-	u  book.Usecase
-	cu crawler.Usecase
+	u book.Usecase
 }
 
 // NewServer initializes server
 func NewServer(key string, db *sql.DB) pb.BookServiceServer {
-	repo := repo.New(db)
+	repo := repo.New(db, key)
 	u := book.NewUsecase(repo)
-	crawlerRepo := crawlerrepo.New(key)
-	cu := crawler.NewUsecase(crawlerRepo)
-	return &server{u: u, cu: cu}
+	return &server{u: u}
 }
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
@@ -79,20 +73,20 @@ func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, err
 }
 
 func (s *server) SearchBookInfo(c context.Context, r *pb.SearchBookRequest) (*pb.SearchBookResponse, error) {
-	bs, err := s.cu.SearchByISBN(r.GetIsbn())
+	bs, err := s.u.SearchBookInfosByISBN(r.GetIsbn())
 	if err != nil {
 		return nil, err
 	}
 
 	books := []*pb.Book{}
-	for _, book := range bs {
+	for _, bookInfo := range bs {
 		books = append(books, &pb.Book{
-			Name:       book.Name,
-			Isbn:       book.Isbn,
-			Authors:    book.Authors,
-			Publisher:  book.Publisher,
-			Content:    book.Content,
-			CoverImage: book.CoverImage,
+			Name:       bookInfo.Name,
+			Isbn:       bookInfo.Isbn,
+			Authors:    bookInfo.Authors,
+			Publisher:  bookInfo.Publisher,
+			Content:    bookInfo.Content,
+			CoverImage: bookInfo.CoverImage,
 		})
 	}
 	return &pb.SearchBookResponse{Books: books}, nil
@@ -100,12 +94,14 @@ func (s *server) SearchBookInfo(c context.Context, r *pb.SearchBookRequest) (*pb
 
 func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Book, error) {
 	book := book.Book{
-		Name:       r.Name,
-		Isbn:       r.Isbn,
-		Authors:    r.Authors,
-		Publisher:  r.Publisher,
-		Content:    r.Content,
-		CoverImage: r.CoverImage,
+		BookInfo: book.BookInfo{
+			Name:       r.Name,
+			Isbn:       r.Isbn,
+			Authors:    r.Authors,
+			Publisher:  r.Publisher,
+			Content:    r.Content,
+			CoverImage: r.CoverImage,
+		},
 	}
 	b, err := s.u.CreateBook(book)
 	if err != nil {

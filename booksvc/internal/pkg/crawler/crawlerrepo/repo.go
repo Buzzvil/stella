@@ -57,32 +57,3 @@ func (r *repo) Find(query string) (*crawler.Book, error) {
 	}
 	return nil, e
 }
-
-func (r *repo) SearchByISBN(isbn string) ([]crawler.Book, error) {
-	client := &http.Client{}
-	api := "https://dapi.kakao.com/v3/search/book?target=isbn"
-	req, err := http.NewRequest("GET", api+"&query="+url.QueryEscape(isbn), nil)
-	req.Header.Add("Authorization", "KakaoAK "+r.Key)
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	target := &kakaoResp{}
-	e := json.NewDecoder(resp.Body).Decode(target)
-	books := []crawler.Book{}
-	for _, d := range target.Documents {
-		books = append(books, crawler.Book{
-			Authors:    d.Authors,
-			Content:    d.Contents,
-			Isbn:       d.Isbn,
-			Publisher:  d.Publisher,
-			Name:       d.Title,
-			CoverImage: d.Thumbnail,
-		})
-	}
-
-	return books, e
-}
