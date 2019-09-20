@@ -67,19 +67,24 @@ func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, err
 		book, err = s.u.GetBook(r.Id)
 	}
 
+func (s *server) SearchBookInfo(c context.Context, r *pb.SearchBookRequest) (*pb.SearchBookResponse, error) {
+	bs, err := s.cu.SearchByISBN(r.GetIsbn())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.Book{
-		Name:       book.Name,
-		Id:         book.ID,
-		Isbn:       book.Isbn,
-		Authors:    book.Authors,
-		Publisher:  book.Publisher,
-		Content:    book.Content,
-		CoverImage: book.CoverImage,
-	}, nil
+	books := []*pb.Book{}
+	for _, book := range bs {
+		books = append(books, &pb.Book{
+			Name:       book.Name,
+			Isbn:       book.Isbn,
+			Authors:    book.Authors,
+			Publisher:  book.Publisher,
+			Content:    book.Content,
+			CoverImage: book.CoverImage,
+		})
+	}
+	return &pb.SearchBookResponse{Books: books}, nil
 }
 
 func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Book, error) {
