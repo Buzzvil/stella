@@ -26,10 +26,11 @@ func TestRepoTestSuite(t *testing.T) {
 }
 
 func (s *repoTestSuite) SetupSuite() {
+	key := "kakao key"
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	require.Nil(s.T(), err)
 	s.db = db
-	s.repo = repo.New(s.db)
+	s.repo = repo.New(s.db, key)
 }
 
 func (s *repoTestSuite) SetupTest() {
@@ -96,13 +97,17 @@ func (s *repoTestSuite) TestGetByFilter() {
 			name: "Title and Author matches",
 			books: []*book.Book{
 				&book.Book{
-					Name:    "Harry Potter",
-					Authors: []string{"J.K. Rowling"},
-					Isbn:    "a",
+					BookInfo: book.BookInfo{
+						Name:    "Harry Potter",
+						Authors: []string{"J.K. Rowling"},
+						Isbn:    "a",
+					},
 				},
 				&book.Book{
-					Authors: []string{"Harry Styles"},
-					Isbn:    "b",
+					BookInfo: book.BookInfo{
+						Authors: []string{"Harry Styles"},
+						Isbn:    "b",
+					},
 				},
 			},
 			query: "Harry",
@@ -112,13 +117,17 @@ func (s *repoTestSuite) TestGetByFilter() {
 			name: "Title matches",
 			books: []*book.Book{
 				&book.Book{
-					Name:    "Harry Potter",
-					Authors: []string{"J.K. Rowling"},
-					Isbn:    "a",
+					BookInfo: book.BookInfo{
+						Name:    "Harry Potter",
+						Authors: []string{"J.K. Rowling"},
+						Isbn:    "a",
+					},
 				},
 				&book.Book{
-					Authors: []string{"Tolkien"},
-					Isbn:    "b",
+					BookInfo: book.BookInfo{
+						Authors: []string{"Tolkien"},
+						Isbn:    "b",
+					},
 				},
 			},
 			query: "Harry",
@@ -165,11 +174,13 @@ func (s *repoTestSuite) TestCreate() {
 	assert := assert.New(s.T())
 
 	b, err := s.repo.Create(book.Book{
-		Name:      "name",
-		Isbn:      "isbn",
-		Authors:   nil,
-		Publisher: "publisher",
-		Content:   "content",
+		BookInfo: book.BookInfo{
+			Name:      "name",
+			Isbn:      "isbn",
+			Authors:   nil,
+			Publisher: "publisher",
+			Content:   "content",
+		},
 	})
 	require.Nil(err)
 
