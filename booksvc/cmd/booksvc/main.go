@@ -28,7 +28,7 @@ func main() {
 	opts := []grpc.ServerOption{}
 	grpcServer := grpc.NewServer(opts...)
 
-	pb.RegisterBookServiceServer(grpcServer, booksrv.NewServer(db))
+	pb.RegisterBookServiceServer(grpcServer, booksrv.NewServer(os.Getenv("KAKAO_API_KEY"), db))
 
 	grpcServer.Serve(listener)
 }

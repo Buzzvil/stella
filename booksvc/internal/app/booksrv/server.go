@@ -5,6 +5,9 @@ import (
 	"database/sql"
 	"log"
 
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler"
+	"github.com/Buzzvil/stella/booksvc/internal/pkg/crawler/crawlerrepo"
+
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book"
 	"github.com/Buzzvil/stella/booksvc/internal/pkg/book/repo"
 	pb "github.com/Buzzvil/stella/booksvc/pkg/proto"
@@ -13,14 +16,17 @@ import (
 
 // Server is interface for grpc server
 type server struct {
-	u book.Usecase
+	u  book.Usecase
+	cu crawler.Usecase
 }
 
 // NewServer initializes server
-func NewServer(db *sql.DB) pb.BookServiceServer {
+func NewServer(key string, db *sql.DB) pb.BookServiceServer {
 	repo := repo.New(db)
 	u := book.NewUsecase(repo)
-	return &server{u: u}
+	crawlerRepo := crawlerrepo.New(key)
+	cu := crawler.NewUsecase(crawlerRepo)
+	return &server{u: u, cu: cu}
 }
 
 func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListBooksResponse, error) {
