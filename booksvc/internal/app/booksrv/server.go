@@ -45,27 +45,32 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 func (s *server) booksToPBBooks(books []*book.Book) []*pb.Book {
 	bookList := make([]*pb.Book, 0)
 	for _, book := range books {
-		bookList = append(bookList, &pb.Book{
-			Id:         book.ID,
-			Name:       book.Name,
-			Publisher:  book.Publisher,
-			Isbn:       book.Isbn,
-			Authors:    book.Authors,
-			Content:    book.Content,
-			CoverImage: book.CoverImage,
-		})
+		bookList = append(bookList, s.bookToPBBook(book))
 	}
 	return bookList
 }
 
-func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {
-	var book *book.Book
-	var err error
-	if len(r.GetIsbn()) > 0 {
-		book, err = s.u.GetBookByISBN(r.Isbn)
-	} else {
-		book, err = s.u.GetBook(r.Id)
+func (s *server) bookToPBBook(book *book.Book) *pb.Book {
+	return &pb.Book{
+		Id:         book.ID,
+		Name:       book.Name,
+		Publisher:  book.Publisher,
+		Isbn:       book.Isbn,
+		Authors:    book.Authors,
+		Content:    book.Content,
+		CoverImage: book.CoverImage,
 	}
+}
+
+func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {
+	book, err := s.u.GetBook(r.Id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.bookToPBBook(book), nil
+}
 
 func (s *server) SearchBookInfo(c context.Context, r *pb.SearchBookRequest) (*pb.SearchBookResponse, error) {
 	bs, err := s.cu.SearchByISBN(r.GetIsbn())
@@ -100,13 +105,5 @@ func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Boo
 	if err != nil {
 		return nil, err
 	}
-	return &pb.Book{
-		Name:       b.Name,
-		Id:         b.ID,
-		Isbn:       b.Isbn,
-		Authors:    b.Authors,
-		Publisher:  b.Publisher,
-		Content:    b.Content,
-		CoverImage: b.CoverImage,
-	}, nil
+	return s.bookToPBBook(b), nil
 }
