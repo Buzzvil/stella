@@ -4,7 +4,9 @@ import {
   CreateBookRequest,
   GetBookRequest,
   ListBooksRequest,
-  ListBooksResponse} from './booksvc_pb';
+  ListBooksResponse,
+  SearchBookRequest,
+  SearchBookResponse} from './booksvc_pb';
 
 export class BookServiceClient {
   constructor (hostname: string,
@@ -24,6 +26,13 @@ export class BookServiceClient {
     callback: (err: grpcWeb.Error,
                response: Book) => void
   ): grpcWeb.ClientReadableStream<Book>;
+
+  searchBookInfo(
+    request: SearchBookRequest,
+    metadata: grpcWeb.Metadata,
+    callback: (err: grpcWeb.Error,
+               response: SearchBookResponse) => void
+  ): grpcWeb.ClientReadableStream<SearchBookResponse>;
 
   createBook(
     request: CreateBookRequest,
@@ -48,6 +57,11 @@ export class BookServicePromiseClient {
     request: GetBookRequest,
     metadata: grpcWeb.Metadata
   ): Promise<Book>;
+
+  searchBookInfo(
+    request: SearchBookRequest,
+    metadata: grpcWeb.Metadata
+  ): Promise<SearchBookResponse>;
 
   createBook(
     request: CreateBookRequest,

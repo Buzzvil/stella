@@ -189,6 +189,62 @@ proto.stella.book.v1.BookServicePromiseClient.prototype.getBook =
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.stella.book.v1.SearchBookRequest,
+ *   !proto.stella.book.v1.SearchBookResponse>}
+ */
+const methodInfo_BookService_SearchBookInfo = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.stella.book.v1.SearchBookResponse,
+  /** @param {!proto.stella.book.v1.SearchBookRequest} request */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.stella.book.v1.SearchBookResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.stella.book.v1.SearchBookRequest} request The
+ *     request proto
+ * @param {!Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.stella.book.v1.SearchBookResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.stella.book.v1.SearchBookResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.stella.book.v1.BookServiceClient.prototype.searchBookInfo =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/stella.book.v1.BookService/SearchBookInfo',
+      request,
+      metadata,
+      methodInfo_BookService_SearchBookInfo,
+      callback);
+};
+
+
+/**
+ * @param {!proto.stella.book.v1.SearchBookRequest} request The
+ *     request proto
+ * @param {!Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.stella.book.v1.SearchBookResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.stella.book.v1.BookServicePromiseClient.prototype.searchBookInfo =
+    function(request, metadata) {
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.searchBookInfo(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
  *   !proto.stella.book.v1.CreateBookRequest,
  *   !proto.stella.book.v1.Book>}
  */
