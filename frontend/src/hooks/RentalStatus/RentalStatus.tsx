@@ -6,7 +6,9 @@ import {
   RentResourceRequest,
   ReturnResourceRequest,
   GetUserStatusRequest,
-  UserStatus
+  UserStatus,
+  WatchResourceRequest,
+  UnwatchResourceRequest
 } from "proto/rentalsvc_pb";
 import { useBookContext, setBookStatus } from "../BookContext/BookContext";
 import { useAuthContext } from "../AuthContext/AuthContext";
@@ -79,6 +81,32 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
     });
   };
 
+  const watchEntity = () => {
+    if (!currentUser) throw new Error("Not signed in!");
+    const req = new WatchResourceRequest();
+    req.setEntityId(entityId);
+    req.setUserId(currentUser.getId());
+    rentalService.watchResource(req, {}, (err, res) => {
+      if (err) {
+        throw err;
+      }
+      NewMsg(dispatchNoti, { msg: `Successfully watched!` });
+    });
+  };
+
+  const unwatchEntity = () => {
+    if (!currentUser) throw new Error("Not signed in!");
+    const req = new UnwatchResourceRequest();
+    req.setEntityId(entityId);
+    req.setUserId(currentUser.getId());
+    rentalService.unwatchResource(req, {}, (err, res) => {
+      if (err) {
+        throw err;
+      }
+      NewMsg(dispatchNoti, { msg: `Successfully unwatched!` });
+    });
+  };
+
   const returnEntity = () => {
     if (!currentUser) throw new Error("Not signed in!");
     const req = new ReturnResourceRequest();
@@ -94,8 +122,9 @@ const getResourceStatus: ResourceStatusIfc = entityId => {
   };
   useEffect(() => getResourceStatus(entityId), [entityId]);
 
-  return [loading, status, { rentEntity, returnEntity }];
+  return [loading, status, { rentEntity, returnEntity, watchEntity, unwatchEntity }];
 };
+
 
 export const defaultStatusFetcher: ResourceStatusIfc = () => [
   false,

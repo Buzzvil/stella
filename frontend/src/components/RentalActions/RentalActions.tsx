@@ -2,18 +2,21 @@ import * as React from "react";
 import { Button } from "@material-ui/core";
 import { ResourceStatus } from "proto/rentalsvc_pb";
 import { useAuthContext } from "../../hooks/AuthContext/AuthContext";
-import useResourceStatus from "../../hooks/RentalStatus/RentalStatus";
+import useResourceStatus, { getUserResourceStatus } from "../../hooks/RentalStatus/RentalStatus";
 
 interface RentalActionsProps {
   entityId: number;
 }
 
 const RentalActions: React.SFC<RentalActionsProps> = ({ entityId }) => {
-  const [loading, status, { rentEntity, returnEntity }] = useResourceStatus(
+  const [loading, status, { rentEntity, returnEntity, watchEntity, unwatchEntity }] = useResourceStatus(
     entityId
   );
   const [{ currentUser }] = useAuthContext();
-
+  if (!currentUser) return <></>;
+  const [, userStatus, { }] = getUserResourceStatus(
+    currentUser.getId()
+  );
   return status ? (
     status.getAvailability() === ResourceStatus.Availability.AVAILABLE ? (
       <Button
@@ -39,11 +42,27 @@ const RentalActions: React.SFC<RentalActionsProps> = ({ entityId }) => {
       >
         Return
       </Button>
+    ) : userStatus && userStatus.waitedBookIds.some(id => id == entityId) ? (
+      <Button 
+        variant="contained" 
+        color="default" 
+        disabled={loading}
+        onClick={e => {
+          unwatchEntity && unwatchEntity();
+        }}>
+        Unwatch
+      </Button>
     ) : (
-      <Button variant="contained" color="default" disabled={loading}>
+      <Button 
+        variant="contained" 
+        color="default" 
+        disabled={loading}
+        onClick={e => {
+          watchEntity && watchEntity();
+        }}>
         Get Notified
       </Button>
-    )
+    ) 
   ) : (
     <></>
   );
