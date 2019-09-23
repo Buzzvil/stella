@@ -57,5 +57,6 @@
     "babel-loader": "^8.0.5",
     "jest-canvas-mock": "^2.1.0",
     "prettier": "^1.17.0"
-  }
+  },
+  "proxy": "https://billy.buzzvil.com/"
 }
