@@ -5,6 +5,7 @@ type Usecase interface {
 	CreateBook(book Book) (*Book, error)
 	ListBooks(ids []int64) ([]*Book, error)
 	SearchBooks(filter string) ([]*Book, error)
+	SearchBookInfosByISBN(filter string) ([]*BookInfo, error)
 }
 
 type usecase struct {
@@ -43,6 +44,14 @@ func (u *usecase) ListBooks(ids []int64) ([]*Book, error) {
 // TODO: define what is filter
 func (u *usecase) SearchBooks(filter string) ([]*Book, error) {
 	books, err := u.repo.GetByFilter(filter)
+	if err == nil {
+		return books, nil
+	}
+	return nil, err
+}
+
+func (u *usecase) SearchBookInfosByISBN(isbn string) ([]*BookInfo, error) {
+	books, err := u.repo.SearchByISBN(isbn)
 	if err == nil {
 		return books, nil
 	}

@@ -68,25 +68,11 @@ proto.stella.user.v1.UserServicePromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   * @private @const {!proto.stella.user.v1.UserServiceClient} The delegate callback based client
    */
-  this.client_ = new grpc.web.GrpcWebClientBase(options);
+  this.delegateClient_ = new proto.stella.user.v1.UserServiceClient(
+      hostname, credentials, options);
 
-  /**
-   * @private @const {string} The hostname
-   */
-  this.hostname_ = hostname;
-
-  /**
-   * @private @const {?Object} The credentials to be used to connect
-   *    to the server
-   */
-  this.credentials_ = credentials;
-
-  /**
-   * @private @const {?Object} Options for the client
-   */
-  this.options_ = options;
 };
 
 
@@ -109,7 +95,7 @@ const methodInfo_UserService_GetCurrentUser = new grpc.web.AbstractClientBase.Me
 /**
  * @param {!proto.stella.user.v1.GetCurrentUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.user.v1.User)}
  *     callback The callback function(error, response)
@@ -121,7 +107,7 @@ proto.stella.user.v1.UserServiceClient.prototype.getCurrentUser =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.user.v1.UserService/GetCurrentUser',
       request,
-      metadata || {},
+      metadata,
       methodInfo_UserService_GetCurrentUser,
       callback);
 };
@@ -130,18 +116,19 @@ proto.stella.user.v1.UserServiceClient.prototype.getCurrentUser =
 /**
  * @param {!proto.stella.user.v1.GetCurrentUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.user.v1.User>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.user.v1.UserServicePromiseClient.prototype.getCurrentUser =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.user.v1.UserService/GetCurrentUser',
-      request,
-      metadata || {},
-      methodInfo_UserService_GetCurrentUser);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.getCurrentUser(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 
@@ -164,7 +151,7 @@ const methodInfo_UserService_GetUser = new grpc.web.AbstractClientBase.MethodInf
 /**
  * @param {!proto.stella.user.v1.GetUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.user.v1.User)}
  *     callback The callback function(error, response)
@@ -176,7 +163,7 @@ proto.stella.user.v1.UserServiceClient.prototype.getUser =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.user.v1.UserService/GetUser',
       request,
-      metadata || {},
+      metadata,
       methodInfo_UserService_GetUser,
       callback);
 };
@@ -185,18 +172,19 @@ proto.stella.user.v1.UserServiceClient.prototype.getUser =
 /**
  * @param {!proto.stella.user.v1.GetUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.user.v1.User>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.user.v1.UserServicePromiseClient.prototype.getUser =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.user.v1.UserService/GetUser',
-      request,
-      metadata || {},
-      methodInfo_UserService_GetUser);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.getUser(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 
@@ -219,7 +207,7 @@ const methodInfo_UserService_ListUsers = new grpc.web.AbstractClientBase.MethodI
 /**
  * @param {!proto.stella.user.v1.ListUsersRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.user.v1.ListUsersResponse)}
  *     callback The callback function(error, response)
@@ -231,7 +219,7 @@ proto.stella.user.v1.UserServiceClient.prototype.listUsers =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.user.v1.UserService/ListUsers',
       request,
-      metadata || {},
+      metadata,
       methodInfo_UserService_ListUsers,
       callback);
 };
@@ -240,18 +228,19 @@ proto.stella.user.v1.UserServiceClient.prototype.listUsers =
 /**
  * @param {!proto.stella.user.v1.ListUsersRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.user.v1.ListUsersResponse>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.user.v1.UserServicePromiseClient.prototype.listUsers =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.user.v1.UserService/ListUsers',
-      request,
-      metadata || {},
-      methodInfo_UserService_ListUsers);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.listUsers(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 
@@ -274,7 +263,7 @@ const methodInfo_UserService_CreateUser = new grpc.web.AbstractClientBase.Method
 /**
  * @param {!proto.stella.user.v1.CreateUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @param {function(?grpc.web.Error, ?proto.stella.user.v1.User)}
  *     callback The callback function(error, response)
@@ -286,7 +275,7 @@ proto.stella.user.v1.UserServiceClient.prototype.createUser =
   return this.client_.rpcCall(this.hostname_ +
       '/stella.user.v1.UserService/CreateUser',
       request,
-      metadata || {},
+      metadata,
       methodInfo_UserService_CreateUser,
       callback);
 };
@@ -295,18 +284,19 @@ proto.stella.user.v1.UserServiceClient.prototype.createUser =
 /**
  * @param {!proto.stella.user.v1.CreateUserRequest} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {!Object<string, string>} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.stella.user.v1.User>}
- *     A native promise that resolves to the response
+ *     The XHR Node Readable Stream
  */
 proto.stella.user.v1.UserServicePromiseClient.prototype.createUser =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
-      '/stella.user.v1.UserService/CreateUser',
-      request,
-      metadata || {},
-      methodInfo_UserService_CreateUser);
+  return new Promise((resolve, reject) => {
+    this.delegateClient_.createUser(
+      request, metadata, (error, response) => {
+        error ? reject(error) : resolve(response);
+      });
+  });
 };
 
 

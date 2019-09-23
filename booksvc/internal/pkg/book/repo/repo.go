@@ -2,7 +2,10 @@ package repo
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -10,7 +13,8 @@ import (
 )
 
 type repo struct {
-	db *sql.DB
+	db  *sql.DB
+	key string
 }
 
 type dbBook struct {
@@ -23,14 +27,29 @@ type dbBook struct {
 	coverImageURL sql.NullString
 }
 
+type kakaoResp struct {
+	Documents []kakaoBook
+}
+
+type kakaoBook struct {
+	Contents  string
+	Isbn      string
+	Publisher string
+	Thumbnail string
+	Title     string
+	Authors   []string
+}
+
 func dbBookToBook(d *dbBook) (b *book.Book) {
 	b = &book.Book{
-		ID:         d.id,
-		Name:       d.name,
-		Isbn:       d.isbn.String,
-		Publisher:  d.publisher.String,
-		Content:    d.content.String,
-		CoverImage: d.coverImageURL.String,
+		ID: d.id,
+		BookInfo: book.BookInfo{
+			Name:       d.name,
+			Isbn:       d.isbn.String,
+			Publisher:  d.publisher.String,
+			Content:    d.content.String,
+			CoverImage: d.coverImageURL.String,
+		},
 	}
 	if d.authors.Valid {
 		b.Authors = strings.Split(d.authors.String, ",")
@@ -39,8 +58,8 @@ func dbBookToBook(d *dbBook) (b *book.Book) {
 }
 
 // New creates postgres repository.
-func New(db *sql.DB) book.Repo {
-	return &repo{db: db}
+func New(db *sql.DB, key string) book.Repo {
+	return &repo{db: db, key: key}
 }
 
 func (r *repo) GetByID(id int64) (*book.Book, error) {
@@ -116,6 +135,35 @@ func (r *repo) GetByFilter(filter string) ([]*book.Book, error) {
 	}
 
 	return books, nil
+}
+
+func (r *repo) SearchByISBN(isbn string) ([]*book.BookInfo, error) {
+	client := &http.Client{}
+	api := "https://dapi.kakao.com/v3/search/book?target=isbn"
+	req, err := http.NewRequest("GET", api+"&query="+url.QueryEscape(isbn), nil)
+	req.Header.Add("Authorization", "KakaoAK "+r.key)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	target := &kakaoResp{}
+	e := json.NewDecoder(resp.Body).Decode(target)
+	books := []*book.BookInfo{}
+	for _, d := range target.Documents {
+		books = append(books, &book.BookInfo{
+			Authors:    d.Authors,
+			Content:    d.Contents,
+			Isbn:       d.Isbn,
+			Publisher:  d.Publisher,
+			Name:       d.Title,
+			CoverImage: d.Thumbnail,
+		})
+	}
+
+	return books, e
 }
 
 func (r *repo) Create(book book.Book) (*book.Book, error) {

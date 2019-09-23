@@ -5,6 +5,7 @@ package stella.book.v1;
 service BookService {
   rpc ListBooks(ListBooksRequest) returns (ListBooksResponse) {}
   rpc GetBook(GetBookRequest) returns (Book) {}
+  rpc SearchBookInfo(SearchBookRequest) returns (SearchBookResponse) {}
   rpc CreateBook(CreateBookRequest) returns (Book) {}
 }
 
@@ -29,6 +30,14 @@ message ListBooksResponse {
 
 message GetBookRequest {
   int64 id = 1;
+}
+
+message SearchBookRequest {
+  string isbn = 1;
+}
+
+message SearchBookResponse {
+  repeated Book books = 1;
 }
 
 message CreateBookRequest {

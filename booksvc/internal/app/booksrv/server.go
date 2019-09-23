@@ -17,8 +17,8 @@ type server struct {
 }
 
 // NewServer initializes server
-func NewServer(db *sql.DB) pb.BookServiceServer {
-	repo := repo.New(db)
+func NewServer(key string, db *sql.DB) pb.BookServiceServer {
+	repo := repo.New(db, key)
 	u := book.NewUsecase(repo)
 	return &server{u: u}
 }
@@ -45,56 +45,67 @@ func (s *server) ListBooks(c context.Context, r *pb.ListBooksRequest) (*pb.ListB
 func (s *server) booksToPBBooks(books []*book.Book) []*pb.Book {
 	bookList := make([]*pb.Book, 0)
 	for _, book := range books {
-		bookList = append(bookList, &pb.Book{
-			Id:         book.ID,
-			Name:       book.Name,
-			Publisher:  book.Publisher,
-			Isbn:       book.Isbn,
-			Authors:    book.Authors,
-			Content:    book.Content,
-			CoverImage: book.CoverImage,
-		})
+		bookList = append(bookList, s.bookToPBBook(book))
 	}
 	return bookList
 }
 
+func (s *server) bookToPBBook(book *book.Book) *pb.Book {
+	return &pb.Book{
+		Id:         book.ID,
+		Name:       book.Name,
+		Publisher:  book.Publisher,
+		Isbn:       book.Isbn,
+		Authors:    book.Authors,
+		Content:    book.Content,
+		CoverImage: book.CoverImage,
+	}
+}
+
 func (s *server) GetBook(c context.Context, r *pb.GetBookRequest) (*pb.Book, error) {
 	book, err := s.u.GetBook(r.Id)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.Book{
-		Name:       book.Name,
-		Id:         book.ID,
-		Isbn:       book.Isbn,
-		Authors:    book.Authors,
-		Publisher:  book.Publisher,
-		Content:    book.Content,
-		CoverImage: book.CoverImage,
-	}, nil
+	return s.bookToPBBook(book), nil
+}
+
+func (s *server) SearchBookInfo(c context.Context, r *pb.SearchBookRequest) (*pb.SearchBookResponse, error) {
+	bs, err := s.u.SearchBookInfosByISBN(r.GetIsbn())
+	if err != nil {
+		return nil, err
+	}
+
+	books := []*pb.Book{}
+	for _, bookInfo := range bs {
+		books = append(books, &pb.Book{
+			Name:       bookInfo.Name,
+			Isbn:       bookInfo.Isbn,
+			Authors:    bookInfo.Authors,
+			Publisher:  bookInfo.Publisher,
+			Content:    bookInfo.Content,
+			CoverImage: bookInfo.CoverImage,
+		})
+	}
+	return &pb.SearchBookResponse{Books: books}, nil
 }
 
 func (s *server) CreateBook(c context.Context, r *pb.CreateBookRequest) (*pb.Book, error) {
 	book := book.Book{
-		Name:       r.Name,
-		Isbn:       r.Isbn,
-		Authors:    r.Authors,
-		Publisher:  r.Publisher,
-		Content:    r.Content,
-		CoverImage: r.CoverImage,
+		BookInfo: book.BookInfo{
+			Name:       r.Name,
+			Isbn:       r.Isbn,
+			Authors:    r.Authors,
+			Publisher:  r.Publisher,
+			Content:    r.Content,
+			CoverImage: r.CoverImage,
+		},
 	}
 	b, err := s.u.CreateBook(book)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.Book{
-		Name:       b.Name,
-		Id:         b.ID,
-		Isbn:       b.Isbn,
-		Authors:    b.Authors,
-		Publisher:  b.Publisher,
-		Content:    b.Content,
-		CoverImage: b.CoverImage,
-	}, nil
+	return s.bookToPBBook(b), nil
 }
