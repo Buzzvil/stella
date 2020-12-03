@@ -1,0 +1,1 @@
+export const SPREAD_SHEET_LINK = "https://docs.google.com/spreadsheets/d/1Mt_mbTEFKMDBDXehIVobIGChpXAcXKJVweYcrEt5t4g/edit#gid=0";
